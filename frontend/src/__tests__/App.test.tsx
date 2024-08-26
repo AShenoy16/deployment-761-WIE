@@ -1,13 +1,10 @@
-// src/__ tests __/App.test.tsx
-
-// Test file to check if installed dependencies work
-
-import "@testing-library/jest-dom";
-import { render, screen, waitFor } from "@testing-library/react";
 import axios from "axios";
-import App from "../App";
 import MockAdapter from "axios-mock-adapter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "@testing-library/jest-dom";
+import { render, screen, waitFor } from "@testing-library/react";
+import App from "../App";
+import { usePlaceholderStore } from "../stores/placeholderStore";
 
 let mock: MockAdapter;
 let queryClient: QueryClient;
@@ -18,14 +15,16 @@ beforeEach(() => {
     title: "mocked title",
   });
   queryClient = new QueryClient();
+  usePlaceholderStore.setState({ thing: null });
 });
 
 afterEach(() => {
   mock.restore();
 });
 
-describe("App Component", () => {
-  it("fetches and displays data using TanStack Query", async () => {
+// Placeholder test to see how we can test components w/ zustand & tanstack
+describe("App Component with Zustand and TanStack Query", () => {
+  it("fetches and displays data, and updates Zustand state", async () => {
     render(
       <QueryClientProvider client={queryClient}>
         <App />
@@ -39,5 +38,8 @@ describe("App Component", () => {
     await waitFor(() =>
       expect(screen.getByText("mocked title")).toBeInTheDocument()
     );
+
+    // Assert that Zustand store was updated
+    expect(usePlaceholderStore.getState().thing).toBe("thing");
   });
 });
