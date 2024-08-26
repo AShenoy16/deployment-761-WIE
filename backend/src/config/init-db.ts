@@ -3,20 +3,20 @@ dotenv.config();
 
 import mongoose from "mongoose";
 
-import { User } from "../models/userModel.js";
+import { User } from "../models/userModel";
 
 // Hardcoded Users list for testing
 const dummyUsers = [
-  { password: "Alice", email: "alice@example.com" },
-  { password: "Bob", email: "bob@example.com" },
-  { password: "Charlie", email: "charlie@example.com" },
+  { password: "Adi", email: "adi@example.com" },
+  { password: "Mitchell", email: "mitchell@example.com" },
+  { password: "Steven", email: "Steven@example.com" },
   { password: "Admin", email: "wen-admin@gmail.com" },
 ];
 
 // This is a standalone program which will populate the database with initial data.
 async function run() {
   console.log("Connecting to database...");
-  await mongoose.connect(process.env.MONGODB_CONNECTION_STRING);
+  await mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string);
 
   // Clear db
 
