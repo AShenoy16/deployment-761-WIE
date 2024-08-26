@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { usePlaceholderStore } from "./stores/placeholderStore";
+import { Box, ThemeProvider } from "@mui/material";
+import { lightTheme } from "./theme";
 
 // Some random placeholder code to check if installed libararies are working
 function App() {
@@ -24,10 +26,12 @@ function App() {
   if (error) return <p>An error occurred: {error.message}</p>;
 
   return (
-    <>
-      <p>{data?.title}</p>
-      <p>{thing}</p>
-    </>
+    <ThemeProvider theme={lightTheme}>
+      <Box color="#FFF" sx={{ backgroundColor: "primary.main" }}>
+        <p>{data?.title}</p>
+        <p>{thing}</p>
+      </Box>
+    </ThemeProvider>
   );
 }
 
