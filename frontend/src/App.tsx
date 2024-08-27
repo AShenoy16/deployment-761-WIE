@@ -1,19 +1,14 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { usePlaceholderStore } from "./stores/placeholderStore";
-import { Box, ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { lightTheme } from "./theme";
+import QuizPage from "./pages/QuizPage";
 
-// Some random placeholder code to check if installed libararies are working
 function App() {
-  const thing = usePlaceholderStore((state) => state.thing);
-  const setThing = usePlaceholderStore((state) => state.setThing);
-
   const fetchPost = async () => {
     const response = await axios.get(
       "https://jsonplaceholder.typicode.com/posts/1"
     );
-    setThing("thing");
     return response.data;
   };
 
@@ -27,10 +22,10 @@ function App() {
 
   return (
     <ThemeProvider theme={lightTheme}>
-      <Box color="#FFF" sx={{ backgroundColor: "primary.main" }}>
+      {/* <Box color="#FFF" sx={{ backgroundColor: "primary.main" }}>
         <p>{data?.title}</p>
-        <p>{thing}</p>
-      </Box>
+      </Box> */}
+      <QuizPage />
     </ThemeProvider>
   );
 }

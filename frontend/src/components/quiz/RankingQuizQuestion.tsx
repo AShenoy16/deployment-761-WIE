@@ -100,10 +100,13 @@ type RankingQuizQuestionProps = {
 export const RankingQuizQuestion: React.FC<RankingQuizQuestionProps> = ({
   question,
 }) => {
-  const { rankings, setRanking } = useRankingStore();
+  const setRanking = useRankingStore((state) => state.setRanking);
+  const rankings = useRankingStore(
+    (state) => state.rankingsByQuestion[question.questionNumber] || {}
+  );
 
   const handleRankingClick = (optionId: string, rank: number) => {
-    setRanking(optionId, rank);
+    setRanking(question.questionNumber, optionId, rank);
   };
 
   const rankingCount = question.answerOptions.length;
