@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { RankingQuizQuestion } from "../components/quiz/RankingQuizQuestion";
 import { Question } from "../types/QuestionTypes";
 import { mockFetchQuizQuestions } from "../util/mockQuizData";
+import { SliderQuizQuestion } from "../components/quiz/SliderQuizQuestion";
 
 const QuizPage: React.FC = () => {
   const {
