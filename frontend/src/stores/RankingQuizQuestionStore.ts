@@ -2,12 +2,12 @@ import { create } from "zustand";
 
 type RankingState = { [optionId: string]: number };
 
-type RankingQuizQuestionStore = {
+type RankingQuestionStore = {
   rankingsByQuestion: { [questionNumber: number]: RankingState };
   setRanking: (questionNumber: number, optionId: string, rank: number) => void;
 };
 
-export const useRankingStore = create<RankingQuizQuestionStore>((set) => ({
+export const useRankingQuestionStore = create<RankingQuestionStore>((set) => ({
   rankingsByQuestion: {},
 
   setRanking: (questionNumber: number, optionId: string, rank: number) => {

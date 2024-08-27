@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { RankingQuizQuestion } from "../../components/quiz/RankingQuizQuestion";
-import { useRankingStore } from "../../stores/RankingQuizQuestionStore";
+import { useRankingQuestionStore } from "../../stores/RankingQuizQuestionStore";
 import { RankingQuestion } from "../../types/QuestionTypes";
 
 const rankingQuestion: RankingQuestion = {
@@ -31,7 +31,7 @@ const rankingQuestion: RankingQuestion = {
 
 describe("RankingQuizQuestion Component", () => {
   beforeEach(() => {
-    useRankingStore.setState({ rankingsByQuestion: {} });
+    useRankingQuestionStore.setState({ rankingsByQuestion: {} });
   });
 
   it("renders the question and options correctly", () => {
@@ -56,7 +56,7 @@ describe("RankingQuizQuestion Component", () => {
     fireEvent.click(rank1ButtonForOption1);
 
     // Check if the store was updated correctly
-    const state = useRankingStore.getState();
+    const state = useRankingQuestionStore.getState();
     expect(state.rankingsByQuestion[1]["1"]).toBe(1);
   });
 
@@ -72,7 +72,7 @@ describe("RankingQuizQuestion Component", () => {
     fireEvent.click(rank1ButtonForOption2);
 
     // Check that the second option has the first rank, and the first option no longer has it
-    const state = useRankingStore.getState();
+    const state = useRankingQuestionStore.getState();
     expect(state.rankingsByQuestion[1]["1"]).toBeUndefined();
     expect(state.rankingsByQuestion[1]["2"]).toBe(1);
   });

@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Stack, Typography, Theme, useTheme } from "@mui/material";
 import { RankingQuestion } from "../../types/QuestionTypes";
-import { useRankingStore } from "../../stores/RankingQuizQuestionStore";
+import { useRankingQuestionStore } from "../../stores/RankingQuizQuestionStore";
 
 type RankingOptionHeaderProps = {
   rankingCount: number;
@@ -108,8 +108,8 @@ type RankingQuizQuestionProps = {
 export const RankingQuizQuestion: React.FC<RankingQuizQuestionProps> = ({
   question,
 }) => {
-  const setRanking = useRankingStore((state) => state.setRanking);
-  const rankings = useRankingStore(
+  const setRanking = useRankingQuestionStore((state) => state.setRanking);
+  const rankings = useRankingQuestionStore(
     (state) => state.rankingsByQuestion[question.questionNumber] || {}
   );
 
