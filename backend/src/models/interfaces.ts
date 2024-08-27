@@ -96,3 +96,12 @@ export interface IRoleModel extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface IUser extends Document {
+  email: string;
+  passwordHash: string;
+  role: "admin" | "user";
+  sessionId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

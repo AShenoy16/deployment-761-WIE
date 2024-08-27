@@ -79,17 +79,49 @@ const quizData = {
 
 // Hardcoded Users list for testing
 const dummyUsers = [
-  { password: "Adi123", email: "adi123456@example.com" },
-  { password: "Mitchell", email: "mitchell@example.com" },
-  { password: "Steven", email: "Steven@example.com" },
-  { password: "Admin", email: "wen-admin@gmail.com" },
+  {
+    email: "adi123456@example.com",
+    passwordHash: "hashedAdi123",
+    role: "user",
+    sessionId: "sessionId1",
+  },
+  {
+    email: "mitchell@example.com",
+    passwordHash: "hashedMitchell",
+    role: "user",
+    sessionId: "sessionId2",
+  },
+  {
+    email: "steven@example.com",
+    passwordHash: "hashedSteven",
+    role: "user",
+    sessionId: "sessionId3",
+  },
+  {
+    email: "wen-admin@gmail.com",
+    passwordHash: "hashedAdmin",
+    role: "admin",
+    sessionId: "sessionId4",
+  },
 ];
 
 // Testimonals
 const dummyTestimonials = [
-  { testimonialId: "1", name: "Jane Doe", description: "Engineering was a great choice for me!" },
-  { testimonialId: "2", name: "John Smith", description: "The challenges are rewarding." },
-  { testimonialId: "3", name: "Alice Johnson", description: "A fulfilling career path." },
+  {
+    testimonialId: "1",
+    name: "Jane Doe",
+    description: "Engineering was a great choice for me!",
+  },
+  {
+    testimonialId: "2",
+    name: "John Smith",
+    description: "The challenges are rewarding.",
+  },
+  {
+    testimonialId: "3",
+    name: "Alice Johnson",
+    description: "A fulfilling career path.",
+  },
 ];
 
 // specs
@@ -98,7 +130,11 @@ const dummySpecializations = [
     name: "Software Engineering",
     description: "Focus on software development and engineering principles.",
     photoUrl: "https://example.com/software-engineering.jpg",
-    careerPathways: ["Software Developer", "System Architect", "DevOps Engineer"],
+    careerPathways: [
+      "Software Developer",
+      "System Architect",
+      "DevOps Engineer",
+    ],
     startingSalary: 60000,
     medianSalary: 90000,
     experiencedSalary: 120000,
@@ -124,7 +160,11 @@ const dummySpecializations = [
     name: "Electrical Engineering",
     description: "Work on electrical systems and technologies.",
     photoUrl: "https://example.com/electrical-engineering.jpg",
-    careerPathways: ["Electrical Engineer", "Electronics Engineer", "Power Systems Engineer"],
+    careerPathways: [
+      "Electrical Engineer",
+      "Electronics Engineer",
+      "Power Systems Engineer",
+    ],
     startingSalary: 58000,
     medianSalary: 88000,
     experiencedSalary: 115000,
@@ -132,45 +172,44 @@ const dummySpecializations = [
     testimonials: [], // No testimonials
     createdAt: new Date(),
     updatedAt: new Date(),
-  }
+  },
 ];
 
 const dummyRoleModels = [
   {
-    name: 'Jane Doe',
-    description: 'An inspiring role model in engineering.',
-    photoUrl: 'https://example.com/photos/jane_doe.jpg',
+    name: "Jane Doe",
+    description: "An inspiring role model in engineering.",
+    photoUrl: "https://example.com/photos/jane_doe.jpg",
     socialMediaLinks: {
-      linkedin: 'https://linkedin.com/in/jane-doe',
-      instagram: 'https://instagram.com/jane_doe'
+      linkedin: "https://linkedin.com/in/jane-doe",
+      instagram: "https://instagram.com/jane_doe",
     },
-    createdAt: new Date('2024-01-01T00:00:00Z'),
-    updatedAt: new Date('2024-01-01T00:00:00Z')
+    createdAt: new Date("2024-01-01T00:00:00Z"),
+    updatedAt: new Date("2024-01-01T00:00:00Z"),
   },
   {
-    name: 'John Smith',
-    description: 'A renowned figure in the field of software development.',
-    photoUrl: 'https://example.com/photos/john_smith.jpg',
+    name: "John Smith",
+    description: "A renowned figure in the field of software development.",
+    photoUrl: "https://example.com/photos/john_smith.jpg",
     socialMediaLinks: {
-      linkedin: 'https://linkedin.com/in/john-smith',
-      instagram: 'https://instagram.com/john_smith'
+      linkedin: "https://linkedin.com/in/john-smith",
+      instagram: "https://instagram.com/john_smith",
     },
-    createdAt: new Date('2024-01-02T00:00:00Z'),
-    updatedAt: new Date('2024-01-02T00:00:00Z')
+    createdAt: new Date("2024-01-02T00:00:00Z"),
+    updatedAt: new Date("2024-01-02T00:00:00Z"),
   },
   {
-    name: 'Alice Johnson',
-    description: 'A leading advocate for diversity in STEM.',
-    photoUrl: 'https://example.com/photos/alice_johnson.jpg',
+    name: "Alice Johnson",
+    description: "A leading advocate for diversity in STEM.",
+    photoUrl: "https://example.com/photos/alice_johnson.jpg",
     socialMediaLinks: {
-      linkedin: 'https://linkedin.com/in/alice-johnson',
-      instagram: 'https://instagram.com/alice_johnson'
+      linkedin: "https://linkedin.com/in/alice-johnson",
+      instagram: "https://instagram.com/alice_johnson",
     },
-    createdAt: new Date('2024-01-03T00:00:00Z'),
-    updatedAt: new Date('2024-01-03T00:00:00Z')
-  }
+    createdAt: new Date("2024-01-03T00:00:00Z"),
+    updatedAt: new Date("2024-01-03T00:00:00Z"),
+  },
 ];
-
 
 // This is a standalone program which will populate the database with initial data.
 async function run() {
@@ -212,7 +251,7 @@ async function run() {
 async function clearDatabase() {
   await User.deleteMany({});
   await Quiz.deleteMany({});
-  await Specialization.deleteMany({})
+  await Specialization.deleteMany({});
 
   console.log(`Cleared database`);
 }
@@ -246,7 +285,9 @@ async function addRoleModels() {
     const dbRoleModel = new RoleModel(roleModel);
 
     await dbRoleModel.save();
-    console.log(`Spec Saveded _id${dbRoleModel._id}, name = ${dbRoleModel.name}`);
+    console.log(
+      `Spec Saveded _id${dbRoleModel._id}, name = ${dbRoleModel.name}`
+    );
   }
 }
 
