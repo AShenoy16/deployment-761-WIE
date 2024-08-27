@@ -8,6 +8,7 @@ export interface IMCQAnswerOption {
 }
 
 export interface IMCQQuestion extends Document {
+  questionType: "MCQ";
   questionText: string;
   questionNumber: number;
   answerOptions: IMCQAnswerOption[];
@@ -25,6 +26,7 @@ export interface IRankingAnswerOption {
 }
 
 export interface IRankingQuestion extends Document {
+  questionType: "Ranking";
   questionText: string;
   questionNumber: number;
   answerOptions: IRankingAnswerOption[];
@@ -42,6 +44,7 @@ export interface ISliderRange {
 }
 
 export interface ISliderQuestion extends Document {
+  questionType: "Slider";
   questionText: string;
   questionNumber: number;
   sliderRange: ISliderRange;

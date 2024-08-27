@@ -11,6 +11,7 @@ const quizData = {
   quizName: "Engineering Specialization Quiz",
   quizQuestions: [
     {
+      questionType: "MCQ",
       questionText: "What is your preferred engineering field?",
       questionNumber: 1,
       answerOptions: [
@@ -33,6 +34,7 @@ const quizData = {
       ],
     },
     {
+      questionType: "Ranking",
       questionText: "Rank the following specializations",
       questionNumber: 2,
       answerOptions: [
@@ -55,6 +57,7 @@ const quizData = {
       ],
     },
     {
+      questionType: "Slider",
       questionText: "Rate your interest in each specialization from 1 to 10",
       questionNumber: 3,
       sliderRange: {
@@ -84,7 +87,7 @@ const dummyUsers = [
 async function run() {
   console.log("Connecting to database...");
 
-  const mongoUri: string = process.env.MONGODB_CONNECTION_STRING as string
+  const mongoUri: string = process.env.MONGODB_CONNECTION_STRING as string;
   await mongoose.connect(mongoUri);
 
   // Clear db

@@ -9,6 +9,7 @@ const sliderRangeSchema: Schema = new Schema({
 });
 
 const sliderQuestionSchema: Schema = new Schema({
+  questionType: "Slider",
   questionText: { type: String, required: true },
   questionNumber: { type: Number, required: true },
   sliderRange: {required: true, type: sliderRangeSchema},

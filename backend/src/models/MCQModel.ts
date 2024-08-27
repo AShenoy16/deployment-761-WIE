@@ -8,7 +8,8 @@ const mcqAnswerOptionSchema: Schema = new Schema({
   weightings: { required: true, type: Map, of: Number },
 });
 
-const mcqQuestionSchema: Schema = new Schema({
+const mcqQuestionSchema: Schema = new Schema<IMCQQuestion>({
+  questionType: "MCQ",
   questionText: { type: String, required: true },
   questionNumber: { type: Number, required: true },
   answerOptions: {

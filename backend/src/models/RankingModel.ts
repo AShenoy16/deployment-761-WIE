@@ -9,6 +9,7 @@ const rankingAnswerOptionSchema: Schema = new Schema({
 });
 
 const rankingQuestionSchema: Schema = new Schema({
+  questionType: "Ranking",
   questionText: { type: String, required: true },
   questionNumber: { type: Number, required: true },
   answerOptions: {
