@@ -82,3 +82,17 @@ export interface Specialization extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface ISocialMediaLinks {
+  linkedin: string;
+  instagram: string;
+}
+
+export interface IRoleModel extends Document {
+  name: string;
+  description: string;
+  photoUrl: string;
+  socialMediaLinks: ISocialMediaLinks;
+  createdAt: Date;
+  updatedAt: Date;
+}

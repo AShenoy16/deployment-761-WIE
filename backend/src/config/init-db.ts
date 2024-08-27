@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import { User } from "../models/userModel";
 import Quiz from "../models/QuizModel";
 import Specialization from "../models/SpecializationModel";
+import RoleModel from "../models/RoleModel";
 
 // Dummy data for Quiz
 const quizData = {
@@ -134,6 +135,42 @@ const dummySpecializations = [
   }
 ];
 
+const dummyRoleModels = [
+  {
+    name: 'Jane Doe',
+    description: 'An inspiring role model in engineering.',
+    photoUrl: 'https://example.com/photos/jane_doe.jpg',
+    socialMediaLinks: {
+      linkedin: 'https://linkedin.com/in/jane-doe',
+      instagram: 'https://instagram.com/jane_doe'
+    },
+    createdAt: new Date('2024-01-01T00:00:00Z'),
+    updatedAt: new Date('2024-01-01T00:00:00Z')
+  },
+  {
+    name: 'John Smith',
+    description: 'A renowned figure in the field of software development.',
+    photoUrl: 'https://example.com/photos/john_smith.jpg',
+    socialMediaLinks: {
+      linkedin: 'https://linkedin.com/in/john-smith',
+      instagram: 'https://instagram.com/john_smith'
+    },
+    createdAt: new Date('2024-01-02T00:00:00Z'),
+    updatedAt: new Date('2024-01-02T00:00:00Z')
+  },
+  {
+    name: 'Alice Johnson',
+    description: 'A leading advocate for diversity in STEM.',
+    photoUrl: 'https://example.com/photos/alice_johnson.jpg',
+    socialMediaLinks: {
+      linkedin: 'https://linkedin.com/in/alice-johnson',
+      instagram: 'https://instagram.com/alice_johnson'
+    },
+    createdAt: new Date('2024-01-03T00:00:00Z'),
+    updatedAt: new Date('2024-01-03T00:00:00Z')
+  }
+];
+
 
 // This is a standalone program which will populate the database with initial data.
 async function run() {
@@ -153,6 +190,7 @@ async function run() {
   await addUsers();
   console.log();
 
+  // add quiz info
   console.log("Adding Quiz Info...");
   await addQuizInfo();
   console.log();
@@ -162,6 +200,10 @@ async function run() {
   await addSpecInfo();
   console.log();
 
+  // add role model info
+  console.log("Adding Role Model Info...");
+  await addRoleModels();
+  console.log();
 
   await mongoose.disconnect();
   console.log("Done!");
@@ -195,7 +237,16 @@ async function addSpecInfo() {
     const dbSpec = new Specialization(spec);
 
     await dbSpec.save();
-    console.log(`Spec Saveded _id${dbSpec._id}, name = ${dbSpec.name}`);
+    console.log(`Role Model Saveded _id${dbSpec._id}, name = ${dbSpec.name}`);
+  }
+}
+
+async function addRoleModels() {
+  for (let roleModel of dummyRoleModels) {
+    const dbRoleModel = new RoleModel(roleModel);
+
+    await dbRoleModel.save();
+    console.log(`Spec Saveded _id${dbRoleModel._id}, name = ${dbRoleModel.name}`);
   }
 }
 
