@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, Stack, Typography } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { mockFetchQuizQuestions } from "../../util/mockQuizData";
-import { Question, RankingQuestion } from "../../types/QuestionTypes";
+import { RankingQuestion } from "../../types/QuestionTypes";
+import { useRankingStore } from "../../stores/RankingQuizQuestionStore";
 
 type RankingOptionHeaderProps = {
   rankingCount: number;
@@ -98,16 +97,13 @@ type RankingQuizQuestionProps = {
   question: RankingQuestion;
 };
 
-const RankingQuizQuestion: React.FC<RankingQuizQuestionProps> = ({
+export const RankingQuizQuestion: React.FC<RankingQuizQuestionProps> = ({
   question,
 }) => {
-  const [rankings, setRankings] = useState<{ [optionId: string]: number }>({});
+  const { rankings, setRanking } = useRankingStore();
 
   const handleRankingClick = (optionId: string, rank: number) => {
-    setRankings((prevRankings) => ({
-      ...prevRankings,
-      [optionId]: rank,
-    }));
+    setRanking(optionId, rank);
   };
 
   const rankingCount = question.answerOptions.length;
@@ -127,36 +123,3 @@ const RankingQuizQuestion: React.FC<RankingQuizQuestionProps> = ({
     </Stack>
   );
 };
-
-const DummyRankingQuizQuestionContainer: React.FC = () => {
-  const {
-    data: questions,
-    isLoading,
-    error,
-  } = useQuery<Question[]>({
-    queryKey: ["questions"],
-    queryFn: mockFetchQuizQuestions,
-  });
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  if (error) {
-    return <div>Error loading questions</div>;
-  }
-
-  const rankingQuestions = questions?.filter((q) => q.type === "ranking") || [];
-
-  return (
-    <Box>
-      {rankingQuestions.map((question) => (
-        <RankingQuizQuestion
-          key={question.questionNumber}
-          question={question}
-        />
-      ))}
-    </Box>
-  );
-};
-
-export default DummyRankingQuizQuestionContainer;
