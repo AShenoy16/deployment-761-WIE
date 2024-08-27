@@ -4,10 +4,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const connectDB = async () => {
+  const mongoUri: string = process.env.MONGODB_CONNECTION_STRING as string
   try {
     // only connect if not alr connected
     if (mongoose.connection.readyState === 0) {
-      await mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string);
+      console.log("MongoDB Connection String:", mongoUri);
+      await mongoose.connect(mongoUri);
       console.log("MongoDB Connected");
       return
     }

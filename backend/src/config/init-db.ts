@@ -72,7 +72,6 @@ const quizData = {
   updatedAt: new Date(),
 };
 
-
 // Hardcoded Users list for testing
 const dummyUsers = [
   { password: "Adi123", email: "adi123456@example.com" },
@@ -84,7 +83,9 @@ const dummyUsers = [
 // This is a standalone program which will populate the database with initial data.
 async function run() {
   console.log("Connecting to database...");
-  await mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string);
+
+  const mongoUri: string = process.env.MONGODB_CONNECTION_STRING as string
+  await mongoose.connect(mongoUri);
 
   // Clear db
 
@@ -106,8 +107,8 @@ async function run() {
 }
 
 async function clearDatabase() {
-  const usersDeleted = await User.deleteMany({});
-  const quizDeleted = await Quiz.deleteMany({})
+  await User.deleteMany({});
+  await Quiz.deleteMany({});
 
   console.log(`Cleared database`);
 }
@@ -122,9 +123,8 @@ async function addUsers() {
 }
 
 async function addQuizInfo() {
-
-  const quiz = new Quiz(quizData)
-  await quiz.save()
+  const quiz = new Quiz(quizData);
+  await quiz.save();
   console.log(`Quiz Saved _id: ${quiz._id}, quizName = ${quiz.quizName}`);
 }
 
