@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Question } from "../types/QuestionTypes";
 import { mockFetchQuizQuestions } from "../util/mockQuizData";
 
-export const useFetchQuestions = () => {
+export const useGetQuestions = () => {
   const {
-    data: questions,
+    data: questions = [], // Default to empty array if questions is undefined
     isLoading,
     isError,
   } = useQuery<Question[]>({

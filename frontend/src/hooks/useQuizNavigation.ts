@@ -29,10 +29,8 @@ export const useQuizNavigation = (questions: Question[]) => {
 
   return {
     currentQuestionIndex,
-    questions,
     nextQuestion: handleNextQuestion,
     prevQuestion: handlePrevQuestion,
     goToQuestion,
-    currentQuestion: questions ? questions[currentQuestionIndex] : null,
   };
 };
