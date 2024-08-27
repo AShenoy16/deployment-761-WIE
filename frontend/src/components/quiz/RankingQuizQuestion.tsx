@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography, Theme, useTheme } from "@mui/material";
 import { RankingQuestion } from "../../types/QuestionTypes";
 import { useRankingStore } from "../../stores/RankingQuizQuestionStore";
 
@@ -44,6 +44,8 @@ const RankingOption: React.FC<RankingOptionProps> = ({
   selectedRank,
   onClick,
 }) => {
+  const theme = useTheme<Theme>();
+
   return (
     <Stack
       direction="row"
@@ -71,6 +73,7 @@ const RankingOption: React.FC<RankingOptionProps> = ({
         {Array.from({ length: rankingCount }).map((_, rankIndex) => (
           <Box
             key={rankIndex}
+            role="button"
             width="2rem"
             height="2rem"
             border="1px solid #ccc"
@@ -81,8 +84,13 @@ const RankingOption: React.FC<RankingOptionProps> = ({
             alignItems="center"
             sx={{
               backgroundColor:
-                selectedRank === rankIndex + 1 ? "#1976d2" : "transparent",
-              color: selectedRank === rankIndex + 1 ? "#fff" : "text.primary",
+                selectedRank === rankIndex + 1
+                  ? theme.palette.primary.main
+                  : "transparent",
+              color:
+                selectedRank === rankIndex + 1
+                  ? "#fff"
+                  : theme.palette.text.primary,
               cursor: "pointer",
             }}
             onClick={() => onClick(option.optionId, rankIndex + 1)}
@@ -113,6 +121,7 @@ export const RankingQuizQuestion: React.FC<RankingQuizQuestionProps> = ({
 
   return (
     <Stack alignItems="center" gap={1}>
+      <Typography>{question.questionText}</Typography>
       <RankingOptionHeader rankingCount={rankingCount} />
       {question.answerOptions.map((option) => (
         <RankingOption
