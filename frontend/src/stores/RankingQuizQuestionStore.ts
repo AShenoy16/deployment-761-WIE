@@ -7,7 +7,7 @@ type RankingQuizQuestionStore = {
   setRanking: (questionNumber: number, optionId: string, rank: number) => void;
 };
 
-export const useRankingStore = create<RankingQuizQuestionStore>((set, get) => ({
+export const useRankingStore = create<RankingQuizQuestionStore>((set) => ({
   rankingsByQuestion: {},
 
   setRanking: (questionNumber: number, optionId: string, rank: number) => {
