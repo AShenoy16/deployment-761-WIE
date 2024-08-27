@@ -2,6 +2,7 @@ import { Box, Button, Stack } from "@mui/material";
 import { useGetQuestions } from "../hooks/useGetQuestions";
 import { useQuizNavigation } from "../hooks/useQuizNavigation";
 import { RankingQuizQuestion } from "../components/quiz/RankingQuizQuestion";
+import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
 import { Question } from "../types/QuestionTypes";
 
 const renderQuestionComponent = (question: Question) => {
@@ -22,6 +23,16 @@ const QuizPage: React.FC = () => {
   const { currentQuestionIndex, nextQuestion, prevQuestion } =
     useQuizNavigation(questions);
   const currentQuestion = questions[currentQuestionIndex];
+
+  const isRankingQuestionAnsweredMap = useRankingQuestionStore(
+    (state) => state.isQuestionAnsweredMap
+  );
+
+  // There might be cases where the questions array is empty, leading to currentQuestion being undefined so we need '?'.
+  const isRankingQuestionAnswered =
+    currentQuestion?.type !== "ranking" ||
+    (currentQuestion?.type === "ranking" &&
+      isRankingQuestionAnsweredMap[currentQuestion.questionNumber]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -44,7 +55,10 @@ const QuizPage: React.FC = () => {
         <Button
           variant="contained"
           onClick={nextQuestion}
-          disabled={currentQuestionIndex === questions.length - 1}
+          disabled={
+            currentQuestionIndex === questions.length - 1 ||
+            !isRankingQuestionAnswered
+          }
         >
           Next
         </Button>

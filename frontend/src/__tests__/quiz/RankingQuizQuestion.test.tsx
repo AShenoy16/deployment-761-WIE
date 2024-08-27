@@ -31,7 +31,7 @@ const rankingQuestion: RankingQuestion = {
 
 describe("RankingQuizQuestion Component", () => {
   beforeEach(() => {
-    useRankingQuestionStore.setState({ rankingsByQuestion: {} });
+    useRankingQuestionStore.setState({ questionRankings: {} });
   });
 
   it("renders the question and options correctly", () => {
@@ -57,7 +57,7 @@ describe("RankingQuizQuestion Component", () => {
 
     // Check if the store was updated correctly
     const state = useRankingQuestionStore.getState();
-    expect(state.rankingsByQuestion[1]["1"]).toBe(1);
+    expect(state.questionRankings[1]["1"]).toBe(1);
   });
 
   it("enforces unique rankings across options", () => {
@@ -73,7 +73,7 @@ describe("RankingQuizQuestion Component", () => {
 
     // Check that the second option has the first rank, and the first option no longer has it
     const state = useRankingQuestionStore.getState();
-    expect(state.rankingsByQuestion[1]["1"]).toBeUndefined();
-    expect(state.rankingsByQuestion[1]["2"]).toBe(1);
+    expect(state.questionRankings[1]["1"]).toBeUndefined();
+    expect(state.questionRankings[1]["2"]).toBe(1);
   });
 });
