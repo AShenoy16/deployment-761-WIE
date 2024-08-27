@@ -31,38 +31,25 @@ const QuizPage: React.FC = () => {
   }
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="space-between"
-      alignItems="flex-start"
-      width="100%"
-      maxWidth={800}
-      margin="auto"
-      padding={2}
-      height="100%"
-    >
-      <Box flexGrow={1} width="100%">
-        {renderQuestionComponent(currentQuestion)}
-      </Box>
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-        width="100%"
-        gap={1}
-        marginTop="auto"
-      >
-        <Button onClick={prevQuestion} disabled={currentQuestionIndex === 0}>
+    <Stack width="100%" maxWidth={800} margin="auto" gap={2} padding={2}>
+      {renderQuestionComponent(currentQuestion)}
+      <Box display="flex" justifyContent="flex-end" width="100%" gap={1}>
+        <Button
+          variant="outlined"
+          onClick={prevQuestion}
+          disabled={currentQuestionIndex === 0}
+        >
           Previous
         </Button>
         <Button
+          variant="contained"
           onClick={nextQuestion}
           disabled={currentQuestionIndex === questions.length - 1}
         >
           Next
         </Button>
       </Box>
-    </Box>
+    </Stack>
   );
 };
 
