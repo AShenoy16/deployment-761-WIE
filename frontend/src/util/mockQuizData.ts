@@ -115,7 +115,7 @@ const mockQuestions: Question[] = [
 ];
 
 // Mock API function
-export const fetchQuizQuestions = async (): Promise<Question[]> => {
+export const mockFetchQuizQuestions = async (): Promise<Question[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(mockQuestions);

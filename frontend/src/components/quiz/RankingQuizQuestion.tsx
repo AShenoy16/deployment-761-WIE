@@ -18,7 +18,7 @@ const RankingOptionHeader: React.FC<RankingOptionHeaderProps> = ({
         {Array.from({ length: rankingCount }).map((_, rankIndex) => (
           <Box
             key={rankIndex}
-            width="2.0625rem"
+            width="2.125rem"
             fontSize="0.875rem"
             display="flex"
             justifyContent="center"
