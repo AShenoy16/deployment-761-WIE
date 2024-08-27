@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 
 import { User } from "../models/userModel";
 import Quiz from "../models/QuizModel";
+import Specialization from "../models/SpecializationModel";
 
 // Dummy data for Quiz
 const quizData = {
@@ -83,6 +84,57 @@ const dummyUsers = [
   { password: "Admin", email: "wen-admin@gmail.com" },
 ];
 
+// Testimonals
+const dummyTestimonials = [
+  { testimonialId: "1", name: "Jane Doe", description: "Engineering was a great choice for me!" },
+  { testimonialId: "2", name: "John Smith", description: "The challenges are rewarding." },
+  { testimonialId: "3", name: "Alice Johnson", description: "A fulfilling career path." },
+];
+
+// specs
+const dummySpecializations = [
+  {
+    name: "Software Engineering",
+    description: "Focus on software development and engineering principles.",
+    photoUrl: "https://example.com/software-engineering.jpg",
+    careerPathways: ["Software Developer", "System Architect", "DevOps Engineer"],
+    startingSalary: 60000,
+    medianSalary: 90000,
+    experiencedSalary: 120000,
+    jobAvailability: "High",
+    testimonials: [dummyTestimonials[0], dummyTestimonials[1]], // Include some testimonials
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    name: "Civil Engineering",
+    description: "Design and construct infrastructure projects.",
+    photoUrl: "https://example.com/civil-engineering.jpg",
+    careerPathways: ["Structural Engineer", "Project Manager", "Urban Planner"],
+    startingSalary: 55000,
+    medianSalary: 85000,
+    experiencedSalary: 110000,
+    jobAvailability: "Medium",
+    testimonials: [dummyTestimonials[2]], // Include a testimonial
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    name: "Electrical Engineering",
+    description: "Work on electrical systems and technologies.",
+    photoUrl: "https://example.com/electrical-engineering.jpg",
+    careerPathways: ["Electrical Engineer", "Electronics Engineer", "Power Systems Engineer"],
+    startingSalary: 58000,
+    medianSalary: 88000,
+    experiencedSalary: 115000,
+    jobAvailability: "High",
+    testimonials: [], // No testimonials
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
+];
+
+
 // This is a standalone program which will populate the database with initial data.
 async function run() {
   console.log("Connecting to database...");
@@ -105,6 +157,12 @@ async function run() {
   await addQuizInfo();
   console.log();
 
+  // add spec info
+  console.log("Adding Spec Info...");
+  await addSpecInfo();
+  console.log();
+
+
   await mongoose.disconnect();
   console.log("Done!");
 }
@@ -112,6 +170,7 @@ async function run() {
 async function clearDatabase() {
   await User.deleteMany({});
   await Quiz.deleteMany({});
+  await Specialization.deleteMany({})
 
   console.log(`Cleared database`);
 }
@@ -129,6 +188,15 @@ async function addQuizInfo() {
   const quiz = new Quiz(quizData);
   await quiz.save();
   console.log(`Quiz Saved _id: ${quiz._id}, quizName = ${quiz.quizName}`);
+}
+
+async function addSpecInfo() {
+  for (let spec of dummySpecializations) {
+    const dbSpec = new Specialization(spec);
+
+    await dbSpec.save();
+    console.log(`Spec Saveded _id${dbSpec._id}, name = ${dbSpec.name}`);
+  }
 }
 
 run();
