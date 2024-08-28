@@ -1,5 +1,12 @@
 import React from "react";
-import { Box, Stack, Typography, Theme, useTheme } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Typography,
+  Theme,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import { RankingQuestion } from "../../types/QuestionTypes";
 import { useRankingQuestionStore } from "../../stores/RankingQuizQuestionStore";
 
@@ -10,10 +17,17 @@ type RankingOptionHeaderProps = {
 const RankingOptionHeader: React.FC<RankingOptionHeaderProps> = ({
   rankingCount,
 }) => {
+  const theme = useTheme<Theme>();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Stack direction="row" gap={2} width="100%">
-      <Box flexGrow={1}></Box>
-      <Box display="flex" gap={1}>
+      <Box
+        display="flex"
+        justifyContent={isSmallScreen ? "center" : "flex-end"}
+        width="100%"
+        gap={1}
+      >
         {Array.from({ length: rankingCount }).map((_, rankIndex) => (
           <Box
             key={rankIndex}
@@ -45,10 +59,17 @@ const RankingOption: React.FC<RankingOptionProps> = ({
   onClick,
 }) => {
   const theme = useTheme<Theme>();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Stack direction="row" alignItems="center" gap={2} width="100%">
+    <Stack
+      direction={isSmallScreen ? "column-reverse" : "row"}
+      alignItems="center"
+      width="100%"
+      gap={2}
+    >
       <Box
+        width="80%"
         borderRadius="50px"
         padding="10px 20px"
         flexGrow={1}
