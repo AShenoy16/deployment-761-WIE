@@ -69,7 +69,7 @@ const RankingOption: React.FC<RankingOptionProps> = ({
       gap={2}
     >
       <Box
-        maxWidth="80%"
+        width="80%"
         borderRadius="50px"
         padding="10px 20px"
         flexGrow={1}
