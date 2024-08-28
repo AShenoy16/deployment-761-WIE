@@ -9,7 +9,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/** REMOVE DEFAULT NAVIGATION LATER */}
-          <Route path="/" element={<Navigate to="/quiz" />} />{" "}
+          <Route path="/" element={<Navigate to="/quiz" />} />
           <Route path="/quiz" element={<QuizPage />} />
         </Routes>
       </BrowserRouter>
