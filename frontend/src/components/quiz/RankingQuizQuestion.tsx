@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Stack, Typography, Theme, useTheme } from "@mui/material";
 import { RankingQuestion } from "../../types/QuestionTypes";
-import { useRankingStore } from "../../stores/RankingQuizQuestionStore";
+import { useRankingQuestionStore } from "../../stores/RankingQuizQuestionStore";
 
 type RankingOptionHeaderProps = {
   rankingCount: number;
@@ -108,13 +108,20 @@ type RankingQuizQuestionProps = {
 export const RankingQuizQuestion: React.FC<RankingQuizQuestionProps> = ({
   question,
 }) => {
-  const setRanking = useRankingStore((state) => state.setRanking);
-  const rankings = useRankingStore(
-    (state) => state.rankingsByQuestion[question.questionNumber] || {}
+  const setQuestionRanking = useRankingQuestionStore(
+    (state) => state.setQuestionRanking
+  );
+  const setIsQuestionAnswered = useRankingQuestionStore(
+    (state) => state.setIsQuestionAnswered
+  );
+  const rankings = useRankingQuestionStore(
+    (state) => state.questionRankings[question.questionNumber] || {}
   );
 
   const handleRankingClick = (optionId: string, rank: number) => {
-    setRanking(question.questionNumber, optionId, rank);
+    const optionCount = question.answerOptions.length;
+    setQuestionRanking(question.questionNumber, optionId, rank);
+    setIsQuestionAnswered(question.questionNumber, optionCount);
   };
 
   const rankingCount = question.answerOptions.length;
