@@ -42,7 +42,7 @@ const QuizPage: React.FC = () => {
   }
 
   return (
-    <Stack width="100%" maxWidth={800} margin="auto" gap={2} padding={2}>
+    <Stack width="100%" maxWidth={800} margin="auto" gap={2}>
       {renderQuestionComponent(currentQuestion)}
       <Box display="flex" justifyContent="flex-end" width="100%" gap={1}>
         <Button
