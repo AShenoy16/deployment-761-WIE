@@ -11,7 +11,7 @@ const RankingOptionHeader: React.FC<RankingOptionHeaderProps> = ({
   rankingCount,
 }) => {
   return (
-    <Stack direction="row" gap={2} width="100%" maxWidth={800}>
+    <Stack direction="row" gap={2} width="100%">
       <Box flexGrow={1}></Box>
       <Box display="flex" gap={1}>
         {Array.from({ length: rankingCount }).map((_, rankIndex) => (
@@ -47,13 +47,7 @@ const RankingOption: React.FC<RankingOptionProps> = ({
   const theme = useTheme<Theme>();
 
   return (
-    <Stack
-      direction="row"
-      alignItems="center"
-      gap={2}
-      width="100%"
-      maxWidth={800}
-    >
+    <Stack direction="row" alignItems="center" gap={2} width="100%">
       <Box
         borderRadius="50px"
         padding="10px 20px"

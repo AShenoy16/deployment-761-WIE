@@ -92,8 +92,8 @@ const mockQuestions: Question[] = [
     questionNumber: 5,
     sliderRange: {
       sliderId: "1",
-      min: 0,
-      max: 10,
+      min: 1,
+      max: 5,
       weightings: { frontend: [0, 10], backend: [0, 5] },
     },
     createdAt: new Date(),
@@ -105,8 +105,8 @@ const mockQuestions: Question[] = [
     questionNumber: 6,
     sliderRange: {
       sliderId: "2",
-      min: 0,
-      max: 10,
+      min: 1,
+      max: 5,
       weightings: { cloud: [0, 10], devOps: [0, 7] },
     },
     createdAt: new Date(),

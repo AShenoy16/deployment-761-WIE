@@ -1,5 +1,16 @@
-import { Typography, Slider } from "@mui/material";
-import { useSliderStore } from "../../stores/SliderQuizQuestionStore";
+import {
+  useMediaQuery,
+  Stack,
+  Typography,
+  Slider,
+  useTheme,
+} from "@mui/material";
+import { useSliderQuestionStore } from "../../stores/SliderQuizQuestionStore";
+import { SliderQuestion } from "../../types/QuestionTypes";
+
+type SliderQuizQuestionProps = {
+  question: SliderQuestion;
+};
 
 const sliderLabels = [
   "Strongly Disagree", // 1
@@ -9,18 +20,25 @@ const sliderLabels = [
   "Strongly Agree", // 5
 ];
 
-export const SliderQuizQuestion = () => {
-  const { selectedValue, setSelectedValue } = useSliderStore();
+export const SliderQuizQuestion: React.FC<SliderQuizQuestionProps> = ({
+  question,
+}) => {
+  const theme = useTheme();
+  // Breakpoint for small screens
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const { selectedValue, setSelectedValue } = useSliderQuestionStore();
 
-  const handleSliderChange = (event: Event, newValue: number | number[]) => {
-    setSelectedValue(newValue as number);
+  const handleSliderChange = (_event: Event, newValue: number | number[]) => {
+    setSelectedValue(question.questionNumber, newValue as number);
   };
 
   return (
-    <div>
-      <Typography variant="h6">Your Opinion</Typography>
+    <Stack gap={4} alignItems="center" width="100%" mb={4}>
+      <Typography>{question.questionText}</Typography>
       <Slider
-        value={selectedValue}
+        // Change orientation based on screen size
+        orientation={isSmallScreen ? "vertical" : "horizontal"}
+        value={selectedValue[question.questionNumber] || 3}
         onChange={handleSliderChange}
         aria-labelledby="slider-question"
         step={1}
@@ -28,10 +46,13 @@ export const SliderQuizQuestion = () => {
           value: index + 1,
           label: label,
         }))}
-        min={1}
-        max={sliderLabels.length}
+        min={question.sliderRange.min}
+        max={question.sliderRange.max}
+        sx={{
+          width: isSmallScreen ? "5%" : "80%",
+          height: isSmallScreen ? 200 : "10%",
+        }}
       />
-      <Typography>{sliderLabels[selectedValue - 1]}</Typography>
-    </div>
+    </Stack>
   );
 };

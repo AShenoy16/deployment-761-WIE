@@ -1,11 +1,16 @@
 import { create } from "zustand";
 
 type SliderQuizQuestionStore = {
-  selectedValue: number;
-  setSelectedValue: (value: number) => void;
+  selectedValue: { [questionNumber: number]: number };
+  setSelectedValue: (questionNumber: number, value: number) => void;
 };
 
-export const useSliderStore = create<SliderQuizQuestionStore>((set) => ({
-  selectedValue: 3, // default value of neutral
-  setSelectedValue: (value: number) => set({ selectedValue: value }),
-}));
+export const useSliderQuestionStore = create<SliderQuizQuestionStore>(
+  (set) => ({
+    selectedValue: {}, // default value of neutral
+    setSelectedValue: (questionNumber: number, value: number) =>
+      set((state) => ({
+        selectedValue: { ...state.selectedValue, [questionNumber]: value },
+      })),
+  })
+);
