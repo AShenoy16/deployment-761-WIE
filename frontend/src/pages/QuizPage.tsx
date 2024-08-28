@@ -4,6 +4,7 @@ import { useQuizNavigation } from "../hooks/useQuizNavigation";
 import { RankingQuizQuestion } from "../components/quiz/RankingQuizQuestion";
 import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
 import { Question } from "../types/QuestionTypes";
+import { SliderQuizQuestion } from "../components/quiz/SliderQuizQuestion";
 
 const renderQuestionComponent = (question: Question) => {
   switch (question.type) {
@@ -12,7 +13,7 @@ const renderQuestionComponent = (question: Question) => {
     case "ranking":
       return <RankingQuizQuestion question={question} />;
     case "slider":
-      return null; // TODO: Return the actual Slider Question component when implemented
+      return <SliderQuizQuestion question={question} />; // TODO: Return the actual Slider Question component when implemented
     default:
       throw new Error("Invalid question type");
   }
