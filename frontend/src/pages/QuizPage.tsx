@@ -1,10 +1,20 @@
-import { Box, Button, Stack } from "@mui/material";
+import React from "react";
+import {
+  Box,
+  Button,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { useGetQuestions } from "../hooks/useGetQuestions";
 import { useQuizNavigation } from "../hooks/useQuizNavigation";
+import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 import { RankingQuizQuestion } from "../components/quiz/RankingQuizQuestion";
-import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
-import { Question } from "../types/QuestionTypes";
 import { SliderQuizQuestion } from "../components/quiz/SliderQuizQuestion";
+import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
+import { useQuizStore } from "../stores/QuizStore";
+import { Question } from "../types/QuestionTypes";
 
 const renderQuestionComponent = (question: Question) => {
   switch (question.type) {
@@ -13,10 +23,33 @@ const renderQuestionComponent = (question: Question) => {
     case "ranking":
       return <RankingQuizQuestion question={question} />;
     case "slider":
-      return <SliderQuizQuestion question={question} />; // TODO: Return the actual Slider Question component when implemented
+      return <SliderQuizQuestion question={question} />;
     default:
       throw new Error("Invalid question type");
   }
+};
+
+const StartingScreen: React.FC = () => {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const startQuiz = useQuizStore((state) => state.startQuiz);
+
+  return (
+    <Stack
+      alignItems="center"
+      justifyContent="center"
+      gap={2}
+      width="100%"
+      height="100%"
+    >
+      <Typography variant={isSmallScreen ? "h4" : "h2"} textAlign="center">
+        Find your spec with this quiz!
+      </Typography>
+      <Button variant="contained" size="large" onClick={startQuiz}>
+        Start
+      </Button>
+    </Stack>
+  );
 };
 
 const QuizPage: React.FC = () => {
@@ -24,6 +57,8 @@ const QuizPage: React.FC = () => {
   const { currentQuestionIndex, nextQuestion, prevQuestion } =
     useQuizNavigation(questions);
   const currentQuestion = questions[currentQuestionIndex];
+
+  const hasStarted = useQuizStore((state) => state.hasStarted);
 
   const isRankingQuestionAnsweredMap = useRankingQuestionStore(
     (state) => state.isQuestionAnsweredMap
@@ -36,34 +71,46 @@ const QuizPage: React.FC = () => {
       isRankingQuestionAnsweredMap[currentQuestion.questionNumber]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinnerScreen />;
   }
   if (isError) {
     return <div>Error loading questions</div>;
   }
 
   return (
-    <Stack width="100%" maxWidth={800} margin="auto" gap={2}>
-      {renderQuestionComponent(currentQuestion)}
-      <Box display="flex" justifyContent="flex-end" width="100%" gap={1}>
-        <Button
-          variant="outlined"
-          onClick={prevQuestion}
-          disabled={currentQuestionIndex === 0}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="contained"
-          onClick={nextQuestion}
-          disabled={
-            currentQuestionIndex === questions.length - 1 ||
-            !isRankingQuestionAnswered
-          }
-        >
-          Next
-        </Button>
-      </Box>
+    <Stack
+      width="100%"
+      maxWidth={800}
+      margin="auto"
+      gap={2}
+      paddingX={{ xs: 2, sm: 2, md: 0 }}
+    >
+      {hasStarted ? (
+        <>
+          {renderQuestionComponent(currentQuestion)}
+          <Box display="flex" justifyContent="flex-end" width="100%" gap={1}>
+            <Button
+              variant="outlined"
+              onClick={prevQuestion}
+              disabled={currentQuestionIndex === 0}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="contained"
+              onClick={nextQuestion}
+              disabled={
+                currentQuestionIndex === questions.length - 1 ||
+                !isRankingQuestionAnswered
+              }
+            >
+              Next
+            </Button>
+          </Box>
+        </>
+      ) : (
+        <StartingScreen />
+      )}
     </Stack>
   );
 };
