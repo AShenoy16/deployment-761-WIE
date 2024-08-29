@@ -99,7 +99,7 @@ const Footer: React.FC = () => {
       <Box>
         <MuiLink component={Link} to="/login">
           <Typography variant="body1" color="white">
-            Login
+            Staff Login
           </Typography>
         </MuiLink>
       </Box>
