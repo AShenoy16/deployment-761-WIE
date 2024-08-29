@@ -3,7 +3,6 @@ import uoaLogo from "../assets/uoa-logo.png";
 import {
   AppBar,
   Toolbar,
-  Typography,
   Box,
   Link as MuiLink,
   IconButton,
@@ -55,27 +54,23 @@ const Navbar: React.FC = () => {
 
   return (
     <AppBar position="static" sx={{ padding: "0.5rem 2rem" }}>
-      <Toolbar>
-        <Box flexGrow={1}>
-          <Typography variant="h6" component="div">
-            <MuiLink component={Link} to="/" color="inherit" underline="none">
-              <Box
-                display="flex"
-                alignItems="center"
-                component="img"
-                src={uoaLogo}
-                alt="UoA logo"
-                sx={{
-                  height: {
-                    xs: "2.5rem",
-                    sm: "3.5rem",
-                    md: "4.5rem",
-                  },
-                }}
-              />
-            </MuiLink>
-          </Typography>
-        </Box>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <MuiLink component={Link} to="/" color="inherit" underline="none">
+          <Box
+            display="flex"
+            alignItems="center"
+            component="img"
+            src={uoaLogo}
+            alt="UoA logo"
+            sx={{
+              height: {
+                xs: "2.5rem",
+                sm: "3.5rem",
+                md: "4.5rem",
+              },
+            }}
+          />
+        </MuiLink>
         <Box display={{ xs: "none", md: "flex" }} gap={8}>
           <MuiLink component={Link} to="/" color="inherit" underline="none">
             Home
