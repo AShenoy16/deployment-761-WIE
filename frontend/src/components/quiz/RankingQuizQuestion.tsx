@@ -75,9 +75,7 @@ const RankingOption: React.FC<RankingOptionProps> = ({
         flexGrow={1}
         border="1px solid #ccc"
         justifyContent="flex-start"
-        sx={{
-          backgroundColor: "rgba(0, 0, 0, 0.04)",
-        }}
+        bgcolor="rgba(0, 0, 0, 0.04)"
       >
         <Typography variant="body1" color="textPrimary">
           {option.text}
@@ -97,15 +95,17 @@ const RankingOption: React.FC<RankingOptionProps> = ({
             display="flex"
             justifyContent="center"
             alignItems="center"
+            bgcolor={
+              selectedRank === rankIndex + 1
+                ? theme.palette.primary.main
+                : "transparent"
+            }
+            color={
+              selectedRank === rankIndex + 1
+                ? "#fff"
+                : theme.palette.text.primary
+            }
             sx={{
-              backgroundColor:
-                selectedRank === rankIndex + 1
-                  ? theme.palette.primary.main
-                  : "transparent",
-              color:
-                selectedRank === rankIndex + 1
-                  ? "#fff"
-                  : theme.palette.text.primary,
               cursor: "pointer",
             }}
             onClick={() => onClick(option.optionId, rankIndex + 1)}

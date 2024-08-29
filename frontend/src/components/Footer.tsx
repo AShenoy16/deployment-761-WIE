@@ -28,6 +28,7 @@ const TikTokIcon = () => {
   );
 };
 
+// TODO: Edit links later
 const Footer: React.FC = () => {
   const theme = useTheme();
 

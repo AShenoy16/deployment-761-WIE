@@ -13,7 +13,7 @@ const renderQuestionComponent = (question: Question) => {
     case "ranking":
       return <RankingQuizQuestion question={question} />;
     case "slider":
-      return <SliderQuizQuestion question={question} />; // TODO: Return the actual Slider Question component when implemented
+      return <SliderQuizQuestion question={question} />;
     default:
       throw new Error("Invalid question type");
   }
