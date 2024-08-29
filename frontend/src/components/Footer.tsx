@@ -6,7 +6,6 @@ import {
   IconButton,
   useTheme,
   SvgIcon,
-  useMediaQuery,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -32,15 +31,10 @@ const TikTokIcon = () => {
 // TODO: Edit links later
 const Footer: React.FC = () => {
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-  if (isSmallScreen) {
-    return null; // Do not render the footer on small screens
-  }
 
   return (
     <Box
-      display="flex"
+      display={{ xs: "none", md: "flex" }}
       justifyContent="space-between"
       alignItems="center"
       padding="0.5rem 3.5rem"

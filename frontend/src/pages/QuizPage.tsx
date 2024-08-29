@@ -77,17 +77,17 @@ const QuizPage: React.FC = () => {
   }
 
   return (
-    <Stack width="100%" maxWidth={800} margin="auto" gap={2}>
+    <Stack
+      width="100%"
+      maxWidth={800}
+      margin="auto"
+      gap={2}
+      paddingX={{ xs: 2, sm: 2, md: 0 }}
+    >
       {hasStarted ? (
         <>
           {renderQuestionComponent(currentQuestion)}
-          <Box
-            display="flex"
-            justifyContent="flex-end"
-            width="100%"
-            gap={1}
-            paddingX={{ xs: 2, md: 0 }}
-          >
+          <Box display="flex" justifyContent="flex-end" width="100%" gap={1}>
             <Button
               variant="outlined"
               onClick={prevQuestion}

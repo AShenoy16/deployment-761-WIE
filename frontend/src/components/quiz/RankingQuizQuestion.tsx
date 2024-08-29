@@ -143,7 +143,7 @@ export const RankingQuizQuestion: React.FC<RankingQuizQuestionProps> = ({
 
   return (
     <Stack alignItems="center" gap={1}>
-      <Typography>{question.questionText}</Typography>
+      <Typography textAlign="center">{question.questionText}</Typography>
       <RankingOptionHeader rankingCount={rankingCount} />
       {question.answerOptions.map((option) => (
         <RankingOption
