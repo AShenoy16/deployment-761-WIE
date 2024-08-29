@@ -1,11 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { lightTheme } from "./theme";
 import QuizPage from "./pages/QuizPage";
 
 function App() {
   return (
     <ThemeProvider theme={lightTheme}>
+      <CssBaseline />
       <BrowserRouter>
         <Routes>
           {/** REMOVE DEFAULT NAVIGATION LATER */}
