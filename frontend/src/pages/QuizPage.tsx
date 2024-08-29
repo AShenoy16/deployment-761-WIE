@@ -81,7 +81,13 @@ const QuizPage: React.FC = () => {
       {hasStarted ? (
         <>
           {renderQuestionComponent(currentQuestion)}
-          <Box display="flex" justifyContent="flex-end" width="100%" gap={1}>
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            width="100%"
+            gap={1}
+            paddingX={{ xs: 2, md: 0 }}
+          >
             <Button
               variant="outlined"
               onClick={prevQuestion}
