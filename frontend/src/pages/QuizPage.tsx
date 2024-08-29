@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useGetQuestions } from "../hooks/useGetQuestions";
 import { useQuizNavigation } from "../hooks/useQuizNavigation";
+import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 import { RankingQuizQuestion } from "../components/quiz/RankingQuizQuestion";
 import { SliderQuizQuestion } from "../components/quiz/SliderQuizQuestion";
 import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
@@ -70,7 +71,7 @@ const QuizPage: React.FC = () => {
       isRankingQuestionAnsweredMap[currentQuestion.questionNumber]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinnerScreen />;
   }
   if (isError) {
     return <div>Error loading questions</div>;
