@@ -18,8 +18,6 @@ import { Question } from "../types/QuestionTypes";
 import { useNavigate } from "react-router-dom";
 import { MCQQuizQuestion } from "../components/quiz/MCQQuizQuestion";
 import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
-import { MCQQuizQuestion } from "../components/quiz/MCQQuizQuestion";
-import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
 
 const renderQuestionComponent = (question: Question) => {
   switch (question.type) {
