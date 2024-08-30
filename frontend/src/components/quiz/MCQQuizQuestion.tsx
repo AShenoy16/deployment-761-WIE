@@ -16,6 +16,7 @@ const MCQOption: React.FC<MCQOptionProps> = ({ option, questionId }) => {
 
   return (
     <Box
+      role="option"
       display="flex"
       sx={{
         width: "10rem",
