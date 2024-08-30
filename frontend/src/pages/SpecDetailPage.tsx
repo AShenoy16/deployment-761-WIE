@@ -26,7 +26,6 @@ const SpecDetailPage = () => {
           height: "300px", // Set a fixed height for the container
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
         }}
       >
         {/* Overlay */}
@@ -47,19 +46,26 @@ const SpecDetailPage = () => {
             position: "relative",
             zIndex: 1,
             textAlign: "left", // Ensure the text is left-aligned
+            maxWidth: "600px",
+            marginLeft: "50px",
           }}
         >
-          <Typography variant="h3" component="h1" gutterBottom>
+          <Typography
+            variant="h3"
+            component="h1"
+            gutterBottom
+            sx={{ fontWeight: "bold" }}
+          >
             Software Engineering
           </Typography>
           <Box
-          sx={{
-            position: "relative",
-            zIndex: 1,
-            textAlign: "left", // Ensure the text is left-aligned
-          }}
-        ></Box>
-          <Typography variant="h6" component="p" >
+            sx={{
+              position: "relative",
+              zIndex: 1,
+              textAlign: "left", // Ensure the text is left-aligned
+            }}
+          ></Box>
+          <Typography variant="h6" component="p">
             Software engineers are problem-solvers who design, develop, and
             optimize software systems that power the digital world.
           </Typography>
@@ -71,15 +77,19 @@ const SpecDetailPage = () => {
         <Grid item xs={12} md={6}>
           <Card sx={{ height: "100%" }}>
             <CardContent>
-              <Typography variant="h4" gutterBottom>
+              <Typography
+                variant="h4"
+                gutterBottom
+                sx={{ color: "#00467F", fontWeight: "bold" }}
+              >
                 Impact
               </Typography>
-              <Typography variant="body1" paragraph>
+              <Typography variant="body1" paragraph sx={{ color: "#00467F" }}>
                 Software engineering is an innovative field that combines
                 creativity and problem-solving to build the technology we use
                 every day.
               </Typography>
-              <Typography variant="body1" paragraph>
+              <Typography variant="body1" paragraph sx={{ color: "#00467F" }}>
                 It allows you to design, develop, and maintain software systems
                 that solve real-world challenges, from healthcare to business
                 solutions.
@@ -90,14 +100,14 @@ const SpecDetailPage = () => {
         <Grid item xs={12} md={6}>
           <Card sx={{ height: "100%" }}>
             <CardContent>
-              <Typography variant="body1" paragraph>
+              <Typography variant="body1" paragraph sx={{ color: "#00467F" }}>
                 As a software engineer, you have the opportunity to make a
                 significant impact by creating solutions that improve people’s
                 lives and businesses. Your work can streamline processes,
                 enhance user experiences, and bring innovation to industries
                 like healthcare, education, and finance.
               </Typography>
-              <Typography variant="body1" paragraph>
+              <Typography variant="body1" paragraph sx={{ color: "#00467F" }}>
                 By building scalable, reliable software, you can help companies
                 grow, empower individuals through accessible technology, and
                 contribute to solving global challenges.
@@ -117,7 +127,7 @@ const SpecDetailPage = () => {
           borderRadius: "8px",
         }}
       >
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
           Career Pathways
         </Typography>
         <Typography variant="h6" gutterBottom>
