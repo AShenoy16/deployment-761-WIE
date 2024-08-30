@@ -1,25 +1,18 @@
-import {
-  Box,
-  Stack,
-  Theme,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Box, Stack, Typography, useTheme } from "@mui/material";
 import React from "react";
-import { MCQQuestion } from "../../types/QuestionTypes";
-import { MCQAnswerOption } from "../../types/QuestionTypes";
 import { useMCQQuestionStore } from "../../stores/MCQQuestionStore";
+import { MCQAnswerOption, MCQQuestion } from "../../types/QuestionTypes";
 
 type MCQOptionProps = {
   option: MCQAnswerOption;
+  questionId: number;
 };
 
-const MCQOption: React.FC<MCQOptionProps> = ({ option }) => {
+const MCQOption: React.FC<MCQOptionProps> = ({ option, questionId }) => {
   const theme = useTheme();
   const { selectedOptionId, selectOption } = useMCQQuestionStore();
 
-  const isSelected = selectedOptionId === option.optionId;
+  const isSelected = selectedOptionId[questionId] === option.optionId;
 
   return (
     <Box
@@ -37,23 +30,25 @@ const MCQOption: React.FC<MCQOptionProps> = ({ option }) => {
         borderColor: isSelected ? theme.palette.primary.main : "inherit",
         transition: "all 0.3s ease",
       }}
-      alignItems={"center"}
-      justifyContent={"center"}
-      onClick={() => selectOption(option.optionId)}
+      alignItems="center"
+      justifyContent="center"
+      onClick={() => selectOption(questionId, option.optionId)}
     >
-      <Typography textAlign={"center"}>{option.text}</Typography>
+      <Typography textAlign="center">{option.text}</Typography>
     </Box>
   );
 };
 
-type MCQQuestionProps = {
+type MCQQuizQuestionProps = {
   question: MCQQuestion;
 };
 
-export const MCQQuizQuestion: React.FC<MCQQuestionProps> = ({ question }) => {
+export const MCQQuizQuestion: React.FC<MCQQuizQuestionProps> = ({
+  question,
+}) => {
   return (
     <Stack gap={4} alignItems="center" width="100%" mb={4}>
-      <Typography>{question.questionText}</Typography>
+      <Typography variant="h6">{question.questionText}</Typography>
       <Stack
         direction="row"
         flexWrap="wrap"
@@ -64,7 +59,11 @@ export const MCQQuizQuestion: React.FC<MCQQuestionProps> = ({ question }) => {
         mb={4}
       >
         {question.answerOptions.map((option) => (
-          <MCQOption key={option.optionId} option={option} />
+          <MCQOption
+            key={option.optionId}
+            option={option}
+            questionId={question.questionNumber} // Pass the question ID
+          />
         ))}
       </Stack>
     </Stack>
