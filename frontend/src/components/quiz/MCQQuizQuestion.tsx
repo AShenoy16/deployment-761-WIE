@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { MCQQuestion } from "../../types/QuestionTypes";
 import { MCQAnswerOption } from "../../types/QuestionTypes";
-import { useMCQStore } from "../../stores/MCQQuestionStore";
+import { useMCQQuestionStore } from "../../stores/MCQQuestionStore";
 
 type MCQOptionProps = {
   option: MCQAnswerOption;
@@ -17,7 +17,7 @@ type MCQOptionProps = {
 
 const MCQOption: React.FC<MCQOptionProps> = ({ option }) => {
   const theme = useTheme();
-  const { selectedOptionId, selectOption } = useMCQStore();
+  const { selectedOptionId, selectOption } = useMCQQuestionStore();
 
   const isSelected = selectedOptionId === option.optionId;
 

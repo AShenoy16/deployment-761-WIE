@@ -5,7 +5,7 @@ type MCQState = {
   selectOption: (optionId: string) => void;
 };
 
-export const useMCQStore = create<MCQState>((set) => ({
+export const useMCQQuestionStore = create<MCQState>((set) => ({
   selectedOptionId: null,
   selectOption: (optionId) => set({ selectedOptionId: optionId }),
 }));
