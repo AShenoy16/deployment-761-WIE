@@ -55,7 +55,8 @@ export const MCQQuizQuestion: React.FC<MCQQuestionProps> = ({ question }) => {
     <Stack gap={4} alignItems="center" width="100%" mb={4}>
       <Typography>{question.questionText}</Typography>
       <Stack
-        direction={"row"}
+        direction="row"
+        flexWrap="wrap"
         gap={4}
         alignItems="center"
         justifyContent="center"
