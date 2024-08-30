@@ -15,11 +15,12 @@ import { SliderQuizQuestion } from "../components/quiz/SliderQuizQuestion";
 import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
 import { useQuizStore } from "../stores/QuizStore";
 import { Question } from "../types/QuestionTypes";
+import { MCQQuizQuestion } from "../components/quiz/MCQQuizQuestion";
 
 const renderQuestionComponent = (question: Question) => {
   switch (question.type) {
     case "mcq":
-      return null; // TODO: Return the actual MCQ Question component when implemented
+      return <MCQQuizQuestion question={question} />;
     case "ranking":
       return <RankingQuizQuestion question={question} />;
     case "slider":
