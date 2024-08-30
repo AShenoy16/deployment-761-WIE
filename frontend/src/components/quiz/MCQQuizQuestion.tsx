@@ -41,7 +41,7 @@ const MCQOption: React.FC<MCQOptionProps> = ({ option }) => {
       justifyContent={"center"}
       onClick={() => selectOption(option.optionId)}
     >
-      <Typography>{option.text}</Typography>
+      <Typography textAlign={"center"}>{option.text}</Typography>
     </Box>
   );
 };
