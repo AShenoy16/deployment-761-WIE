@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { SpecSummary } from "../../util/mockResultsData";
-import { SpecCard } from "../../pages/QuizResultsPage";
+import SpecCard from "../../components/quiz/SpecCard";
 
 // Mock data for the test
 const mockSpec: SpecSummary = {
