@@ -62,7 +62,6 @@ export interface IQuiz extends Document {
   updatedAt: Date;
 }
 
-
 export interface Testimonial extends Document {
   testimonialId: string;
   name: string;
