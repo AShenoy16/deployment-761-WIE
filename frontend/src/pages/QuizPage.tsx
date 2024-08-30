@@ -15,11 +15,13 @@ import { SliderQuizQuestion } from "../components/quiz/SliderQuizQuestion";
 import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
 import { useQuizStore } from "../stores/QuizStore";
 import { Question } from "../types/QuestionTypes";
+import { MCQQuizQuestion } from "../components/quiz/MCQQuizQuestion";
+import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
 
 const renderQuestionComponent = (question: Question) => {
   switch (question.type) {
     case "mcq":
-      return null; // TODO: Return the actual MCQ Question component when implemented
+      return <MCQQuizQuestion question={question} />;
     case "ranking":
       return <RankingQuizQuestion question={question} />;
     case "slider":
@@ -64,11 +66,20 @@ const QuizPage: React.FC = () => {
     (state) => state.isQuestionAnsweredMap
   );
 
+  const isMCQQuestionAnsweredMap = useMCQQuestionStore(
+    (state) => state.isQuestionAnsweredMap
+  );
+
   // There might be cases where the questions array is empty, leading to currentQuestion being undefined so we need '?'.
   const isRankingQuestionAnswered =
     currentQuestion?.type !== "ranking" ||
     (currentQuestion?.type === "ranking" &&
       isRankingQuestionAnsweredMap[currentQuestion.questionNumber]);
+
+  const isMCQQuestionAnswered =
+    currentQuestion?.type !== "mcq" ||
+    (currentQuestion?.type === "mcq" &&
+      isMCQQuestionAnsweredMap[currentQuestion.questionNumber]);
 
   if (isLoading) {
     return <LoadingSpinnerScreen />;
@@ -101,7 +112,8 @@ const QuizPage: React.FC = () => {
               onClick={nextQuestion}
               disabled={
                 currentQuestionIndex === questions.length - 1 ||
-                !isRankingQuestionAnswered
+                !isRankingQuestionAnswered ||
+                !isMCQQuestionAnswered
               }
             >
               Next
