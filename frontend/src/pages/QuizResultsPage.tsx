@@ -6,7 +6,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Paper,
   Stack,
   Typography,
 } from "@mui/material";
@@ -45,7 +44,7 @@ const SpecCard = () => {
   ];
 
   return (
-    <>
+    <Box>
       <Typography variant="h5">Software Engineering</Typography>
       <Card
         onMouseEnter={() => setHovered(true)}
@@ -93,7 +92,7 @@ const SpecCard = () => {
           </Box>
         )}
       </Card>
-    </>
+    </Box>
   );
 };
 
