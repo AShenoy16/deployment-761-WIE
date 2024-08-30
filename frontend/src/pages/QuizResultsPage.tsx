@@ -10,60 +10,79 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { useGetQuizResults } from "../hooks/useGetQuizResults";
+import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
+import { SpecSummary } from "../util/mockResultsData";
 
 const QuizResultsPage = () => {
+  const { quizResults, isLoading, isError } = useGetQuizResults();
+
+  if (isLoading) {
+    return <LoadingSpinnerScreen />;
+  }
+
+  if (isError) {
+    return <div>Error loading quiz results</div>;
+  }
+
   return (
-    <Stack>
-      <Typography variant="h2">Here's Your Top 3</Typography>
-      <Typography variant="body1">Click to find out more!</Typography>
+    <Stack alignItems="center" margin="auto" gap={2}>
+      <Box>
+        <Typography variant="h2">Here's Your Top 3</Typography>
+        <Typography variant="body1" textAlign="center">
+          Click to find out more!
+        </Typography>
+      </Box>
 
-      {
-        // cards of top 3 recommended specs go here
-      }
-
-      <SpecCard />
+      <Stack direction="row" gap={2}>
+        {quizResults.map((spec, index) => (
+          <SpecCard key={index} {...spec} />
+        ))}
+      </Stack>
 
       {
         // todo: implement download functionality & error and success alerts
       }
-      <Typography>Download Results</Typography>
+      <Typography variant="h5">Download Results</Typography>
     </Stack>
   );
 };
 
-// todo: add props for spec data
-const SpecCard = () => {
+const SpecCard: React.FC<SpecSummary> = ({
+  name,
+  description,
+  careerPathways,
+}) => {
   const [hovered, setHovered] = useState(false);
 
-  const careerPathways = [
-    "Frontend Developer",
-    "Backend Developer",
-    "Full Stack Developer",
-    "DevOps Engineer",
-    "Software Architect",
-  ];
-
   return (
-    <Box>
-      <Typography variant="h5">Software Engineering</Typography>
+    <Stack
+      alignItems="center"
+      justifyContent="center"
+      p={2}
+      gap={1}
+      width="100%"
+    >
+      <Typography variant="h5">{name}</Typography>
       <Card
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         sx={{
           backgroundColor: "#00467F",
-          maxWidth: 250,
-          minHeight: 300,
-          borderRadius: "0.75rem",
+          width: 350,
+          minHeight: 400,
+          borderRadius: "2rem",
           position: "relative", // Ensure content on top is positioned correctly
-          overflow: "hidden", // Hide any overflow
           "&:hover": {
             cursor: "pointer",
           },
         }}
       >
         <CardContent sx={{ color: "white" }}>
-          <Typography variant="h6">Career Pathways</Typography>
-          <List sx={{ listStyleType: "disc", pl: 1 }}>
+          <Typography variant="h6" textAlign="center">
+            Career Pathways
+          </Typography>
+          <List sx={{ listStyleType: "disc", pl: 2 }}>
             {careerPathways.map((pathway, index) => (
               <ListItem key={index} sx={{ display: "list-item", p: 0 }}>
                 <ListItemText primary={pathway} />
@@ -77,6 +96,7 @@ const SpecCard = () => {
               position: "absolute",
               top: 0,
               left: 0,
+              padding: 1,
               width: "100%",
               height: "100%",
               backgroundColor: "rgba(0, 0, 0, 0.7)", // Semi-transparent overlay
@@ -87,12 +107,12 @@ const SpecCard = () => {
               alignItems: "center",
             }}
           >
-            <Typography>Software Engineers are problem solvers</Typography>
+            <Typography textAlign="center">{description}</Typography>
             <Link href="/">Click to find out more</Link>
           </Box>
         )}
       </Card>
-    </Box>
+    </Stack>
   );
 };
 
