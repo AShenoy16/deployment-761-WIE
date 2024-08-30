@@ -48,7 +48,7 @@ const QuizResultsPage = () => {
   );
 };
 
-const SpecCard: React.FC<SpecSummary> = ({
+export const SpecCard: React.FC<SpecSummary> = ({
   name,
   description,
   careerPathways,
@@ -67,6 +67,7 @@ const SpecCard: React.FC<SpecSummary> = ({
       <Card
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
+        role="button"
         sx={{
           backgroundColor: "#00467F",
           width: 350,
