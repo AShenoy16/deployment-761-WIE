@@ -1,10 +1,18 @@
 import { Request, Response } from "express";
 import { QuizSubmissionRequest } from "../types/quizTypes";
-import { processQuizSubmission } from "../services/quizService";
+import { getSpecQuiz, processQuizSubmission } from "../services/quizService";
 import { isQuizSubmissionRequest } from "../validation/quizValidation";
 
 export const getQuiz = async (req: Request, res: Response) => {
-  return res.status(200).json({ message: "TODO implement quiz endpoints" });
+
+  const quiz = await getSpecQuiz()
+
+  if(!quiz){
+    return res.status(200).json(quiz)
+  }
+
+  return res.status(404).send({message: "Quiz Not Found"})
+  
 };
 
 /**

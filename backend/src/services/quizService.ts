@@ -1,4 +1,5 @@
 import { quizResults } from "../constants/quizConstants";
+import Quiz from "../models/QuizModel";
 import { QuizSubmissionRequest } from "../types/quizTypes";
 
 /**
@@ -17,7 +18,6 @@ export const processQuizSubmission = async (quizSubmission: QuizSubmissionReques
     // loop through all question types -> ensuring it is not empty/undefined
     
 
-
     // update specific weightings in the hashmap of the spec:score
 
     // return top three specs
@@ -25,4 +25,16 @@ export const processQuizSubmission = async (quizSubmission: QuizSubmissionReques
 
 
     return 1;
+}
+
+/**
+ * This will return the quiz in the database if present, otherwise null
+ * @returns Quiz or null 
+ */
+export const getSpecQuiz = async () =>  {
+    const quiz = await Quiz.find({
+        quizName: "Engineering Specialization Quiz"
+    })
+
+    return quiz;
 }
