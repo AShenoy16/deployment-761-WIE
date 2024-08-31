@@ -1,3 +1,4 @@
+import { quizResults } from "../constants/quizConstants";
 import { QuizSubmissionRequest } from "../types/quizTypes";
 
 /**
@@ -7,7 +8,21 @@ import { QuizSubmissionRequest } from "../types/quizTypes";
  */
 export const processQuizSubmission = async (quizSubmission: QuizSubmissionRequest) => {
 
-    console.log(quizSubmission)
+
+    // have a hashmap of the spec : score -> returning an array 
+    console.log(quizResults.specResults)
+    
+    // get the quiz and store it in memory 
+
+    // loop through all question types -> ensuring it is not empty/undefined
+    
+
+
+    // update specific weightings in the hashmap of the spec:score
+
+    // return top three specs
+
+
 
     return 1;
 }
