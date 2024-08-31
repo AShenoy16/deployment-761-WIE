@@ -8,10 +8,11 @@ export const getQuiz = async (req: Request, res: Response) => {
   const quiz = await getSpecQuiz()
 
   if(!quiz){
-    return res.status(200).json(quiz)
+    return res.status(404).send({message: "Quiz Not Found"})
+    
   }
 
-  return res.status(404).send({message: "Quiz Not Found"})
+  return res.status(200).json(quiz)
   
 };
 
@@ -31,6 +32,11 @@ export const submitQuiz = async (req: Request, res: Response) => {
     }
     
     const result = await processQuizSubmission(quizSubmission);
+
+    if(!result){
+      return res.status(500).json({ error: 'Failed to process submission' });
+    }
+
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ error: 'Failed to process submission' });
