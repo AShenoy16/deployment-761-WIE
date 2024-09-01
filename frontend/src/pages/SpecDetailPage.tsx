@@ -20,9 +20,9 @@ const SpecDetailPage = () => {
           backgroundPosition: "center",
           color: "white",
           padding: "60px 20px",
-          height: "300px", // Set a fixed height for the container
           display: "flex",
           alignItems: "center",
+          height: "100vh",
         }}
       >
         {/* Overlay */}
@@ -71,77 +71,118 @@ const SpecDetailPage = () => {
       <Box sx={{ backgroundColor: "#00467F", height: "30px" }}></Box>
 
       {/* Impact Section */}
-      <Grid container>
-        <Grid item xs={12} md={6}>
-          <Card sx={{ height: "100%" }}>
-            <CardContent>
-              <Typography
-                variant="h4"
-                gutterBottom
-                sx={{ color: "#00467F", fontWeight: "bold" }}
+      <Box sx={{ height: "100vh" }}>
+        <Grid container sx={{ height: "50%" }}>
+          <Grid item xs={12} md={6}>
+            <Card sx={{ height: "100%" }}>
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column", // Stack the items vertically
+                  justifyContent: "center", // Center vertically
+                  height: "100%", // Ensure it takes up the full height of the card
+                  marginLeft: "50px",
+                  width:"80%"
+                }}
               >
-                Impact
-              </Typography>
-              <Typography variant="body1" paragraph sx={{ color: "#00467F" }}>
-                Software engineering is an innovative field that combines
-                creativity and problem-solving to build the technology we use
-                every day.
-              </Typography>
-              <Typography variant="body1" paragraph sx={{ color: "#00467F" }}>
-                It allows you to design, develop, and maintain software systems
-                that solve real-world challenges, from healthcare to business
-                solutions.
-              </Typography>
-            </CardContent>
-          </Card>
+                <Typography
+                  variant="h4"
+                  gutterBottom
+                  sx={{
+                    color: "#00467F",
+                    fontWeight: "bold",
+                    marginBottom: "30px",
+                  }}
+                >
+                  Impact
+                </Typography>
+                <Typography
+                  variant="body1"
+                  paragraph
+                  sx={{ color: "#00467F", fontWeight: "bold" }}
+                >
+                  Software engineering is an innovative field that combines
+                  creativity and problem-solving to build the technology we use
+                  every day.
+                </Typography>
+                <Typography
+                  variant="body1"
+                  paragraph
+                  sx={{ color: "#00467F", fontWeight: "bold" }}
+                >
+                  It allows you to design, develop, and maintain software
+                  systems that solve real-world challenges, from healthcare to
+                  business solutions.
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Box
+              sx={{
+                height: "100%", // Ensure it fills the grid item's height
+                backgroundImage: `url(${uoaEngBuilding})`,
+                backgroundSize: "cover", // Cover the entire box
+                backgroundPosition: "center", // Center the image
+                display: "flex", // Use flexbox to align content
+                alignItems: "center", // Vertically center content
+                justifyContent: "center", // Horizontally center content
+              }}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Box
-            sx={{
-              height: "100%", // Ensure it fills the grid item's height
-              backgroundImage: `url(${uoaEngBuilding})`,
-              backgroundSize: "cover", // Cover the entire box
-              backgroundPosition: "center", // Center the image
-              display: "flex", // Use flexbox to align content
-              alignItems: "center", // Vertically center content
-              justifyContent: "center", // Horizontally center content
-            }}
-          />
+        <Grid container sx={{ height: "50%" }}>
+          <Grid item xs={12} md={6}>
+            <Box
+              sx={{
+                height: "100%", // Ensure it fills the grid item's height
+                backgroundImage: `url(${uoaEngBuilding})`,
+                backgroundSize: "cover", // Cover the entire box
+                backgroundPosition: "center", // Center the image
+                display: "flex", // Use flexbox to align content
+                alignItems: "center", // Vertically center content
+                justifyContent: "center", // Horizontally center content
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Card sx={{ height: "100%", borderRadius: "0" }}>
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column", // Stack the items vertically
+                  alignItems: "center", // Center horizontally
+                  justifyContent: "center", // Center vertically
+                  height: "100%", // Ensure it takes up the full height of the card
+                  width: "80%",
+                  marginLeft: "50px",
+                }}
+              >
+                <Typography
+                  variant="body1"
+                  paragraph
+                  sx={{ color: "#00467F", fontWeight: "bold" }}
+                >
+                  As a software engineer, you have the opportunity to make a
+                  significant impact by creating solutions that improve people's
+                  lives and businesses. Your work can streamline processes,
+                  enhance user experiences, and bring innovation to industries
+                  like healthcare, education, and finance.
+                </Typography>
+                <Typography
+                  variant="body1"
+                  paragraph
+                  sx={{ color: "#00467F", fontWeight: "bold" }}
+                >
+                  By building scalable, reliable software, you can help
+                  companies grow, empower individuals through accessible
+                  technology, and contribute to solving global challenges.
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid container>
-        <Grid item xs={12} md={6}>
-          <Box
-            sx={{
-              height: "100%", // Ensure it fills the grid item's height
-              backgroundImage: `url(${uoaEngBuilding})`,
-              backgroundSize: "cover", // Cover the entire box
-              backgroundPosition: "center", // Center the image
-              display: "flex", // Use flexbox to align content
-              alignItems: "center", // Vertically center content
-              justifyContent: "center", // Horizontally center content
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Card sx={{ height: "100%", borderRadius: "0" }}>
-            <CardContent>
-              <Typography variant="body1" paragraph sx={{ color: "#00467F" }}>
-                As a software engineer, you have the opportunity to make a
-                significant impact by creating solutions that improve people's
-                lives and businesses. Your work can streamline processes,
-                enhance user experiences, and bring innovation to industries
-                like healthcare, education, and finance.
-              </Typography>
-              <Typography variant="body1" paragraph sx={{ color: "#00467F" }}>
-                By building scalable, reliable software, you can help companies
-                grow, empower individuals through accessible technology, and
-                contribute to solving global challenges.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      </Box>
 
       {/* Career Pathways Section */}
       <Box
