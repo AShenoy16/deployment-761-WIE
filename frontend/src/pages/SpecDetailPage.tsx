@@ -88,7 +88,7 @@ const SpecDetailPage = () => {
       <Box sx={{ minHeight: "100vh" }}>
         <Grid container>
           <Grid item xs={12} md={6}>
-            <Card sx={{ minHeight: "50vh" }}>
+            <Card sx={{ minHeight: "50vh", alignContent: "center" }}>
               <CardContent
                 sx={{
                   display: "flex",
@@ -188,7 +188,13 @@ const SpecDetailPage = () => {
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <Card sx={{ minHeight: "50vh", borderRadius: "0" }}>
+            <Card
+              sx={{
+                minHeight: "50vh",
+                borderRadius: "0",
+                alignContent: "center",
+              }}
+            >
               <CardContent
                 sx={{
                   display: "flex",
