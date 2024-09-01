@@ -9,10 +9,9 @@ import {
 
 import uoaEngBuilding from "../assets/engineering-building.jpg";
 
-
 const SpecDetailPage = () => {
   return (
-    <Container sx={{ marginTop: 4 }}>
+    <Container disableGutters>
       {/* Top Section */}
       <Box
         sx={{
@@ -22,7 +21,6 @@ const SpecDetailPage = () => {
           backgroundPosition: "center",
           color: "white",
           padding: "60px 20px",
-          borderRadius: "8px",
           height: "300px", // Set a fixed height for the container
           display: "flex",
           alignItems: "center",
@@ -37,7 +35,6 @@ const SpecDetailPage = () => {
             width: "100%",
             height: "100%",
             backgroundColor: "rgba(0, 0, 0, 0.75)", // Adjust the opacity for tint strength
-            borderRadius: "8px",
           }}
         />
         {/* Content */}
@@ -72,8 +69,10 @@ const SpecDetailPage = () => {
         </Box>
       </Box>
 
+      <Box sx={{ backgroundColor: "#00467F", height: "30px" }}></Box>
+
       {/* Impact Section */}
-      <Grid container spacing={4} sx={{ marginTop: 4 }}>
+      <Grid container>
         <Grid item xs={12} md={6}>
           <Card sx={{ height: "100%" }}>
             <CardContent>
@@ -98,19 +97,52 @@ const SpecDetailPage = () => {
           </Card>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Card sx={{ height: "100%" }}>
+          <Box
+            sx={{
+              height: "100%", // Ensure it fills the grid item's height
+              backgroundImage: `url(${uoaEngBuilding})`,
+              backgroundSize: "cover", // Cover the entire box
+              backgroundPosition: "center", // Center the image
+              display: "flex", // Use flexbox to align content
+              alignItems: "center", // Vertically center content
+              justifyContent: "center", // Horizontally center content
+            }}
+          />
+        </Grid>
+      </Grid>
+      <Grid container>
+        <Grid item xs={12} md={6}>
+          <Box
+            sx={{
+              height: "100%", // Ensure it fills the grid item's height
+              backgroundImage: `url(${uoaEngBuilding})`,
+              backgroundSize: "cover", // Cover the entire box
+              backgroundPosition: "center", // Center the image
+              display: "flex", // Use flexbox to align content
+              alignItems: "center", // Vertically center content
+              justifyContent: "center", // Horizontally center content
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Card sx={{ height: "100%", borderRadius:"0" }}>
             <CardContent>
-              <Typography variant="body1" paragraph sx={{ color: "#00467F" }}>
-                As a software engineer, you have the opportunity to make a
-                significant impact by creating solutions that improve people’s
-                lives and businesses. Your work can streamline processes,
-                enhance user experiences, and bring innovation to industries
-                like healthcare, education, and finance.
+              <Typography
+                variant="h4"
+                gutterBottom
+                sx={{ color: "#00467F", fontWeight: "bold" }}
+              >
+                Impact
               </Typography>
               <Typography variant="body1" paragraph sx={{ color: "#00467F" }}>
-                By building scalable, reliable software, you can help companies
-                grow, empower individuals through accessible technology, and
-                contribute to solving global challenges.
+                Software engineering is an innovative field that combines
+                creativity and problem-solving to build the technology we use
+                every day.
+              </Typography>
+              <Typography variant="body1" paragraph sx={{ color: "#00467F" }}>
+                It allows you to design, develop, and maintain software systems
+                that solve real-world challenges, from healthcare to business
+                solutions.
               </Typography>
             </CardContent>
           </Card>
@@ -120,11 +152,9 @@ const SpecDetailPage = () => {
       {/* Career Pathways Section */}
       <Box
         sx={{
-          marginTop: 4,
           backgroundColor: "#00467F",
           color: "white",
           padding: "20px",
-          borderRadius: "8px",
         }}
       >
         <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
