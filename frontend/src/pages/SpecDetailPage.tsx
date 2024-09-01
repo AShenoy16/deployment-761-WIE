@@ -50,7 +50,7 @@ const SpecDetailPage = () => {
             variant="h3"
             component="h1"
             gutterBottom
-            sx={{ fontWeight: "bold" }}
+            sx={{ fontWeight: "bold", fontSize: "5rem" }}
           >
             Software Engineering
           </Typography>
@@ -61,14 +61,18 @@ const SpecDetailPage = () => {
               textAlign: "left", // Ensure the text is left-aligned
             }}
           ></Box>
-          <Typography variant="h6" component="p">
+          <Typography
+            variant="h6"
+            component="p"
+            sx={{ fontWeight: "bold", fontSize: "2rem" }}
+          >
             Software engineers are problem-solvers who design, develop, and
             optimize software systems that power the digital world.
           </Typography>
         </Box>
       </Box>
 
-      <Box sx={{ backgroundColor: "#00467F", height: "30px" }}></Box>
+      {/* <Box sx={{ backgroundColor: "#00467F", height: "30px" }}></Box> */}
 
       {/* Impact Section */}
       <Box sx={{ height: "100vh" }}>
@@ -82,7 +86,7 @@ const SpecDetailPage = () => {
                   justifyContent: "center", // Center vertically
                   height: "100%", // Ensure it takes up the full height of the card
                   marginLeft: "50px",
-                  width:"80%"
+                  width: "80%",
                 }}
               >
                 <Typography
@@ -190,12 +194,16 @@ const SpecDetailPage = () => {
           backgroundColor: "#00467F",
           color: "white",
           padding: "20px",
+          "& li": {
+            marginBottom: "10px", // Adds space between list items
+          },
+          fontWeight: "bold",
         }}
       >
         <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
           Career Pathways
         </Typography>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
           Potential Career options as a Software Engineer Graduate
         </Typography>
         <Grid container spacing={2}>
