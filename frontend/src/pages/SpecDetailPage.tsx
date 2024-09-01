@@ -1,16 +1,10 @@
-import {
-  Grid,
-  Typography,
-  Box,
-  Card,
-  CardContent,
-} from "@mui/material";
-
+import React from "react";
+import { Grid, Typography, Box, Card, CardContent } from "@mui/material";
 import uoaEngBuilding from "../assets/engineering-building.jpg";
 
 const SpecDetailPage = () => {
   return (
-    <div>
+    <Box sx={{ overflowX: "hidden" }}>
       {/* Top Section */}
       <Box
         sx={{
@@ -19,10 +13,13 @@ const SpecDetailPage = () => {
           backgroundSize: "cover",
           backgroundPosition: "center",
           color: "white",
-          padding: "60px 20px",
+          padding: {
+            xs: "40px 20px",
+            sm: "60px 20px",
+          },
           display: "flex",
           alignItems: "center",
-          height: "100vh",
+          minHeight: "100vh", // Ensure it at least covers the viewport height
         }}
       >
         {/* Overlay */}
@@ -33,7 +30,7 @@ const SpecDetailPage = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.75)", // Adjust the opacity for tint strength
+            backgroundColor: "rgba(0, 0, 0, 0.75)",
           }}
         />
         {/* Content */}
@@ -41,30 +38,45 @@ const SpecDetailPage = () => {
           sx={{
             position: "relative",
             zIndex: 1,
-            textAlign: "left", // Ensure the text is left-aligned
-            maxWidth: "600px",
-            marginLeft: "50px",
+            textAlign: "left",
+            marginLeft: {
+              xs: "20px",
+              sm: "50px",
+            },
+            maxWidth: {
+              xs: "calc(100% - 40px)",
+              sm: "600px",
+              md: "50%",
+            },
           }}
         >
           <Typography
             variant="h3"
             component="h1"
             gutterBottom
-            sx={{ fontWeight: "bold", fontSize: "5rem" }}
+            sx={{
+              fontWeight: "bold",
+              fontSize: {
+                xs: "2.5rem",
+                sm: "3rem",
+                md: "5rem",
+              },
+              paddingBottom: "20px",
+            }}
           >
             Software Engineering
           </Typography>
-          <Box
-            sx={{
-              position: "relative",
-              zIndex: 1,
-              textAlign: "left", // Ensure the text is left-aligned
-            }}
-          ></Box>
           <Typography
             variant="h6"
             component="p"
-            sx={{ fontWeight: "bold", fontSize: "2rem" }}
+            sx={{
+              fontWeight: "bold",
+              fontSize: {
+                xs: "1.2rem",
+                sm: "1.5rem",
+                md: "2rem",
+              },
+            }}
           >
             Software engineers are problem-solvers who design, develop, and
             optimize software systems that power the digital world.
@@ -72,21 +84,24 @@ const SpecDetailPage = () => {
         </Box>
       </Box>
 
-      {/* <Box sx={{ backgroundColor: "#00467F", height: "30px" }}></Box> */}
-
       {/* Impact Section */}
-      <Box sx={{ height: "100vh" }}>
-        <Grid container sx={{ height: "50%" }}>
+      <Box sx={{ minHeight: "100vh" }}>
+        <Grid container>
           <Grid item xs={12} md={6}>
-            <Card sx={{ height: "100%" }}>
+            <Card sx={{ minHeight: "50vh" }}>
               <CardContent
                 sx={{
                   display: "flex",
-                  flexDirection: "column", // Stack the items vertically
-                  justifyContent: "center", // Center vertically
-                  height: "100%", // Ensure it takes up the full height of the card
-                  marginLeft: "50px",
-                  width: "80%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  marginLeft: {
+                    xs: "20px",
+                    sm: "50px",
+                  },
+                  width: {
+                    xs: "calc(100% - 40px)",
+                    sm: "80%",
+                  },
                 }}
               >
                 <Typography
@@ -96,6 +111,11 @@ const SpecDetailPage = () => {
                     color: "#00467F",
                     fontWeight: "bold",
                     marginBottom: "30px",
+                    fontSize: {
+                      xs: "1.5rem",
+                      sm: "2rem",
+                      md: "2.5rem",
+                    },
                   }}
                 >
                   Impact
@@ -103,7 +123,11 @@ const SpecDetailPage = () => {
                 <Typography
                   variant="body1"
                   paragraph
-                  sx={{ color: "#00467F", fontWeight: "bold" }}
+                  sx={{
+                    color: "#00467F",
+                    fontWeight: "bold",
+                    fontSize: "1.2rem",
+                  }}
                 >
                   Software engineering is an innovative field that combines
                   creativity and problem-solving to build the technology we use
@@ -112,7 +136,11 @@ const SpecDetailPage = () => {
                 <Typography
                   variant="body1"
                   paragraph
-                  sx={{ color: "#00467F", fontWeight: "bold" }}
+                  sx={{
+                    color: "#00467F",
+                    fontWeight: "bold",
+                    fontSize: "1.2rem",
+                  }}
                 >
                   It allows you to design, develop, and maintain software
                   systems that solve real-world challenges, from healthcare to
@@ -124,48 +152,67 @@ const SpecDetailPage = () => {
           <Grid item xs={12} md={6}>
             <Box
               sx={{
-                height: "100%", // Ensure it fills the grid item's height
+                height: "100%",
                 backgroundImage: `url(${uoaEngBuilding})`,
-                backgroundSize: "cover", // Cover the entire box
-                backgroundPosition: "center", // Center the image
-                display: "flex", // Use flexbox to align content
-                alignItems: "center", // Vertically center content
-                justifyContent: "center", // Horizontally center content
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             />
           </Grid>
         </Grid>
-        <Grid container sx={{ height: "50%" }}>
-          <Grid item xs={12} md={6}>
+        <Grid container>
+          <Grid
+            item
+            xs={12}
+            md={6}
+            sx={{
+              display: {
+                xs: "none",
+                md: "block",
+              },
+            }}
+          >
             <Box
               sx={{
-                height: "100%", // Ensure it fills the grid item's height
+                height: "100%",
                 backgroundImage: `url(${uoaEngBuilding})`,
-                backgroundSize: "cover", // Cover the entire box
-                backgroundPosition: "center", // Center the image
-                display: "flex", // Use flexbox to align content
-                alignItems: "center", // Vertically center content
-                justifyContent: "center", // Horizontally center content
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <Card sx={{ height: "100%", borderRadius: "0" }}>
+            <Card sx={{ minHeight: "50vh", borderRadius: "0" }}>
               <CardContent
                 sx={{
                   display: "flex",
-                  flexDirection: "column", // Stack the items vertically
-                  alignItems: "center", // Center horizontally
-                  justifyContent: "center", // Center vertically
-                  height: "100%", // Ensure it takes up the full height of the card
-                  width: "80%",
-                  marginLeft: "50px",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: {
+                    xs: "calc(100% - 40px)",
+                    sm: "80%",
+                  },
+                  marginLeft: {
+                    xs: "20px",
+                    sm: "50px",
+                  },
                 }}
               >
                 <Typography
                   variant="body1"
                   paragraph
-                  sx={{ color: "#00467F", fontWeight: "bold" }}
+                  sx={{
+                    color: "#00467F",
+                    fontWeight: "bold",
+                    fontSize: "1.2rem",
+                  }}
                 >
                   As a software engineer, you have the opportunity to make a
                   significant impact by creating solutions that improve people's
@@ -176,7 +223,11 @@ const SpecDetailPage = () => {
                 <Typography
                   variant="body1"
                   paragraph
-                  sx={{ color: "#00467F", fontWeight: "bold" }}
+                  sx={{
+                    color: "#00467F",
+                    fontWeight: "bold",
+                    fontSize: "1.2rem",
+                  }}
                 >
                   By building scalable, reliable software, you can help
                   companies grow, empower individuals through accessible
@@ -195,15 +246,37 @@ const SpecDetailPage = () => {
           color: "white",
           padding: "20px",
           "& li": {
-            marginBottom: "10px", // Adds space between list items
+            marginBottom: "10px",
           },
           fontWeight: "bold",
         }}
       >
-        <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            fontWeight: "bold",
+            fontSize: {
+              xs: "1.5rem",
+              sm: "2rem",
+              md: "2.5rem",
+            },
+          }}
+        >
           Career Pathways
         </Typography>
-        <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+        <Typography
+          variant="h6"
+          gutterBottom
+          sx={{
+            fontWeight: "bold",
+            fontSize: {
+              xs: "1rem",
+              sm: "1.25rem",
+              md: "1.5rem",
+            },
+          }}
+        >
           Potential Career options as a Software Engineer Graduate
         </Typography>
         <Grid container spacing={2}>
@@ -228,7 +301,7 @@ const SpecDetailPage = () => {
           </Grid>
         </Grid>
       </Box>
-    </div>
+    </Box>
   );
 };
 
