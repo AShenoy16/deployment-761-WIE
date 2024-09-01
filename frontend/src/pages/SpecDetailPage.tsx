@@ -1,5 +1,4 @@
 import {
-  Container,
   Grid,
   Typography,
   Box,
@@ -11,7 +10,7 @@ import uoaEngBuilding from "../assets/engineering-building.jpg";
 
 const SpecDetailPage = () => {
   return (
-    <Container disableGutters>
+    <div>
       {/* Top Section */}
       <Box
         sx={{
@@ -125,24 +124,19 @@ const SpecDetailPage = () => {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <Card sx={{ height: "100%", borderRadius:"0" }}>
+          <Card sx={{ height: "100%", borderRadius: "0" }}>
             <CardContent>
-              <Typography
-                variant="h4"
-                gutterBottom
-                sx={{ color: "#00467F", fontWeight: "bold" }}
-              >
-                Impact
+              <Typography variant="body1" paragraph sx={{ color: "#00467F" }}>
+                As a software engineer, you have the opportunity to make a
+                significant impact by creating solutions that improve people's
+                lives and businesses. Your work can streamline processes,
+                enhance user experiences, and bring innovation to industries
+                like healthcare, education, and finance.
               </Typography>
               <Typography variant="body1" paragraph sx={{ color: "#00467F" }}>
-                Software engineering is an innovative field that combines
-                creativity and problem-solving to build the technology we use
-                every day.
-              </Typography>
-              <Typography variant="body1" paragraph sx={{ color: "#00467F" }}>
-                It allows you to design, develop, and maintain software systems
-                that solve real-world challenges, from healthcare to business
-                solutions.
+                By building scalable, reliable software, you can help companies
+                grow, empower individuals through accessible technology, and
+                contribute to solving global challenges.
               </Typography>
             </CardContent>
           </Card>
@@ -185,7 +179,7 @@ const SpecDetailPage = () => {
           </Grid>
         </Grid>
       </Box>
-    </Container>
+    </div>
   );
 };
 
