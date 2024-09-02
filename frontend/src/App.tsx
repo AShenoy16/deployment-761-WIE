@@ -3,6 +3,8 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { lightTheme } from "./theme";
 import HomePage from "./pages/HomePage";
 import QuizPage from "./pages/QuizPage";
+import SpecPage from "./pages/SpecPage";
+import SpecDetailPage from "./pages/SpecDetailPage";
 import GeneralLayout from "./layouts/GeneralLayout";
 import QuizResultsPage from "./pages/QuizResultsPage";
 
@@ -16,6 +18,8 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/quiz" element={<QuizPage />} />
             <Route path="/quiz/results" element={<QuizResultsPage />} />
+            <Route path="/spec-info" element={<SpecPage />} />
+            <Route path="/specialisation/:id" element={<SpecDetailPage />} />
           </Routes>
         </GeneralLayout>
       </BrowserRouter>
