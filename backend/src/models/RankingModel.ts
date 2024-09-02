@@ -3,15 +3,13 @@ import { IRankingQuestion, IRankingAnswerOption } from './interfaces';
 
 
 const rankingAnswerOptionSchema: Schema = new Schema({
-  optionId: { type: String, required: true },
   text: { type: String, required: true },
-  weightings: { required: true, type: Map, of: Map },
+  weightings: { required: true, type: Map, of: Number }
 });
 
 const rankingQuestionSchema: Schema = new Schema({
-  questionType: "Ranking",
+  questionType: { type: String, default: "Ranking", required: true },
   questionText: { type: String, required: true },
-  questionNumber: { type: Number, required: true },
   answerOptions: {
     type: [rankingAnswerOptionSchema],
     validate: {
