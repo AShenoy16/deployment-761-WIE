@@ -36,6 +36,12 @@ const StartingScreen: React.FC = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const startQuiz = useQuizStore((state) => state.startQuiz);
+  const [isAdminLoggedIn, _] = React.useState(true); // TODO: Replace with actual auth state
+  const navigate = useNavigate();
+
+  const onClickEdit = () => {
+    navigate("/quiz/edit");
+  };
 
   return (
     <Stack
@@ -48,9 +54,38 @@ const StartingScreen: React.FC = () => {
       <Typography variant={isSmallScreen ? "h4" : "h2"} textAlign="center">
         Find your spec with this quiz!
       </Typography>
-      <Button variant="contained" size="large" onClick={startQuiz}>
-        Start
-      </Button>
+      <Stack direction="row" gap={2}>
+        <Button
+          variant="contained"
+          size="large"
+          onClick={startQuiz}
+          sx={{
+            backgroundColor: theme.palette.secondary.main,
+            "&:hover": {
+              backgroundColor: theme.palette.secondary.dark,
+            },
+          }}
+        >
+          Start
+        </Button>
+        {isAdminLoggedIn && (
+          <Button
+            variant="outlined"
+            size="large"
+            sx={{
+              borderColor: theme.palette.secondary.main,
+              color: theme.palette.secondary.main,
+              "&:hover": {
+                borderColor: theme.palette.secondary.dark,
+                color: theme.palette.secondary.dark,
+              },
+            }}
+            onClick={onClickEdit}
+          >
+            Edit
+          </Button>
+        )}
+      </Stack>
     </Stack>
   );
 };
