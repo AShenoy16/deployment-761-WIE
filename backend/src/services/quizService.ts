@@ -3,13 +3,12 @@ import { quizResults } from "../constants/quizConstants";
 import { IMCQAnswerOption, IQuiz } from "../models/interfaces";
 import Quiz from "../models/QuizModel";
 import { QuizSubmissionRequest } from "../types/quizTypes";
-import {
-  isQuizSubmissionRequest,
-} from "../validation/quizValidation";
+import { isQuizSubmissionRequest } from "../validation/quizValidation";
 import RankingQuestion from "../models/RankingModel";
 import SliderQuestion from "../models/SliderModel";
 import MCQQuestion from "../models/MCQModel";
 import mongoose from "mongoose";
+import { Console } from "console";
 
 /**
  * Servixe code that will actually calculate the results
@@ -32,6 +31,9 @@ export const processQuizSubmission = async (
     console.log(specMap);
 
     await mcqResults(quizSubmission.mcqAnswers, specMap);
+
+    console.log(specMap);
+    await sliderResults(quizSubmission.sliderAnswers, specMap);
 
     console.log(specMap);
 
@@ -150,4 +152,50 @@ const mcqResults = async (
       specResults[spec] += weightings[spec];
     }
   });
+};
+
+/**
+ * method to update specMap of slider results
+ * @param sliderAnswers object that has questionId to number of the slider 
+ * -> this will be the index inside the database 
+ * @param specResults specMap 
+ */
+const sliderResults = async (
+  sliderAnswers: { [questionNumber: string]: number; },
+  specResults: { [specName: string]: number }
+) => {
+
+   // is an object and there are keys present
+   if (!isQuizSubmissionRequest(sliderAnswers)) {
+    return;
+  }
+
+   // convert optionId strings to ObjectiD
+   const sliderQuestionIds = Object.keys(sliderAnswers);
+   const objectIds = sliderQuestionIds.map((id) => new mongoose.Types.ObjectId(id));
+ 
+   // get all the slider questions
+   const sliderQuestions = await fetchSlider(objectIds);
+ 
+   // loop through all the slider questions -> updating the correct value 
+ 
+   sliderQuestions.forEach((question) => {
+    const sliderIndex = sliderAnswers[question._id.toString()]
+
+    // index of weightings array to use to update data
+
+    const weightings = question.sliderRange.weightings
+
+    // update spec map 
+    for(const spec in weightings){
+      const specWeighting = weightings[spec]
+      specResults[spec] += specWeighting[sliderIndex]
+    }
+ 
+   });
+
+
+
+
+
 };
