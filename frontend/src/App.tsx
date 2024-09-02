@@ -4,6 +4,7 @@ import { lightTheme } from "./theme";
 import HomePage from "./pages/HomePage";
 import QuizPage from "./pages/QuizPage";
 import GeneralLayout from "./layouts/GeneralLayout";
+import QuizResultsPage from "./pages/QuizResultsPage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/quiz" element={<QuizPage />} />
+            <Route path="/quiz/results" element={<QuizResultsPage />} />
           </Routes>
         </GeneralLayout>
       </BrowserRouter>

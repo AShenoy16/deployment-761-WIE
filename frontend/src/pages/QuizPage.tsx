@@ -15,6 +15,7 @@ import { SliderQuizQuestion } from "../components/quiz/SliderQuizQuestion";
 import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
 import { useQuizStore } from "../stores/QuizStore";
 import { Question } from "../types/QuestionTypes";
+import { useNavigate } from "react-router-dom";
 import { MCQQuizQuestion } from "../components/quiz/MCQQuizQuestion";
 import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
 
@@ -59,8 +60,10 @@ const QuizPage: React.FC = () => {
   const { currentQuestionIndex, nextQuestion, prevQuestion } =
     useQuizNavigation(questions);
   const currentQuestion = questions[currentQuestionIndex];
+  const navigate = useNavigate();
 
   const hasStarted = useQuizStore((state) => state.hasStarted);
+  const isFinalQuestion = currentQuestionIndex === questions.length - 1;
 
   const isRankingQuestionAnsweredMap = useRankingQuestionStore(
     (state) => state.isQuestionAnsweredMap
@@ -76,6 +79,9 @@ const QuizPage: React.FC = () => {
     (currentQuestion?.type === "ranking" &&
       isRankingQuestionAnsweredMap[currentQuestion.questionNumber]);
 
+  const handleSubmit = () => {
+    navigate("/quiz/results");
+  };
   const isMCQQuestionAnswered =
     currentQuestion?.type !== "mcq" ||
     (currentQuestion?.type === "mcq" &&
@@ -107,16 +113,13 @@ const QuizPage: React.FC = () => {
             >
               Previous
             </Button>
+
             <Button
               variant="contained"
-              onClick={nextQuestion}
-              disabled={
-                currentQuestionIndex === questions.length - 1 ||
-                !isRankingQuestionAnswered ||
-                !isMCQQuestionAnswered
-              }
+              onClick={isFinalQuestion ? handleSubmit : nextQuestion}
+              disabled={!isRankingQuestionAnswered || !isMCQQuestionAnswered}
             >
-              Next
+              {isFinalQuestion ? "Submit" : "Next"}
             </Button>
           </Box>
         </>
