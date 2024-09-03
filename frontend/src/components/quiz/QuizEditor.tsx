@@ -63,7 +63,7 @@ const EditableQuestion = ({
           <EditIcon />
         </IconButton>
         <IconButton
-          color="secondary"
+          color="error"
           onClick={() => onClickDeleteQuestion(question)}
         >
           <DeleteIcon />
@@ -157,10 +157,7 @@ const QuestionEditor: React.FC = () => {
           : null;
       case "ranking":
         return selectedQuestion && selectedQuestion.type === "ranking" ? (
-          <RankingQuestionEditor
-            question={selectedQuestion}
-            onClose={clearSelection}
-          />
+          <RankingQuestionEditor question={selectedQuestion} />
         ) : null;
       case "slider":
         return selectedQuestion && selectedQuestion.type === "slider"
@@ -185,7 +182,17 @@ const QuestionEditor: React.FC = () => {
         <Tab label="Slider" value="slider" />
       </Tabs>
 
-      <Box padding={2}>{renderQuestionTypeEditor()}</Box>
+      <Box maxHeight={450} overflow="auto" padding={2}>
+        {renderQuestionTypeEditor()}
+      </Box>
+      <Stack direction="row" spacing={2} justifyContent="center" marginTop={4}>
+        <Button variant="outlined" onClick={clearSelection}>
+          Cancel
+        </Button>
+        <Button variant="contained" color="primary">
+          Confirm
+        </Button>
+      </Stack>
     </Box>
   );
 };

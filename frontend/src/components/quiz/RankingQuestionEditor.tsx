@@ -14,12 +14,14 @@ import {
   RankingQuestion,
 } from "../../types/QuestionTypes";
 
-const EditableSpecWeightings = ({
-  specName,
-  ranks,
-}: {
+type EditableSpecWeightingsProps = {
   specName: string;
   ranks: RankingAnswerOption["weightings"]["specializationName"];
+};
+
+const EditableSpecWeightings: React.FC<EditableSpecWeightingsProps> = ({
+  specName,
+  ranks,
 }) => {
   return (
     <Stack direction="row" alignItems="center" spacing={1}>
@@ -31,7 +33,7 @@ const EditableSpecWeightings = ({
         flexGrow={1}
         spacing={2}
       >
-        <IconButton size="small" color="error">
+        <IconButton color="error">
           <DeleteIcon />
         </IconButton>
         <Typography>{specName}</Typography>
@@ -56,44 +58,33 @@ const EditableSpecWeightings = ({
   );
 };
 
-const EditableRankingOption = ({ option }: { option: RankingAnswerOption }) => {
-  // const firstSpecialization = Object.keys(option.weightings)[0];
-  // const ranksForFirstSpecialization = option.weightings[firstSpecialization];
-  // const rankCount = Object.keys(ranksForFirstSpecialization).length;
+type EditableRankingOption = {
+  option: RankingAnswerOption;
+};
 
+const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
   return (
-    <Paper sx={{ padding: 2, borderRadius: "1rem" }}>
+    <Paper sx={{ padding: 2, borderRadius: "1rem", position: "relative" }}>
       <Stack alignItems="center" spacing={2}>
         <Stack
           width="100%"
           direction="row"
           alignItems="center"
           justifyContent="space-between"
+          position="relative"
         >
           <Button startIcon={<AddIcon />} sx={{ flexShrink: 0 }}>
             Spec
           </Button>
-          <Typography sx={{ flexGrow: 1, textAlign: "center" }}>
+          <Typography
+            sx={{
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+          >
             {option.text}
           </Typography>
-
-          {/* <Stack direction="row" alignItems="center" spacing={2}>
-            <Typography> Ranks: </Typography>
-            <Stack direction="row" spacing={1}>
-              {Array.from({ length: rankCount }).map((_, index) => (
-                <Box
-                  key={index}
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  width="2rem"
-                  height="2rem"
-                >
-                  <Typography>{index + 1}</Typography>
-                </Box>
-              ))}
-            </Stack>
-          </Stack> */}
         </Stack>
         <Stack width="100%" spacing={1}>
           {Object.entries(option.weightings).map(([specName, ranks], index) => (
@@ -111,12 +102,10 @@ const EditableRankingOption = ({ option }: { option: RankingAnswerOption }) => {
 
 type RankingQuestionEditorProps = {
   question: RankingQuestion;
-  onClose: () => void;
 };
 
 const RankingQuestionEditor: React.FC<RankingQuestionEditorProps> = ({
   question,
-  onClose,
 }) => {
   return (
     <Stack padding={2}>
@@ -150,14 +139,6 @@ const RankingQuestionEditor: React.FC<RankingQuestionEditorProps> = ({
         {question.answerOptions.map((option, index) => (
           <EditableRankingOption key={index} option={option} />
         ))}
-      </Stack>
-      <Stack direction="row" spacing={2} justifyContent="center" marginTop={4}>
-        <Button variant="outlined" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button variant="contained" color="primary">
-          Confirm
-        </Button>
       </Stack>
     </Stack>
   );
