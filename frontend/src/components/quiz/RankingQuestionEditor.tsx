@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   RankingAnswerOption,
   RankingQuestion,
@@ -29,13 +30,19 @@ const EditableSpecWeightings: React.FC<EditableSpecWeightingsProps> = ({
         direction="row"
         alignItems="center"
         bgcolor="#f5f5f5"
+        padding={0.5}
         borderRadius="0.5rem"
         flexGrow={1}
         spacing={2}
       >
-        <IconButton color="error">
-          <DeleteIcon />
-        </IconButton>
+        <Stack direction="row">
+          <IconButton color="error" sx={{ padding: "0.25rem" }}>
+            <DeleteIcon />
+          </IconButton>
+          <IconButton color="primary" sx={{ padding: "0.25rem" }}>
+            <EditIcon />
+          </IconButton>
+        </Stack>
         <Typography>{specName}</Typography>
       </Stack>
       <Stack direction="row" spacing={1}>
