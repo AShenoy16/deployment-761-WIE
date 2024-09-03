@@ -46,7 +46,10 @@ const mockQuestions: Question[] = [
       {
         optionId: "1",
         text: "JavaScript",
-        weightings: { frontend: { 1: 10, 2: 5, 3: 2 } },
+        weightings: {
+          frontend: { 1: 10, 2: 5, 3: 2 },
+          backend: { 1: 5, 2: 4, 3: 1 },
+        },
       },
       {
         optionId: "2",
