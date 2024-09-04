@@ -4,10 +4,12 @@ type RankingQuestionEditorStore = {
   isWeightingFormOpen: boolean;
   selectedSpecName: string;
   ranksForSelectedSpec: { [rank: number]: number };
+  errors: { specName: string; ranks: string[] };
   setIsWeightingFormOpen: (isOpen: boolean) => void;
   setSelectedSpecName: (specName: string) => void;
   setRanksForSelectedSpec: (ranks: { [rank: number]: number }) => void;
   updateRank: (rank: number, value: number) => void;
+  setErrors: (errors: { specName: string; ranks: string[] }) => void;
   reset: () => void;
 };
 
@@ -16,6 +18,7 @@ export const useRankingQuestionEditorStore = create<RankingQuestionEditorStore>(
     isWeightingFormOpen: false,
     selectedSpecName: "",
     ranksForSelectedSpec: {},
+    errors: { specName: "", ranks: [] },
 
     setIsWeightingFormOpen: (isOpen: boolean) =>
       set({ isWeightingFormOpen: isOpen }),
@@ -34,11 +37,15 @@ export const useRankingQuestionEditorStore = create<RankingQuestionEditorStore>(
         },
       })),
 
+    setErrors: (errors: { specName: string; ranks: string[] }) =>
+      set({ errors }),
+
     reset: () =>
       set({
         isWeightingFormOpen: false,
         selectedSpecName: "",
         ranksForSelectedSpec: {},
+        errors: { specName: "", ranks: [] },
       }),
   })
 );

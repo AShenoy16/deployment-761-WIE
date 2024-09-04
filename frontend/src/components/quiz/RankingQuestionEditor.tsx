@@ -17,6 +17,7 @@ import {
   RankingAnswerOption,
   RankingQuestion,
 } from "../../types/QuestionTypes";
+import { rankingWeightingsFormSchema } from "../../util/FormSchema";
 
 const RankingWeightingsForm: React.FC = () => {
   const selectedSpecName = useRankingQuestionEditorStore(
@@ -29,6 +30,7 @@ const RankingWeightingsForm: React.FC = () => {
     (state) => state.setSelectedSpecName
   );
   const updateRank = useRankingQuestionEditorStore((state) => state.updateRank);
+  const errors = useRankingQuestionEditorStore((state) => state.errors);
 
   return (
     <Stack spacing={2}>
@@ -36,6 +38,8 @@ const RankingWeightingsForm: React.FC = () => {
         label="Spec Name"
         value={selectedSpecName}
         onChange={(e) => setSelectedSpecName(e.target.value)}
+        error={!!errors.specName}
+        helperText={errors.specName}
         fullWidth
       />
       {Object.entries(ranksForSelectedSpec).map(([rank, value]) => (
@@ -45,6 +49,8 @@ const RankingWeightingsForm: React.FC = () => {
           type="number"
           value={value}
           onChange={(e) => updateRank(parseInt(rank), parseInt(e.target.value))}
+          error={!!errors.ranks[parseInt(rank) - 1]}
+          helperText={errors.ranks[parseInt(rank) - 1]}
           fullWidth
         />
       ))}
@@ -67,12 +73,20 @@ const RankingSpecWeightings: React.FC<RankingSpecWeightingsProps> = ({
   const setIsWeightingFormOpen = useRankingQuestionEditorStore(
     (state) => state.setIsWeightingFormOpen
   );
+  const selectedSpecName = useRankingQuestionEditorStore(
+    (state) => state.selectedSpecName
+  );
   const setSelectedSpecName = useRankingQuestionEditorStore(
     (state) => state.setSelectedSpecName
+  );
+  const ranksForSelectedSpec = useRankingQuestionEditorStore(
+    (state) => state.ranksForSelectedSpec
   );
   const setRanksForSelectedSpec = useRankingQuestionEditorStore(
     (state) => state.setRanksForSelectedSpec
   );
+  const reset = useRankingQuestionEditorStore((state) => state.reset);
+  const setErrors = useRankingQuestionEditorStore((state) => state.setErrors);
 
   const handleOpenWeightingForm = () => {
     setSelectedSpecName(specName);
@@ -81,10 +95,33 @@ const RankingSpecWeightings: React.FC<RankingSpecWeightingsProps> = ({
   };
 
   const handleCloseWeightingForm = () => {
-    setIsWeightingFormOpen(false);
+    reset();
   };
 
-  const handleConfirmWeightingChanges = () => {};
+  const handleConfirmWeightingChanges = () => {
+    const validation = rankingWeightingsFormSchema.safeParse({
+      specName: selectedSpecName,
+      ranks: ranksForSelectedSpec,
+    });
+
+    if (validation.success) {
+      // TODO: Call API to persist changes and refetch data
+      reset();
+    } else {
+      const fieldErrors: { specName: string; ranks: string[] } = {
+        specName: "",
+        ranks: [],
+      };
+      validation.error.errors.forEach((err) => {
+        if (err.path[0] === "specName") {
+          fieldErrors.specName = err.message;
+        } else if (err.path[0] === "ranks") {
+          fieldErrors.ranks = [...fieldErrors.ranks, err.message];
+        }
+      });
+      setErrors(fieldErrors);
+    }
+  };
 
   return (
     <>
