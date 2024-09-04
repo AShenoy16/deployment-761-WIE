@@ -1,13 +1,14 @@
 import React from "react";
 import {
-  Stack,
-  Typography,
+  alpha,
+  Autocomplete,
   Box,
-  Paper,
   Button,
   IconButton,
+  Paper,
+  Stack,
   TextField,
-  alpha,
+  Typography,
   useTheme,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -23,7 +24,26 @@ import {
 import { rankingWeightingsFormSchema } from "../../util/FormSchema";
 import { useQuizEditorStore } from "../../stores/QuizEditorStore";
 
-const EditSpecWeightingForm: React.FC = () => {
+const possibleSpecs = [
+  "Biomedical",
+  "Chemmat",
+  "Civil",
+  "Compsys",
+  "Electrical",
+  "Engsci",
+  "Mechanical",
+  "Mechatronics",
+  "Software",
+  "Structural",
+];
+
+type EditSpecWeightingFormProps = {
+  weightings: IRankingAnswerOption["weightings"];
+};
+
+const EditSpecWeightingForm: React.FC<EditSpecWeightingFormProps> = ({
+  weightings,
+}) => {
   const {
     selectedSpecName,
     weightingsForSelectedSpec,
@@ -37,15 +57,29 @@ const EditSpecWeightingForm: React.FC = () => {
     updateRank: state.updateRankWeighting,
     errors: state.errors,
   }));
+
+  const existingSpecs = weightings.map((w) => w.specializationName);
+  const availableSpecs = possibleSpecs.filter(
+    (s) => !existingSpecs.includes(s)
+  );
+
   return (
     <Stack spacing={2}>
-      <TextField
-        label="Spec Name"
+      <Autocomplete
+        options={availableSpecs}
         value={selectedSpecName}
-        onChange={(e) => setSelectedSpecName(e.target.value)}
-        error={!!errors.specName}
-        helperText={errors.specName}
+        onChange={(_, newValue) => setSelectedSpecName(newValue || "")}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Spec Name"
+            error={!!errors.specName}
+            helperText={errors.specName}
+            fullWidth
+          />
+        )}
         fullWidth
+        disableClearable
       />
       {Object.entries(weightingsForSelectedSpec).map(([rank, weight]) => (
         <TextField
@@ -114,7 +148,7 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
   const handleConfirmWeightingChanges = () => {
     const validation = rankingWeightingsFormSchema.safeParse({
       specName: selectedSpecName,
-      weightings: weightingsForSelectedSpec,
+      weighting: weightingsForSelectedSpec,
     });
 
     if (validation.success) {
@@ -188,7 +222,7 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
         onClose={handleCloseWeightingForm}
         onConfirm={handleConfirmWeightingChanges}
       >
-        <EditSpecWeightingForm />
+        <EditSpecWeightingForm weightings={option.weightings} />
       </GeneralModal>
     </>
   );
