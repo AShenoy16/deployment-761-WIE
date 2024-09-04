@@ -14,7 +14,7 @@ const QuestionEditorLayout: React.FC<QuestionEditorLayoutProps> = ({
   return (
     <>
       {children}
-      <Stack direction="row" spacing={2} justifyContent="center" marginTop={4}>
+      <Stack direction="row" spacing={2} justifyContent="center">
         <Button variant="outlined" onClick={onCancel}>
           Cancel
         </Button>

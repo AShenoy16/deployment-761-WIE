@@ -20,6 +20,7 @@ import {
   RankingQuestion,
 } from "../../types/QuestionTypes";
 import { rankingWeightingsFormSchema } from "../../util/FormSchema";
+import { useQuizEditorStore } from "../../stores/QuizEditorStore";
 
 const RankingWeightingsForm: React.FC = () => {
   const {
@@ -185,6 +186,36 @@ type EditableRankingOption = {
 };
 
 const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
+  const { selectedQuestion, updateRankingAnswerOptions } = useQuizEditorStore(
+    (state) => ({
+      selectedQuestion: state.selectedQuestion,
+      updateRankingAnswerOptions: state.updateRankingAnswerOptions,
+    })
+  );
+
+  const handleAddSpec = () => {
+    if (selectedQuestion?.type === "ranking") {
+      const updatedAnswerOptions = selectedQuestion.answerOptions.map((opt) => {
+        if (opt.optionId === option.optionId) {
+          // Add a new spec to the weightings for this option
+          return {
+            ...opt,
+            weightings: {
+              ...opt.weightings,
+              [`New Spec ${Object.entries(opt.weightings).length}`]: {
+                1: 0,
+                2: 0,
+                3: 0,
+              },
+            },
+          };
+        }
+        return opt;
+      });
+      updateRankingAnswerOptions(updatedAnswerOptions);
+    }
+  };
+
   return (
     <Paper sx={{ padding: 2, borderRadius: "1rem", position: "relative" }}>
       <Stack alignItems="center" spacing={2}>
@@ -195,7 +226,11 @@ const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
           justifyContent="space-between"
           position="relative"
         >
-          <Button startIcon={<AddIcon />} sx={{ flexShrink: 0 }}>
+          <Button
+            startIcon={<AddIcon />}
+            sx={{ flexShrink: 0 }}
+            onClick={handleAddSpec}
+          >
             Spec
           </Button>
           <Typography

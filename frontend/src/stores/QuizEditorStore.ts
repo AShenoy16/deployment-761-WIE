@@ -1,13 +1,35 @@
 import { create } from "zustand";
-import { Question } from "../types/QuestionTypes";
+import { RankingQuestion, Question } from "../types/QuestionTypes";
 
 type QuizEditorStore = {
   selectedQuestion: Question | null;
   setSelectedQuestion: (question: Question | null) => void;
+  updateRankingAnswerOptions: (
+    updatedAnswerOptions: RankingQuestion["answerOptions"]
+  ) => void;
 };
+
+function isRankingQuestion(
+  question: Question | null
+): question is RankingQuestion {
+  return question?.type === "ranking";
+}
 
 export const useQuizEditorStore = create<QuizEditorStore>((set) => ({
   selectedQuestion: null,
-  setSelectedQuestion: (question: Question | null) =>
-    set({ selectedQuestion: question ? { ...question } : null }),
+
+  setSelectedQuestion: (question) => set({ selectedQuestion: question }),
+
+  updateRankingAnswerOptions: (updatedAnswerOptions) =>
+    set((state) => {
+      if (isRankingQuestion(state.selectedQuestion)) {
+        return {
+          selectedQuestion: {
+            ...state.selectedQuestion,
+            answerOptions: updatedAnswerOptions,
+          },
+        };
+      }
+      return state;
+    }),
 }));
