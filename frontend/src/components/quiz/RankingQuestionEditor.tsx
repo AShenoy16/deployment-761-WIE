@@ -52,10 +52,14 @@ const RankingWeightingsForm: React.FC = () => {
           key={rank}
           label={`Rank ${rank}`}
           type="number"
-          value={value}
+          value={isNaN(value) ? "" : value}
           onChange={(e) => updateRank(parseInt(rank), parseInt(e.target.value))}
           error={!!errors.ranks[parseInt(rank) - 1]}
-          helperText={errors.ranks[parseInt(rank) - 1]}
+          helperText={
+            isNaN(value)
+              ? "Please enter a number"
+              : errors.ranks[parseInt(rank) - 1]
+          }
           fullWidth
         />
       ))}
@@ -186,23 +190,21 @@ type EditableRankingOption = {
 };
 
 const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
-  const { selectedQuestion, updateRankingAnswerOptions } = useQuizEditorStore(
-    (state) => ({
+  const { selectedQuestion, addNewSpecToRankingAnswerOption } =
+    useQuizEditorStore((state) => ({
       selectedQuestion: state.selectedQuestion,
-      updateRankingAnswerOptions: state.updateRankingAnswerOptions,
-    })
-  );
+      addNewSpecToRankingAnswerOption: state.addNewSpecToRankingAnswerOption,
+    }));
 
   const handleAddSpec = () => {
     if (selectedQuestion?.type === "ranking") {
       const updatedAnswerOptions = selectedQuestion.answerOptions.map((opt) => {
         if (opt.optionId === option.optionId) {
-          // Add a new spec to the weightings for this option
           return {
             ...opt,
             weightings: {
               ...opt.weightings,
-              [`New Spec ${Object.entries(opt.weightings).length}`]: {
+              [`New Spec ${Object.entries(opt.weightings).length + 1}`]: {
                 1: 0,
                 2: 0,
                 3: 0,
@@ -212,7 +214,7 @@ const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
         }
         return opt;
       });
-      updateRankingAnswerOptions(updatedAnswerOptions);
+      addNewSpecToRankingAnswerOption(updatedAnswerOptions);
     }
   };
 

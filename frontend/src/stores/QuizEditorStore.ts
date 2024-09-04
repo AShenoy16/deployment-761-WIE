@@ -4,7 +4,7 @@ import { RankingQuestion, Question } from "../types/QuestionTypes";
 type QuizEditorStore = {
   selectedQuestion: Question | null;
   setSelectedQuestion: (question: Question | null) => void;
-  updateRankingAnswerOptions: (
+  addNewSpecToRankingAnswerOption: (
     updatedAnswerOptions: RankingQuestion["answerOptions"]
   ) => void;
 };
@@ -20,7 +20,7 @@ export const useQuizEditorStore = create<QuizEditorStore>((set) => ({
 
   setSelectedQuestion: (question) => set({ selectedQuestion: question }),
 
-  updateRankingAnswerOptions: (updatedAnswerOptions) =>
+  addNewSpecToRankingAnswerOption: (updatedAnswerOptions) =>
     set((state) => {
       if (isRankingQuestion(state.selectedQuestion)) {
         return {
