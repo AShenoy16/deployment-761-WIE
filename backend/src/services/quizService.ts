@@ -1,6 +1,11 @@
 import { spec } from "node:test/reporters";
 import { quizResults } from "../constants/quizConstants";
-import { IMCQAnswerOption, IQuiz } from "../models/interfaces";
+import {
+  IMCQAnswerOption,
+  IQuiz,
+  IRankingAnswerOption,
+  IRankingQuestion,
+} from "../models/interfaces";
 import Quiz from "../models/QuizModel";
 import { QuizSubmissionRequest } from "../types/quizTypes";
 import { isQuizSubmissionRequest } from "../validation/quizValidation";
@@ -22,20 +27,21 @@ export const processQuizSubmission = async (
     // have a hashmap of the spec : score -> returning an array
     let specMap = quizResults.specResults;
 
-    // get the quiz and store it in memory
-
-    // error getting quiz
-
-    // loop through all the question types -> depending on question type -> do diff funtion
-
-    console.log(specMap);
-
     await mcqResults(quizSubmission.mcqAnswers, specMap);
-
-    console.log(specMap);
     await sliderResults(quizSubmission.sliderAnswers, specMap);
+    await rankingResults(quizSubmission.rankingAnswers, specMap);
 
     console.log(specMap);
+    
+    const entries = Object.entries(specMap);
+
+    // Sort entries by value
+    entries.sort(([, valueA], [, valueB]) => valueB - valueA);
+
+    const top3Entries = entries.slice(0, 3);
+
+    // Convert sorted array back to object
+    const sortedObj = Object.fromEntries(top3Entries);
 
     // loop through all question types -> ensuring it is not empty/undefined
 
@@ -43,7 +49,7 @@ export const processQuizSubmission = async (
 
     // return top three specs
 
-    return 1;
+    return sortedObj;
   } catch (error) {
     return null;
   }
@@ -156,46 +162,115 @@ const mcqResults = async (
 
 /**
  * method to update specMap of slider results
- * @param sliderAnswers object that has questionId to number of the slider 
- * -> this will be the index inside the database 
- * @param specResults specMap 
+ * @param sliderAnswers object that has questionId to number of the slider
+ * -> this will be the index inside the database
+ * @param specResults specMap
  */
 const sliderResults = async (
-  sliderAnswers: { [questionNumber: string]: number; },
+  sliderAnswers: { [questionNumber: string]: number },
   specResults: { [specName: string]: number }
 ) => {
-
-   // is an object and there are keys present
-   if (!isQuizSubmissionRequest(sliderAnswers)) {
+  // is an object and there are keys present
+  if (!isQuizSubmissionRequest(sliderAnswers)) {
     return;
   }
 
-   // convert optionId strings to ObjectiD
-   const sliderQuestionIds = Object.keys(sliderAnswers);
-   const objectIds = sliderQuestionIds.map((id) => new mongoose.Types.ObjectId(id));
- 
-   // get all the slider questions
-   const sliderQuestions = await fetchSlider(objectIds);
- 
-   // loop through all the slider questions -> updating the correct value 
- 
-   sliderQuestions.forEach((question) => {
-    const sliderIndex = sliderAnswers[question._id.toString()]
+  // convert optionId strings to ObjectiD
+  const sliderQuestionIds = Object.keys(sliderAnswers);
+  const objectIds = sliderQuestionIds.map(
+    (id) => new mongoose.Types.ObjectId(id)
+  );
+
+  // get all the slider questions
+  const sliderQuestions = await fetchSlider(objectIds);
+
+  // loop through all the slider questions -> updating the correct value
+
+  sliderQuestions.forEach((question) => {
+    const sliderIndex = sliderAnswers[question._id.toString()];
 
     // index of weightings array to use to update data
 
-    const weightings = question.sliderRange.weightings
+    const weightings = question.sliderRange.weightings;
 
-    // update spec map 
-    for(const spec in weightings){
-      const specWeighting = weightings[spec]
-      specResults[spec] += specWeighting[sliderIndex]
+    // update spec map
+    for (const spec in weightings) {
+      const specWeighting = weightings[spec];
+      specResults[spec] += specWeighting[sliderIndex];
     }
- 
-   });
+  });
+};
 
+/**
+ * Method to update specMap of ranking results
+ * @param rankingAnswers object that has questionId, and nested object with the optionId to the rank
+ * -> will not be index inside database, but rather an object
+ * @param specResults specMap
+ */
+const rankingResults = async (
+  rankingAnswers: {
+    [questionNumber: string]: { rankings: { [optionId: string]: number } };
+  },
+  specResults: { [specName: string]: number }
+) => {
+  // is an object and there are keys present
+  if (!isQuizSubmissionRequest(rankingAnswers)) {
+    return;
+  }
 
+  // convert optionId strings to ObjectiD
+  const rankingQuestionIds = Object.keys(rankingAnswers);
+  const objectIds = rankingQuestionIds.map(
+    (id) => new mongoose.Types.ObjectId(id)
+  );
 
+  // // get all the rankingQuestions
+  const rankingQuestions = await fetchRanking(objectIds);
+  // console.log(rankingQuestions)
 
+  // creates a map of question -> {answerId: weights}
+  const questionsMap = new Map();
 
+  rankingQuestions.forEach((obj) => {
+    // Initialize a nested map if the questionId does not exist in the outer map
+    if (!questionsMap.has(obj._id.toString())) {
+      questionsMap.set(obj._id.toString(), new Map());
+    }
+
+    // Get the inner map of answer options for this question
+    const answerMap = questionsMap.get(obj._id.toString());
+
+    // Add each answer option's answerId and weightings to the inner map
+    obj.answerOptions.forEach(
+      (option: { _id: { toString: () => any }; weightings: any }) => {
+        answerMap.set(option._id.toString(), {
+          weightings: option.weightings,
+        });
+      }
+    );
+
+    // Update the outer map with the inner map of answer options
+    questionsMap.set(obj._id.toString(), answerMap);
+  });
+
+  for (const questionNumber in rankingAnswers) {
+    const question = rankingAnswers[questionNumber];
+    const { rankings } = question; // Extract rankings object
+
+    const answerMap = questionsMap.get(questionNumber);
+
+    for (const [answerId, rank] of Object.entries(rankings)) {
+      const answerData = answerMap.get(answerId);
+      const { weightings } = answerData;
+
+      weightings.forEach(
+        (specialization: { weights: any; specializationName: string }) => {
+          const { weights, specializationName } = specialization;
+          const amount = weights[rank];
+          specResults[specializationName] += amount;
+        }
+      );
+    }
+  }
+  return;
 };

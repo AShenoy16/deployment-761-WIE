@@ -322,52 +322,76 @@ async function populateNewQuiz() {
       questionText: "Rank the following specializations",
       answerOptions: [
         {
-          text: "Mechanical",
-          weightings: {
-            "1": 10,
-            "2": 8,
-            "3": 5,
-            "4": 3,
-          },
+          text: "Sky Diving",
+          weightings: [
+            {
+              specializationName: "Mechanical",
+              weights: { "1": 10, "2": 8, "3": 5, "4": 0 },
+            },
+            {
+              specializationName: "Electrical",
+              weights: { "1": 10, "2": 8, "3": 5, "4": 0 },
+            },
+            {
+              specializationName: "Software",
+              weights: { "1": 15, "2": 8, "3": 5, "4": 0 },
+            },
+            {
+              specializationName: "Compsys",
+              weights: { "1": 20, "2": 8, "3": 5, "4": 0 },
+            },
+          ],
         },
         {
-          text: "Electrical",
-          weightings: {
-            "1": 15,
-            "2": 6,
-            "3": 5,
-            "4": 3,
-          },
+          text: "Soldering",
+          weightings: [
+            {
+              specializationName: "Mechanical",
+              weights: { "1": 10, "2": 8, "3": 5, "4": 0 },
+            },
+            {
+              specializationName: "Electrical",
+              weights: { "1": 10, "2": 8, "3": 5, "4": 0 },
+            },
+            {
+              specializationName: "Software",
+              weights: { "1": 15, "2": 8, "3": 5, "4": 0 },
+            },
+            {
+              specializationName: "Compsys",
+              weights: { "1": 20, "2": 8, "3": 5, "4": 0 },
+            },
+          ],
         },
       ],
     });
 
-    const rankingQuestion2 = new RankingQuestion({
-      questionText: "Rank the following jobs",
-      answerOptions: [
-        {
-          text: "Civil Engineer",
-          weightings: {
-            "1": 8,
-            "2": 6,
-            "3": 5,
-            "4": 3,
-          },
-        },
-        {
-          text: "Robot Building",
-          weightings: {
-            "1": 15,
-            "2": 6,
-            "3": 5,
-            "4": 3,
-          },
-        },
-      ],
-    });
+    // const rankingQuestion2 = new RankingQuestion({
+    //   questionText: "Rank the following jobs",
+    //   answerOptions: [
+    //     {
+    //       text: "Civil Engineer",
+    //       weightings: {
+    //         "1": 8,
+    //         "2": 6,
+    //         "3": 5,
+    //         "4": 3,
+    //       },
+    //     },
+    //     {
+    //       text: "Robot Building",
+    //       weightings: {
+    //         "1": 15,
+    //         "2": 6,
+    //         "3": 5,
+    //         "4": 3,
+    //       },
+    //     },
+    //   ],
+    // });
 
     await rankingQuestion1.save();
-    await rankingQuestion2.save();
+    // await rankingQuestion2.save();
 
     // Create multiple sample Slider questions
     const sliderQuestion1 = new SliderQuestion({
@@ -385,7 +409,7 @@ async function populateNewQuiz() {
         min: 1,
         max: 10,
         weightings: {
-          "Software Engineering": [1, 3, 8, 10],
+          Software: [1, 3, 8, 10],
           Mechatronics: [1, 3, 5, 7],
           Compsys: [1, 3, 5, 6],
           Electrical: [1, 3, 5, 6],
@@ -403,7 +427,7 @@ async function populateNewQuiz() {
         mcqQuestion1._id,
         mcqQuestion2._id,
         rankingQuestion1._id,
-        rankingQuestion2._id,
+        // rankingQuestion2._id,
         sliderQuestion1._id,
         sliderQuestion2._id,
       ],

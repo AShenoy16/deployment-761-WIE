@@ -22,13 +22,12 @@ export interface IRankingAnswerOption {
   text: string;
   _id: string
   // map of rank to rank to weight
-  weightings: { [rank: string]: number }
+  weightings: { [specializationName: string]: { [rank: number]: number } };
 }
 
 export interface IRankingQuestion extends Document {
   questionType: "Ranking";
   questionText: string;
-  questionId: string;
   answerOptions: IRankingAnswerOption[];
   createdAt: Date;
   updatedAt: Date;
