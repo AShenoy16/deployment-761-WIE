@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { Question } from "../types/QuestionTypes";
+import { IQuestion } from "../types/QuestionTypes";
 
 type QuizEditorStore = {
-  selectedQuestion: Question | null;
-  setSelectedQuestion: (question: Question | null) => void;
+  selectedQuestion: IQuestion | null;
+  setSelectedQuestion: (question: IQuestion | null) => void;
 };
 
 export const useQuizEditorStore = create<QuizEditorStore>((set) => ({

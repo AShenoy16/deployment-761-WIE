@@ -12,32 +12,21 @@ import { useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Question } from "../../types/QuestionTypes";
+import { IQuestion } from "../../types/QuestionTypes";
 import { useQuizEditorStore } from "../../stores/QuizEditorStore";
 import RankingQuestionEditor from "./RankingQuestionEditor";
 import QuestionEditorLayout from "../../layouts/QuestionEditorLayout";
 
-const getQuestionTypeLabel = (type: Question["type"]) => {
-  switch (type) {
-    case "mcq":
-      return "MCQ";
-    case "ranking":
-      return "Ranking";
-    case "slider":
-      return "Slider";
-    default:
-      return "";
-  }
-};
-
 const EditableQuestion = ({
   question,
+  questionNumber,
   onClickEditQuestion,
   onClickDeleteQuestion,
 }: {
-  question: Question;
-  onClickEditQuestion: (question: Question) => void;
-  onClickDeleteQuestion: (question: Question) => void;
+  question: IQuestion;
+  questionNumber: number;
+  onClickEditQuestion: (question: IQuestion) => void;
+  onClickDeleteQuestion: (question: IQuestion) => void;
 }) => {
   return (
     <Paper
@@ -49,9 +38,9 @@ const EditableQuestion = ({
       }}
     >
       <Typography variant="body1">
-        {`Question ${question.questionNumber} `}
+        {`Question ${questionNumber}`}
         <Typography variant="body1" component="span" color="grey">
-          {`~ ${getQuestionTypeLabel(question.type)}`}
+          {`~ ${question.questionType}`}
         </Typography>
       </Typography>
       <Box>
@@ -72,22 +61,22 @@ const EditableQuestion = ({
   );
 };
 
-const EditQuestionList = ({ questions }: { questions: Question[] }) => {
+const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
   const theme = useTheme();
   const setSelectedQuestion = useQuizEditorStore(
     (state) => state.setSelectedQuestion
   );
 
-  const onClickAddQuestion = (question: Question) => {
-    console.log(question.questionNumber);
+  const onClickAddQuestion = (question: IQuestion) => {
+    console.log(question._id);
   };
 
-  const onClickEditQuestion = (question: Question) => {
+  const onClickEditQuestion = (question: IQuestion) => {
     setSelectedQuestion(question);
   };
 
-  const onClickDeleteQuestion = (question: Question) => {
-    console.log(question.questionNumber);
+  const onClickDeleteQuestion = (question: IQuestion) => {
+    console.log(question._id);
   };
 
   return (
@@ -122,12 +111,13 @@ const EditQuestionList = ({ questions }: { questions: Question[] }) => {
         overflow="auto"
         sx={{ scrollbarWidth: "thin" }}
       >
-        {questions.map((question) => (
+        {questions.map((question, index) => (
           <EditableQuestion
+            key={question._id}
             question={question}
+            questionNumber={index + 1}
             onClickEditQuestion={onClickEditQuestion}
             onClickDeleteQuestion={onClickDeleteQuestion}
-            key={question.questionNumber}
           />
         ))}
       </Stack>
@@ -136,7 +126,7 @@ const EditQuestionList = ({ questions }: { questions: Question[] }) => {
 };
 
 type QuizEditorProps = {
-  questions: Question[];
+  questions: IQuestion[];
 };
 
 const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
@@ -156,16 +146,16 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
   };
 
   if (selectedQuestion) {
-    switch (selectedQuestion.type) {
-      case "mcq":
+    switch (selectedQuestion.questionType) {
+      case "MCQ":
         return <div>Implement</div>;
-      case "ranking":
+      case "Ranking":
         return (
           <QuestionEditorLayout onCancel={handleOnCancel} onSave={handleOnSave}>
             <RankingQuestionEditor question={selectedQuestion} />;
           </QuestionEditorLayout>
         );
-      case "slider":
+      case "Slider":
         return <div>Implement</div>;
       default:
         throw new Error("Invalid question type");
