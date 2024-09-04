@@ -14,18 +14,18 @@ import { RankingQuizQuestion } from "../components/quiz/RankingQuizQuestion";
 import { SliderQuizQuestion } from "../components/quiz/SliderQuizQuestion";
 import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
 import { useQuizStore } from "../stores/QuizStore";
-import { Question } from "../types/QuestionTypes";
+import { IQuestion } from "../types/QuestionTypes";
 import { useNavigate } from "react-router-dom";
 import { MCQQuizQuestion } from "../components/quiz/MCQQuizQuestion";
 import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
 
-const renderQuestionComponent = (question: Question) => {
-  switch (question.type) {
-    case "mcq":
+const renderQuestionComponent = (question: IQuestion) => {
+  switch (question.questionType) {
+    case "MCQ":
       return <MCQQuizQuestion question={question} />;
-    case "ranking":
+    case "Ranking":
       return <RankingQuizQuestion question={question} />;
-    case "slider":
+    case "Slider":
       return <SliderQuizQuestion question={question} />;
     default:
       throw new Error("Invalid question type");
@@ -110,17 +110,17 @@ const QuizPage: React.FC = () => {
 
   // There might be cases where the questions array is empty, leading to currentQuestion being undefined so we need '?'.
   const isRankingQuestionAnswered =
-    currentQuestion?.type !== "ranking" ||
-    (currentQuestion?.type === "ranking" &&
-      isRankingQuestionAnsweredMap[currentQuestion.questionNumber]);
+    currentQuestion?.questionType !== "Ranking" ||
+    (currentQuestion?.questionType === "Ranking" &&
+      isRankingQuestionAnsweredMap[currentQuestion._id]);
 
   const handleSubmit = () => {
     navigate("/quiz/results");
   };
   const isMCQQuestionAnswered =
-    currentQuestion?.type !== "mcq" ||
-    (currentQuestion?.type === "mcq" &&
-      isMCQQuestionAnsweredMap[currentQuestion.questionNumber]);
+    currentQuestion?.questionType !== "MCQ" ||
+    (currentQuestion?.questionType === "MCQ" &&
+      isMCQQuestionAnsweredMap[currentQuestion._id]);
 
   if (isLoading) {
     return <LoadingSpinnerScreen />;
