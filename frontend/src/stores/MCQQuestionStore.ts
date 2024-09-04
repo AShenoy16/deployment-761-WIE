@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 type MCQState = {
   selectedOptionId: { [questionId: string]: string | null };
-  isQuestionAnsweredMap: { [questionNumber: number]: boolean };
+  isQuestionAnsweredMap: { [questionId: string]: boolean };
   selectOption: (questionId: string, optionId: string) => void;
 };
 
