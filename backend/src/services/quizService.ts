@@ -31,8 +31,6 @@ export const processQuizSubmission = async (
     await sliderResults(quizSubmission.sliderAnswers, specMap);
     await rankingResults(quizSubmission.rankingAnswers, specMap);
 
-    console.log(specMap);
-    
     const entries = Object.entries(specMap);
 
     // Sort entries by value
@@ -43,12 +41,7 @@ export const processQuizSubmission = async (
     // Convert sorted array back to object
     const sortedObj = Object.fromEntries(top3Entries);
 
-    // loop through all question types -> ensuring it is not empty/undefined
-
-    // update specific weightings in the hashmap of the spec:score
-
     // return top three specs
-
     return sortedObj;
   } catch (error) {
     return null;
@@ -67,9 +60,6 @@ export const getSpecQuiz = async () => {
 
   // Combine all questions into a single array
   const allQuestions = [...mcq, ...slider, ...ranking];
-
-  console.log(allQuestions);
-
   return allQuestions;
 };
 
@@ -89,6 +79,7 @@ const fetchMCQ = async (ids: any[]) => {
   return mcqQuestions;
 };
 
+// fetch SliderQuestions
 const fetchSlider = async (ids: any[]) => {
   const mcqQuestions = await SliderQuestion.aggregate([
     { $match: { _id: { $in: ids } } },
@@ -104,6 +95,7 @@ const fetchSlider = async (ids: any[]) => {
   return mcqQuestions;
 };
 
+// fetch rankingQuestions
 const fetchRanking = async (ids: any) => {
   const mcqQuestions = await RankingQuestion.aggregate([
     { $match: { _id: { $in: ids } } },
@@ -119,11 +111,18 @@ const fetchRanking = async (ids: any) => {
   return mcqQuestions;
 };
 
+// get all QuizQuestion Ids from Database
 const getQuizIds = async () => {
   const ids = await Quiz.find().select("quizQuestions");
   return ids[0].quizQuestions;
 };
 
+/**
+ * Calculate mcq quiz question results
+ * @param mcqAnswers -> json object of mcq question: chosen answer (both ids)
+ * @param specResults -> specMap
+ * @returns
+ */
 const mcqResults = async (
   mcqAnswers: { [questionId: string]: string },
   specResults: { [specName: string]: number }
@@ -192,7 +191,6 @@ const sliderResults = async (
     // index of weightings array to use to update data
 
     const weightings = question.sliderRange.weightings;
-
     // update spec map
     for (const spec in weightings) {
       const specWeighting = weightings[spec];
@@ -226,7 +224,6 @@ const rankingResults = async (
 
   // // get all the rankingQuestions
   const rankingQuestions = await fetchRanking(objectIds);
-  // console.log(rankingQuestions)
 
   // creates a map of question -> {answerId: weights}
   const questionsMap = new Map();
@@ -257,12 +254,15 @@ const rankingResults = async (
     const question = rankingAnswers[questionNumber];
     const { rankings } = question; // Extract rankings object
 
+    // get answerMap -> answerId : weights
     const answerMap = questionsMap.get(questionNumber);
 
     for (const [answerId, rank] of Object.entries(rankings)) {
+      // get the necessary weights
       const answerData = answerMap.get(answerId);
       const { weightings } = answerData;
 
+      // update specMap
       weightings.forEach(
         (specialization: { weights: any; specializationName: string }) => {
           const { weights, specializationName } = specialization;
