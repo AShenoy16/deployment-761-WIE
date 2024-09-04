@@ -190,11 +190,12 @@ type EditableRankingOption = {
 };
 
 const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
-  const { selectedQuestion, addNewSpecToRankingAnswerOption } =
-    useQuizEditorStore((state) => ({
+  const { selectedQuestion, setSelectedQuestion } = useQuizEditorStore(
+    (state) => ({
       selectedQuestion: state.selectedQuestion,
-      addNewSpecToRankingAnswerOption: state.addNewSpecToRankingAnswerOption,
-    }));
+      setSelectedQuestion: state.setSelectedQuestion,
+    })
+  );
 
   const handleAddSpec = () => {
     if (selectedQuestion?.type === "ranking") {
@@ -214,7 +215,10 @@ const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
         }
         return opt;
       });
-      addNewSpecToRankingAnswerOption(updatedAnswerOptions);
+      setSelectedQuestion({
+        ...selectedQuestion,
+        answerOptions: updatedAnswerOptions,
+      });
     }
   };
 
