@@ -7,8 +7,6 @@ import {
   IconButton,
   alpha,
   Button,
-  Tabs,
-  Tab,
 } from "@mui/material";
 import { useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -17,6 +15,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Question } from "../../types/QuestionTypes";
 import { useQuizEditorStore } from "../../stores/QuizEditorStore";
 import RankingQuestionEditor from "./RankingQuestionEditor";
+import QuestionEditorLayout from "../../layouts/QuestionEditorLayout";
 
 const getQuestionTypeLabel = (type: Question["type"]) => {
   switch (type) {
@@ -136,85 +135,44 @@ const EditQuestionList = ({ questions }: { questions: Question[] }) => {
   );
 };
 
-const QuestionEditor: React.FC = () => {
-  const selectedQuestion = useQuizEditorStore(
-    (state) => state.selectedQuestion
-  );
-  const clearSelection = useQuizEditorStore((state) => state.clearSelection);
-
-  const selectedTab = useQuizEditorStore((state) => state.selectedTab);
-  const setSelectedTab = useQuizEditorStore((state) => state.setSelectedTab);
-
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
-    setSelectedTab(newValue as "mcq" | "ranking" | "slider");
-  };
-
-  const renderQuestionTypeEditor = () => {
-    switch (selectedTab) {
-      case "mcq":
-        return selectedQuestion && selectedQuestion.type === "mcq"
-          ? null
-          : null;
-      case "ranking":
-        return selectedQuestion && selectedQuestion.type === "ranking" ? (
-          <RankingQuestionEditor question={selectedQuestion} />
-        ) : null;
-      case "slider":
-        return selectedQuestion && selectedQuestion.type === "slider"
-          ? null
-          : null;
-      default:
-        throw new Error("Invalid question type");
-    }
-  };
-
-  return (
-    <Box>
-      <Tabs
-        value={selectedTab}
-        onChange={handleTabChange}
-        indicatorColor="primary"
-        textColor="primary"
-        centered
-      >
-        <Tab label="MCQ" value="mcq" />
-        <Tab label="Ranking" value="ranking" />
-        <Tab label="Slider" value="slider" />
-      </Tabs>
-
-      <Box maxHeight={450} overflow="auto" padding={2}>
-        {renderQuestionTypeEditor()}
-      </Box>
-      <Stack direction="row" spacing={2} justifyContent="center" marginTop={4}>
-        <Button variant="outlined" onClick={clearSelection}>
-          Cancel
-        </Button>
-        <Button variant="contained" color="primary">
-          Confirm
-        </Button>
-      </Stack>
-    </Box>
-  );
-};
-
 type QuizEditorProps = {
   questions: Question[];
 };
 
 const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
-  const selectedQuestion = useQuizEditorStore(
-    (state) => state.selectedQuestion
+  const { selectedQuestion, setSelectedQuestion } = useQuizEditorStore(
+    (state) => ({
+      selectedQuestion: state.selectedQuestion,
+      setSelectedQuestion: state.setSelectedQuestion,
+    })
   );
 
-  return (
-    <>
-      {selectedQuestion ? (
-        <QuestionEditor />
-      ) : (
-        <EditQuestionList questions={questions} />
-      )}
-    </>
-  );
+  const handleOnCancel = () => {
+    setSelectedQuestion(null);
+  };
+
+  const handleOnSave = () => {
+    console.log(selectedQuestion);
+  };
+
+  if (selectedQuestion) {
+    switch (selectedQuestion.type) {
+      case "mcq":
+        return <div>Implement</div>;
+      case "ranking":
+        return (
+          <QuestionEditorLayout onCancel={handleOnCancel} onSave={handleOnSave}>
+            <RankingQuestionEditor question={selectedQuestion} />;
+          </QuestionEditorLayout>
+        );
+      case "slider":
+        return <div>Implement</div>;
+      default:
+        throw new Error("Invalid question type");
+    }
+  }
+
+  return <EditQuestionList questions={questions} />;
 };
 
 export default QuizEditor;

@@ -7,6 +7,8 @@ import {
   Button,
   IconButton,
   TextField,
+  alpha,
+  useTheme,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -20,17 +22,19 @@ import {
 import { rankingWeightingsFormSchema } from "../../util/FormSchema";
 
 const RankingWeightingsForm: React.FC = () => {
-  const selectedSpecName = useRankingQuestionEditorStore(
-    (state) => state.selectedSpecName
-  );
-  const ranksForSelectedSpec = useRankingQuestionEditorStore(
-    (state) => state.ranksForSelectedSpec
-  );
-  const setSelectedSpecName = useRankingQuestionEditorStore(
-    (state) => state.setSelectedSpecName
-  );
-  const updateRank = useRankingQuestionEditorStore((state) => state.updateRank);
-  const errors = useRankingQuestionEditorStore((state) => state.errors);
+  const {
+    selectedSpecName,
+    ranksForSelectedSpec,
+    setSelectedSpecName,
+    updateRank,
+    errors,
+  } = useRankingQuestionEditorStore((state) => ({
+    selectedSpecName: state.selectedSpecName,
+    ranksForSelectedSpec: state.ranksForSelectedSpec,
+    setSelectedSpecName: state.setSelectedSpecName,
+    updateRank: state.updateRank,
+    errors: state.errors,
+  }));
 
   return (
     <Stack spacing={2}>
@@ -67,26 +71,25 @@ const RankingSpecWeightings: React.FC<RankingSpecWeightingsProps> = ({
   specName,
   ranks,
 }) => {
-  const isWeightingFormOpen = useRankingQuestionEditorStore(
-    (state) => state.isWeightingFormOpen
-  );
-  const setIsWeightingFormOpen = useRankingQuestionEditorStore(
-    (state) => state.setIsWeightingFormOpen
-  );
-  const selectedSpecName = useRankingQuestionEditorStore(
-    (state) => state.selectedSpecName
-  );
-  const setSelectedSpecName = useRankingQuestionEditorStore(
-    (state) => state.setSelectedSpecName
-  );
-  const ranksForSelectedSpec = useRankingQuestionEditorStore(
-    (state) => state.ranksForSelectedSpec
-  );
-  const setRanksForSelectedSpec = useRankingQuestionEditorStore(
-    (state) => state.setRanksForSelectedSpec
-  );
-  const reset = useRankingQuestionEditorStore((state) => state.reset);
-  const setErrors = useRankingQuestionEditorStore((state) => state.setErrors);
+  const {
+    isWeightingFormOpen,
+    setIsWeightingFormOpen,
+    selectedSpecName,
+    setSelectedSpecName,
+    ranksForSelectedSpec,
+    setRanksForSelectedSpec,
+    reset,
+    setErrors,
+  } = useRankingQuestionEditorStore((state) => ({
+    isWeightingFormOpen: state.isWeightingFormOpen,
+    setIsWeightingFormOpen: state.setIsWeightingFormOpen,
+    selectedSpecName: state.selectedSpecName,
+    setSelectedSpecName: state.setSelectedSpecName,
+    ranksForSelectedSpec: state.ranksForSelectedSpec,
+    setRanksForSelectedSpec: state.setRanksForSelectedSpec,
+    reset: state.reset,
+    setErrors: state.setErrors,
+  }));
 
   const handleOpenWeightingForm = () => {
     setSelectedSpecName(specName);
@@ -105,7 +108,6 @@ const RankingSpecWeightings: React.FC<RankingSpecWeightingsProps> = ({
     });
 
     if (validation.success) {
-      // TODO: Call API to persist changes and refetch data
       reset();
     } else {
       const fieldErrors: { specName: string; ranks: string[] } = {
@@ -227,8 +229,15 @@ type RankingQuestionEditorProps = {
 const RankingQuestionEditor: React.FC<RankingQuestionEditorProps> = ({
   question,
 }) => {
+  const theme = useTheme();
   return (
-    <Stack padding={2}>
+    <Stack
+      maxHeight={450}
+      overflow="auto"
+      padding={2}
+      bgcolor={alpha(theme.palette.secondary.main, 0.17)}
+      borderRadius={theme.shape.borderRadius}
+    >
       <Typography variant="h5" textAlign="center" marginBottom={2}>
         {question.questionText}
       </Typography>
