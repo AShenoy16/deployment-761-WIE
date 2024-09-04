@@ -89,7 +89,7 @@ const RankingOption: React.FC<RankingOptionProps> = ({
         {Array.from({ length: rankingCount }).map((_, rankIndex) => (
           <Box
             key={rankIndex}
-            role="button"
+            role="ranking-button"
             width="2rem"
             height="2rem"
             border="1px solid #ccc"

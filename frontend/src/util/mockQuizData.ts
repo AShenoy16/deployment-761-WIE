@@ -1,6 +1,6 @@
 import { IQuestion } from "../types/QuestionTypes";
 
-const mockQuestions: IQuestion[] = [
+export const mockQuestions: IQuestion[] = [
   // MCQ Questions
   {
     _id: "mcq1",
