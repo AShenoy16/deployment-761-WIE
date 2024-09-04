@@ -2,50 +2,64 @@ import { create } from "zustand";
 
 type RankingQuestionEditorStore = {
   isWeightingFormOpen: boolean;
+  selectedOptionId: string;
+  selectedWeightingId: string;
   selectedSpecName: string;
-  ranksForSelectedSpec: { [rank: number]: number };
-  errors: { specName: string; ranks: string[] };
+  weightingsForSelectedSpec: { [rank: string]: number };
+  errors: { specName: string; weightings: string[] };
   setIsWeightingFormOpen: (isOpen: boolean) => void;
+  setSelectedOptionAndWeighting: (
+    optionId: string,
+    weightingId: string
+  ) => void;
   setSelectedSpecName: (specName: string) => void;
-  setRanksForSelectedSpec: (ranks: { [rank: number]: number }) => void;
-  updateRank: (rank: number, value: number) => void;
-  setErrors: (errors: { specName: string; ranks: string[] }) => void;
+  setWeightingsForSelectedSpec: (ranks: { [rank: string]: number }) => void;
+  updateRankWeighting: (rank: string, value: number) => void;
+  setErrors: (errors: { specName: string; weightings: string[] }) => void;
   reset: () => void;
 };
 
 export const useRankingQuestionEditorStore = create<RankingQuestionEditorStore>(
   (set) => ({
     isWeightingFormOpen: false,
+    selectedOptionId: "",
+    selectedWeightingId: "",
     selectedSpecName: "",
-    ranksForSelectedSpec: {},
-    errors: { specName: "", ranks: [] },
+    weightingsForSelectedSpec: {},
+    errors: { specName: "", weightings: [] },
 
     setIsWeightingFormOpen: (isOpen: boolean) =>
       set({ isWeightingFormOpen: isOpen }),
 
+    setSelectedOptionAndWeighting: (optionId: string, weightingId: string) =>
+      set({
+        selectedOptionId: optionId,
+        selectedWeightingId: weightingId,
+      }),
+
     setSelectedSpecName: (specName: string) =>
       set({ selectedSpecName: specName }),
 
-    setRanksForSelectedSpec: (ranks: { [rank: number]: number }) =>
-      set({ ranksForSelectedSpec: ranks }),
+    setWeightingsForSelectedSpec: (ranks: { [rank: string]: number }) =>
+      set({ weightingsForSelectedSpec: ranks }),
 
-    updateRank: (rank: number, value: number) =>
+    updateRankWeighting: (rank: string, value: number) =>
       set((state) => ({
-        ranksForSelectedSpec: {
-          ...state.ranksForSelectedSpec,
+        weightingsForSelectedSpec: {
+          ...state.weightingsForSelectedSpec,
           [rank]: value,
         },
       })),
 
-    setErrors: (errors: { specName: string; ranks: string[] }) =>
+    setErrors: (errors: { specName: string; weightings: string[] }) =>
       set({ errors }),
 
     reset: () =>
       set({
         isWeightingFormOpen: false,
         selectedSpecName: "",
-        ranksForSelectedSpec: {},
-        errors: { specName: "", ranks: [] },
+        weightingsForSelectedSpec: {},
+        errors: { specName: "", weightings: [] },
       }),
   })
 );

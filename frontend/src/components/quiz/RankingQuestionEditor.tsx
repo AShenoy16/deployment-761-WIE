@@ -16,27 +16,27 @@ import EditIcon from "@mui/icons-material/Edit";
 import GeneralModal from "../GeneralModal";
 import { useRankingQuestionEditorStore } from "../../stores/RankingQuestionEditorStore";
 import {
-  RankingAnswerOption,
-  RankingQuestion,
+  IRankingAnswerOption,
+  IRankingQuestion,
+  IRankingWeights,
 } from "../../types/QuestionTypes";
 import { rankingWeightingsFormSchema } from "../../util/FormSchema";
 import { useQuizEditorStore } from "../../stores/QuizEditorStore";
 
-const RankingWeightingsForm: React.FC = () => {
+const EditSpecWeightingForm: React.FC = () => {
   const {
     selectedSpecName,
-    ranksForSelectedSpec,
+    weightingsForSelectedSpec,
     setSelectedSpecName,
     updateRank,
     errors,
   } = useRankingQuestionEditorStore((state) => ({
     selectedSpecName: state.selectedSpecName,
-    ranksForSelectedSpec: state.ranksForSelectedSpec,
+    weightingsForSelectedSpec: state.weightingsForSelectedSpec,
     setSelectedSpecName: state.setSelectedSpecName,
-    updateRank: state.updateRank,
+    updateRank: state.updateRankWeighting,
     errors: state.errors,
   }));
-
   return (
     <Stack spacing={2}>
       <TextField
@@ -47,18 +47,18 @@ const RankingWeightingsForm: React.FC = () => {
         helperText={errors.specName}
         fullWidth
       />
-      {Object.entries(ranksForSelectedSpec).map(([rank, value]) => (
+      {Object.entries(weightingsForSelectedSpec).map(([rank, weight]) => (
         <TextField
           key={rank}
           label={`Rank ${rank}`}
           type="number"
-          value={isNaN(value) ? "" : value}
-          onChange={(e) => updateRank(parseInt(rank), parseInt(e.target.value))}
-          error={!!errors.ranks[parseInt(rank) - 1]}
+          value={isNaN(weight) ? "" : weight}
+          onChange={(e) => updateRank(rank, parseInt(e.target.value))}
+          error={!!errors.weightings[parseInt(rank) - 1]}
           helperText={
-            isNaN(value)
+            isNaN(weight)
               ? "Please enter a number"
-              : errors.ranks[parseInt(rank) - 1]
+              : errors.weightings[parseInt(rank) - 1]
           }
           fullWidth
         />
@@ -67,38 +67,43 @@ const RankingWeightingsForm: React.FC = () => {
   );
 };
 
-type RankingSpecWeightingsProps = {
-  specName: string;
-  ranks: RankingAnswerOption["weightings"]["specializationName"];
+type SpecWeightingProps = {
+  option: IRankingAnswerOption;
+  weighting: IRankingWeights;
 };
 
-const RankingSpecWeightings: React.FC<RankingSpecWeightingsProps> = ({
-  specName,
-  ranks,
-}) => {
+const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
+  const { specializationName: specName, weights } = weighting;
   const {
     isWeightingFormOpen,
-    setIsWeightingFormOpen,
+    selectedOptionId,
+    selectedWeightingId,
     selectedSpecName,
+    weightingsForSelectedSpec,
+    setIsWeightingFormOpen,
+    setSelectedOptionAndWeighting,
     setSelectedSpecName,
-    ranksForSelectedSpec,
-    setRanksForSelectedSpec,
+    setWeightingsForSelectedSpec,
     reset,
     setErrors,
   } = useRankingQuestionEditorStore((state) => ({
     isWeightingFormOpen: state.isWeightingFormOpen,
-    setIsWeightingFormOpen: state.setIsWeightingFormOpen,
+    selectedOptionId: state.selectedOptionId,
+    selectedWeightingId: state.selectedWeightingId,
     selectedSpecName: state.selectedSpecName,
+    weightingsForSelectedSpec: state.weightingsForSelectedSpec,
+    setIsWeightingFormOpen: state.setIsWeightingFormOpen,
+    setSelectedOptionAndWeighting: state.setSelectedOptionAndWeighting,
     setSelectedSpecName: state.setSelectedSpecName,
-    ranksForSelectedSpec: state.ranksForSelectedSpec,
-    setRanksForSelectedSpec: state.setRanksForSelectedSpec,
+    setWeightingsForSelectedSpec: state.setWeightingsForSelectedSpec,
     reset: state.reset,
     setErrors: state.setErrors,
   }));
 
   const handleOpenWeightingForm = () => {
     setSelectedSpecName(specName);
-    setRanksForSelectedSpec(ranks);
+    setWeightingsForSelectedSpec(weights);
+    setSelectedOptionAndWeighting(option._id, weighting._id);
     setIsWeightingFormOpen(true);
   };
 
@@ -109,21 +114,21 @@ const RankingSpecWeightings: React.FC<RankingSpecWeightingsProps> = ({
   const handleConfirmWeightingChanges = () => {
     const validation = rankingWeightingsFormSchema.safeParse({
       specName: selectedSpecName,
-      ranks: ranksForSelectedSpec,
+      weightings: weightingsForSelectedSpec,
     });
 
     if (validation.success) {
       reset();
     } else {
-      const fieldErrors: { specName: string; ranks: string[] } = {
+      const fieldErrors: { specName: string; weightings: string[] } = {
         specName: "",
-        ranks: [],
+        weightings: [],
       };
       validation.error.errors.forEach((err) => {
         if (err.path[0] === "specName") {
           fieldErrors.specName = err.message;
-        } else if (err.path[0] === "ranks") {
-          fieldErrors.ranks = [...fieldErrors.ranks, err.message];
+        } else if (err.path[0] === "weightings") {
+          fieldErrors.weightings = [...fieldErrors.weightings, err.message];
         }
       });
       setErrors(fieldErrors);
@@ -157,7 +162,7 @@ const RankingSpecWeightings: React.FC<RankingSpecWeightingsProps> = ({
           <Typography>{specName}</Typography>
         </Stack>
         <Stack direction="row" spacing={1}>
-          {Object.entries(ranks).map(([rank, value]) => (
+          {Object.entries(weights).map(([rank, value]) => (
             <Box
               key={rank}
               display="flex"
@@ -175,18 +180,22 @@ const RankingSpecWeightings: React.FC<RankingSpecWeightingsProps> = ({
       </Stack>
       <GeneralModal
         title={"Edit Spec Weighting"}
-        open={isWeightingFormOpen}
+        open={
+          isWeightingFormOpen &&
+          selectedOptionId === option._id &&
+          selectedWeightingId === weighting._id
+        }
         onClose={handleCloseWeightingForm}
         onConfirm={handleConfirmWeightingChanges}
       >
-        <RankingWeightingsForm />
+        <EditSpecWeightingForm />
       </GeneralModal>
     </>
   );
 };
 
 type EditableRankingOption = {
-  option: RankingAnswerOption;
+  option: IRankingAnswerOption;
 };
 
 const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
@@ -198,19 +207,23 @@ const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
   );
 
   const handleAddSpec = () => {
-    if (selectedQuestion?.type === "ranking") {
+    if (selectedQuestion?.questionType === "Ranking") {
       const updatedAnswerOptions = selectedQuestion.answerOptions.map((opt) => {
-        if (opt.optionId === option.optionId) {
+        if (opt._id === option._id) {
           return {
             ...opt,
-            weightings: {
+            weightings: [
               ...opt.weightings,
-              [`New Spec ${Object.entries(opt.weightings).length + 1}`]: {
-                1: 0,
-                2: 0,
-                3: 0,
+              {
+                _id: `new_weight_${opt.weightings.length + 1}`,
+                specializationName: `New Spec ${opt.weightings.length + 1}`,
+                weights: {
+                  "1": 0,
+                  "2": 0,
+                  "3": 0,
+                },
               },
-            },
+            ],
           };
         }
         return opt;
@@ -250,12 +263,8 @@ const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
           </Typography>
         </Stack>
         <Stack width="100%" spacing={1}>
-          {Object.entries(option.weightings).map(([specName, ranks], index) => (
-            <RankingSpecWeightings
-              key={index}
-              specName={specName}
-              ranks={ranks}
-            />
+          {option.weightings.map((weighting, index) => (
+            <SpecWeighting key={index} option={option} weighting={weighting} />
           ))}
         </Stack>
       </Stack>
@@ -264,7 +273,7 @@ const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
 };
 
 type RankingQuestionEditorProps = {
-  question: RankingQuestion;
+  question: IRankingQuestion;
 };
 
 const RankingQuestionEditor: React.FC<RankingQuestionEditorProps> = ({
