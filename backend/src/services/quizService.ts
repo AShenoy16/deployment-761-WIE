@@ -186,7 +186,7 @@ const sliderResults = async (
   // loop through all the slider questions -> updating the correct value
 
   sliderQuestions.forEach((question) => {
-    const sliderIndex = sliderAnswers[question._id.toString()];
+    const sliderIndex = sliderAnswers[question._id.toString()] - 1;
 
     // index of weightings array to use to update data
 
