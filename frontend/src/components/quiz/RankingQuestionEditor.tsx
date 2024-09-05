@@ -127,6 +127,8 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
     selectedOptionId,
     selectedWeightingId,
     errors,
+    selectedSpecName,
+    weightingsForSelectedSpec,
     setIsWeightingFormOpen,
     setSelectedOptionAndWeighting,
     setSelectedSpecName,
@@ -137,12 +139,21 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
     selectedOptionId: state.selectedOptionId,
     selectedWeightingId: state.selectedWeightingId,
     errors: state.errors,
+    selectedSpecName: state.selectedSpecName,
+    weightingsForSelectedSpec: state.weightingsForSelectedSpec,
     setIsWeightingFormOpen: state.setIsWeightingFormOpen,
     setSelectedOptionAndWeighting: state.setSelectedOptionAndWeighting,
     setSelectedSpecName: state.setSelectedSpecName,
     setWeightingsForSelectedSpec: state.setWeightingsForSelectedSpec,
     reset: state.reset,
   }));
+
+  const { selectedQuestion, setSelectedQuestion } = useQuizEditorStore(
+    (state) => ({
+      selectedQuestion: state.selectedQuestion as IRankingQuestion,
+      setSelectedQuestion: state.setSelectedQuestion,
+    })
+  );
 
   const handleOpenWeightingForm = () => {
     setSelectedSpecName(specializationName);
@@ -160,8 +171,39 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
     if (hasErrors) {
       console.log("Cannot confirm weighting changes due to validation errors.");
     } else {
-      console.log("Weighting changes confirmed.");
-      reset();
+      // Find the option and the weighting to edit
+      const optionToEdit = selectedQuestion.answerOptions.find(
+        (o) => o._id === selectedOptionId
+      );
+
+      const weightToEdit = optionToEdit?.weightings.find(
+        (w) => w._id === selectedWeightingId
+      );
+
+      if (weightToEdit) {
+        weightToEdit.specializationName = selectedSpecName;
+        weightToEdit.weights = {
+          ...weightToEdit.weights,
+          ...weightingsForSelectedSpec,
+        };
+
+        const updatedAnswerOptions = selectedQuestion.answerOptions.map(
+          (option) =>
+            option._id === selectedOptionId
+              ? { ...option, weightings: [...option.weightings] }
+              : option
+        );
+
+        if (selectedQuestion?.questionType === "Ranking") {
+          setSelectedQuestion({
+            ...selectedQuestion,
+            answerOptions: updatedAnswerOptions,
+          });
+        }
+
+        // Reset the form state
+        reset();
+      }
     }
   };
 
