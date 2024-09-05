@@ -12,7 +12,9 @@ export const getQuiz = async (req: Request, res: Response) => {
     
   }
 
-  return res.status(200).json(quiz)
+  const sortedQuizData = quiz.sort((a, b) => a._id.toString().localeCompare(b._id.toString()));
+
+  return res.status(200).json(sortedQuizData)
   
 };
 
