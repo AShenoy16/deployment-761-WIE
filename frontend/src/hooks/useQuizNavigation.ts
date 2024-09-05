@@ -1,7 +1,7 @@
 import { useQuizStore } from "../stores/QuizStore";
-import { Question } from "../types/QuestionTypes";
+import { IQuestion } from "../types/QuestionTypes";
 
-export const useQuizNavigation = (questions: Question[]) => {
+export const useQuizNavigation = (questions: IQuestion[]) => {
   const {
     currentQuestionIndex,
     nextQuestion,

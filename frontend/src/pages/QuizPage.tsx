@@ -14,18 +14,18 @@ import { RankingQuizQuestion } from "../components/quiz/RankingQuizQuestion";
 import { SliderQuizQuestion } from "../components/quiz/SliderQuizQuestion";
 import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
 import { useQuizStore } from "../stores/QuizStore";
-import { Question } from "../types/QuestionTypes";
+import { IQuestion } from "../types/QuestionTypes";
 import { useNavigate } from "react-router-dom";
 import { MCQQuizQuestion } from "../components/quiz/MCQQuizQuestion";
 import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
 
-const renderQuestionComponent = (question: Question) => {
-  switch (question.type) {
-    case "mcq":
+const renderQuestionComponent = (question: IQuestion) => {
+  switch (question.questionType) {
+    case "MCQ":
       return <MCQQuizQuestion question={question} />;
-    case "ranking":
+    case "Ranking":
       return <RankingQuizQuestion question={question} />;
-    case "slider":
+    case "Slider":
       return <SliderQuizQuestion question={question} />;
     default:
       throw new Error("Invalid question type");
@@ -36,6 +36,12 @@ const StartingScreen: React.FC = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const startQuiz = useQuizStore((state) => state.startQuiz);
+  const [isAdminLoggedIn, _] = React.useState(true); // TODO: Replace with actual auth state
+  const navigate = useNavigate();
+
+  const onClickEdit = () => {
+    navigate("/quiz/edit");
+  };
 
   return (
     <Stack
@@ -48,9 +54,38 @@ const StartingScreen: React.FC = () => {
       <Typography variant={isSmallScreen ? "h4" : "h2"} textAlign="center">
         Find your spec with this quiz!
       </Typography>
-      <Button variant="contained" size="large" onClick={startQuiz}>
-        Start
-      </Button>
+      <Stack direction="row" gap={2}>
+        <Button
+          variant="contained"
+          size="large"
+          onClick={startQuiz}
+          sx={{
+            backgroundColor: theme.palette.secondary.main,
+            "&:hover": {
+              backgroundColor: theme.palette.secondary.dark,
+            },
+          }}
+        >
+          Start
+        </Button>
+        {isAdminLoggedIn && (
+          <Button
+            variant="outlined"
+            size="large"
+            sx={{
+              borderColor: theme.palette.secondary.main,
+              color: theme.palette.secondary.main,
+              "&:hover": {
+                borderColor: theme.palette.secondary.dark,
+                color: theme.palette.secondary.dark,
+              },
+            }}
+            onClick={onClickEdit}
+          >
+            Edit
+          </Button>
+        )}
+      </Stack>
     </Stack>
   );
 };
@@ -75,17 +110,17 @@ const QuizPage: React.FC = () => {
 
   // There might be cases where the questions array is empty, leading to currentQuestion being undefined so we need '?'.
   const isRankingQuestionAnswered =
-    currentQuestion?.type !== "ranking" ||
-    (currentQuestion?.type === "ranking" &&
-      isRankingQuestionAnsweredMap[currentQuestion.questionNumber]);
+    currentQuestion?.questionType !== "Ranking" ||
+    (currentQuestion?.questionType === "Ranking" &&
+      isRankingQuestionAnsweredMap[currentQuestion._id]);
 
   const handleSubmit = () => {
     navigate("/quiz/results");
   };
   const isMCQQuestionAnswered =
-    currentQuestion?.type !== "mcq" ||
-    (currentQuestion?.type === "mcq" &&
-      isMCQQuestionAnsweredMap[currentQuestion.questionNumber]);
+    currentQuestion?.questionType !== "MCQ" ||
+    (currentQuestion?.questionType === "MCQ" &&
+      isMCQQuestionAnsweredMap[currentQuestion._id]);
 
   if (isLoading) {
     return <LoadingSpinnerScreen />;
