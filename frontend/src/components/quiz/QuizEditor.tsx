@@ -16,6 +16,7 @@ import { IQuestion } from "../../types/QuestionTypes";
 import { useQuizEditorStore } from "../../stores/QuizEditorStore";
 import RankingQuestionEditor from "./RankingQuestionEditor";
 import QuestionEditorLayout from "../../layouts/QuestionEditorLayout";
+import { useRankingQuestionEditorStore } from "../../stores/RankingQuestionEditorStore";
 
 const EditableQuestion = ({
   question,
@@ -40,7 +41,7 @@ const EditableQuestion = ({
       <Typography variant="body1">
         {`Question ${questionNumber}`}
         <Typography variant="body1" component="span" color="grey">
-          {`~ ${question.questionType}`}
+          {` ~ ${question.questionType}`}
         </Typography>
       </Typography>
       <Box>
@@ -66,6 +67,9 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
   const setSelectedQuestion = useQuizEditorStore(
     (state) => state.setSelectedQuestion
   );
+  const setSelectedRankingQuestion = useRankingQuestionEditorStore(
+    (state) => state.setSelectedQuestion
+  );
 
   const onClickAddQuestion = (question: IQuestion) => {
     console.log(question._id);
@@ -73,6 +77,17 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
 
   const onClickEditQuestion = (question: IQuestion) => {
     setSelectedQuestion(question);
+    switch (question.questionType) {
+      case "MCQ": // Implement
+        break;
+      case "Ranking":
+        setSelectedRankingQuestion(question);
+        break;
+      case "Slider": // Implement
+        break;
+      default:
+        throw new Error("Invalid question type");
+    }
   };
 
   const onClickDeleteQuestion = (question: IQuestion) => {
@@ -136,9 +151,13 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
       setSelectedQuestion: state.setSelectedQuestion,
     })
   );
+  const setSelectedRankingQuestion = useRankingQuestionEditorStore(
+    (state) => state.setSelectedQuestion
+  );
 
   const handleOnCancel = () => {
     setSelectedQuestion(null);
+    setSelectedRankingQuestion(null);
   };
 
   const handleOnSave = () => {
@@ -147,16 +166,16 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
 
   if (selectedQuestion) {
     switch (selectedQuestion.questionType) {
-      case "MCQ":
-        return <div>Implement</div>;
+      case "MCQ": // Implement
+        break;
       case "Ranking":
         return (
           <QuestionEditorLayout onCancel={handleOnCancel} onSave={handleOnSave}>
-            <RankingQuestionEditor question={selectedQuestion} />
+            <RankingQuestionEditor />
           </QuestionEditorLayout>
         );
       case "Slider":
-        return <div>Implement</div>;
+        break; // Implement
       default:
         throw new Error("Invalid question type");
     }

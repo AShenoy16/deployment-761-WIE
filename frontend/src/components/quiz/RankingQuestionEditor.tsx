@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   alpha,
   Autocomplete,
   Box,
   Button,
   IconButton,
+  Modal,
   Paper,
   Stack,
   TextField,
@@ -14,14 +15,11 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import GeneralModal from "../GeneralModal";
 import { useRankingQuestionEditorStore } from "../../stores/RankingQuestionEditorStore";
 import {
   IRankingAnswerOption,
-  IRankingQuestion,
   IRankingWeight,
 } from "../../types/QuestionTypes";
-import { useQuizEditorStore } from "../../stores/QuizEditorStore";
 
 const possibleSpecs = [
   "Biomedical",
@@ -36,28 +34,58 @@ const possibleSpecs = [
   "Structural",
 ];
 
-type EditSpecWeightingFormProps = {
+type EditWeightingFormProps = {
+  open: boolean;
+  onClose: () => void;
+  onConfirm: (
+    specializationName: string,
+    newWeights: { [rank: string]: number }
+  ) => void;
+  title: string;
   weightings: IRankingAnswerOption["weightings"];
 };
 
-const EditSpecWeightingForm: React.FC<EditSpecWeightingFormProps> = ({
+const EditWeightingForm: React.FC<EditWeightingFormProps> = ({
+  open,
+  onClose,
+  onConfirm,
+  title,
   weightings,
 }) => {
   const {
-    selectedSpecName,
-    weightingsForSelectedSpec,
+    selectedQuestion,
+    selectedOptionId,
+    selectedWeightingId,
     errors,
-    setSelectedSpecName,
-    updateRankWeighting,
     setErrors,
   } = useRankingQuestionEditorStore((state) => ({
-    selectedSpecName: state.selectedSpecName,
-    weightingsForSelectedSpec: state.weightingsForSelectedSpec,
-    setSelectedSpecName: state.setSelectedSpecName,
-    updateRankWeighting: state.updateRankWeighting,
+    selectedQuestion: state.selectedQuestion,
+    selectedOptionId: state.selectedOptionId,
+    selectedWeightingId: state.selectedWeightingId,
     errors: state.errors,
     setErrors: state.setErrors,
   }));
+
+  const optionToEdit = selectedQuestion?.answerOptions.find(
+    (o) => o._id === selectedOptionId
+  );
+  const weightingToEdit = optionToEdit?.weightings.find(
+    (w) => w._id === selectedWeightingId
+  );
+
+  const [localSpecializationName, setLocalSpecializationName] = useState(
+    weightingToEdit?.specializationName || ""
+  );
+  const [localWeights, setLocalWeights] = useState(
+    weightingToEdit?.weights || { "1": 0, "2": 0, "3": 0 }
+  );
+
+  useEffect(() => {
+    if (weightingToEdit) {
+      setLocalSpecializationName(weightingToEdit.specializationName);
+      setLocalWeights(weightingToEdit.weights);
+    }
+  }, [weightingToEdit]);
 
   const existingSpecs = weightings.map((w) => w.specializationName);
   const availableSpecs = possibleSpecs.filter(
@@ -65,53 +93,83 @@ const EditSpecWeightingForm: React.FC<EditSpecWeightingFormProps> = ({
   );
 
   const handleWeightChange = (rank: string, value: number) => {
+    const newErrors = { ...errors };
     if (value < 1 || value > 10) {
-      const newErrors = { ...errors };
       newErrors[rank] = "Value must be between 1 and 10";
+      setErrors(newErrors);
+    } else if (isNaN(value)) {
+      newErrors[rank] = "Please enter a number";
       setErrors(newErrors);
     } else {
       const { [rank]: _, ...rest } = errors;
       setErrors(rest);
     }
-    updateRankWeighting(rank, value);
+    setLocalWeights((prev) => ({ ...prev, [rank]: value }));
+  };
+
+  const onConfirmClick = () => {
+    onConfirm(localSpecializationName!, localWeights!);
   };
 
   return (
-    <Stack spacing={2}>
-      <Autocomplete
-        options={availableSpecs}
-        value={selectedSpecName}
-        onChange={(_, newValue) => setSelectedSpecName(newValue || "")}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Spec Name"
-            error={!!errors.specName}
-            helperText={errors.specName}
+    <Modal open={open} onClose={onClose}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          width: 500,
+          transform: "translate(-50%, -50%)",
+          bgcolor: "background.paper",
+          borderRadius: "0.5rem",
+          boxShadow: 24,
+          p: 4,
+        }}
+      >
+        <Typography variant="h6" component="h2" marginBottom={2}>
+          {title}
+        </Typography>
+        <Stack spacing={2}>
+          <Autocomplete
+            options={availableSpecs}
+            value={localSpecializationName}
+            onChange={(_, newValue) => setLocalSpecializationName(newValue)}
+            renderInput={(params) => (
+              <TextField {...params} label="Spec Name" fullWidth />
+            )}
             fullWidth
+            disableClearable
           />
-        )}
-        fullWidth
-        disableClearable
-      />
-      {Object.entries(weightingsForSelectedSpec).map(([rank, weight]) => (
-        <TextField
-          key={rank}
-          label={`Rank ${rank}`}
-          type="number"
-          value={isNaN(weight) ? "" : weight}
-          onChange={(e) => {
-            const value = parseInt(e.target.value);
-            handleWeightChange(rank, value);
-          }}
-          error={!!errors[rank]}
-          helperText={
-            errors[rank] || (isNaN(weight) ? "Please enter a number" : "")
-          }
-          fullWidth
-        />
-      ))}
-    </Stack>
+          {Object.entries(localWeights).map(([rank, weight]) => (
+            <TextField
+              key={rank}
+              label={`Rank ${rank}`}
+              type="number"
+              value={isNaN(weight) ? "" : weight}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                handleWeightChange(rank, value);
+              }}
+              error={!!errors[rank]}
+              helperText={errors[rank]}
+              fullWidth
+            />
+          ))}
+          <Stack direction="row" justifyContent="flex-end" spacing={2}>
+            <Button variant="outlined" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={onConfirmClick}
+            >
+              Confirm
+            </Button>
+          </Stack>
+        </Stack>
+      </Box>
+    </Modal>
   );
 };
 
@@ -123,107 +181,62 @@ type SpecWeightingProps = {
 const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
   const { specializationName, weights } = weighting;
   const {
-    isWeightingFormOpen,
     selectedOptionId,
+    setSelectedOptionId,
     selectedWeightingId,
-    errors,
-    selectedSpecName,
-    weightingsForSelectedSpec,
+    setSelectedWeightingId,
+    isWeightingFormOpen,
     setIsWeightingFormOpen,
-    setSelectedOptionAndWeighting,
-    setSelectedSpecName,
-    setWeightingsForSelectedSpec,
-    reset,
+    errors,
+    setErrors,
+    updateWeightingSpecialization,
+    updateWeightingRanks,
+    deleteWeighting,
   } = useRankingQuestionEditorStore((state) => ({
-    isWeightingFormOpen: state.isWeightingFormOpen,
     selectedOptionId: state.selectedOptionId,
+    setSelectedOptionId: state.setSelectedOptionId,
     selectedWeightingId: state.selectedWeightingId,
-    errors: state.errors,
-    selectedSpecName: state.selectedSpecName,
-    weightingsForSelectedSpec: state.weightingsForSelectedSpec,
+    setSelectedWeightingId: state.setSelectedWeightingId,
+    isWeightingFormOpen: state.isWeightingFormOpen,
     setIsWeightingFormOpen: state.setIsWeightingFormOpen,
-    setSelectedOptionAndWeighting: state.setSelectedOptionAndWeighting,
-    setSelectedSpecName: state.setSelectedSpecName,
-    setWeightingsForSelectedSpec: state.setWeightingsForSelectedSpec,
-    reset: state.reset,
+    errors: state.errors,
+    setErrors: state.setErrors,
+    updateWeightingSpecialization: state.updateWeightingSpecialization,
+    updateWeightingRanks: state.updateWeightingRanks,
+    deleteWeighting: state.deleteWeighting,
   }));
 
-  const { selectedQuestion, setSelectedQuestion } = useQuizEditorStore(
-    (state) => ({
-      selectedQuestion: state.selectedQuestion as IRankingQuestion,
-      setSelectedQuestion: state.setSelectedQuestion,
-    })
-  );
-
   const handleOpenWeightingForm = () => {
-    setSelectedSpecName(specializationName);
-    setWeightingsForSelectedSpec(weights);
-    setSelectedOptionAndWeighting(option._id, weighting._id);
+    setSelectedOptionId(option._id);
+    setSelectedWeightingId(weighting._id);
     setIsWeightingFormOpen(true);
   };
 
   const handleCloseWeightingForm = () => {
-    reset();
+    setSelectedOptionId("");
+    setSelectedWeightingId("");
+    setErrors({});
+    setIsWeightingFormOpen(false);
+  };
+
+  const handleConfirmSpecWeightChanges = (
+    specializationName: string,
+    newWeights: { [rank: string]: number }
+  ) => {
+    const hasErrors = Object.keys(errors).length > 0;
+    if (!hasErrors) {
+      updateWeightingSpecialization(
+        selectedOptionId,
+        selectedWeightingId,
+        specializationName
+      );
+      updateWeightingRanks(selectedOptionId, selectedWeightingId, newWeights);
+      handleCloseWeightingForm();
+    }
   };
 
   const handleDeleteWeighting = () => {
-    const updatedAnswerOptions = selectedQuestion.answerOptions.map((opt) => {
-      if (opt._id === option._id) {
-        return {
-          ...opt,
-          weightings: opt.weightings.filter((w) => w._id !== weighting._id),
-        };
-      }
-      return opt;
-    });
-
-    const updatedQuestion = {
-      ...selectedQuestion,
-      answerOptions: updatedAnswerOptions,
-    };
-
-    setSelectedQuestion(updatedQuestion);
-  };
-
-  const handleConfirmWeightingChanges = () => {
-    const hasErrors = Object.keys(errors).length > 0;
-    if (hasErrors) {
-      console.log("Cannot confirm weighting changes due to validation errors.");
-    } else {
-      // Find the option and the weighting to edit
-      const optionToEdit = selectedQuestion.answerOptions.find(
-        (o) => o._id === selectedOptionId
-      );
-
-      const weightToEdit = optionToEdit?.weightings.find(
-        (w) => w._id === selectedWeightingId
-      );
-
-      if (weightToEdit) {
-        weightToEdit.specializationName = selectedSpecName;
-        weightToEdit.weights = {
-          ...weightToEdit.weights,
-          ...weightingsForSelectedSpec,
-        };
-
-        const updatedAnswerOptions = selectedQuestion.answerOptions.map(
-          (option) =>
-            option._id === selectedOptionId
-              ? { ...option, weightings: [...option.weightings] }
-              : option
-        );
-
-        if (selectedQuestion?.questionType === "Ranking") {
-          setSelectedQuestion({
-            ...selectedQuestion,
-            answerOptions: updatedAnswerOptions,
-          });
-        }
-
-        // Reset the form state
-        reset();
-      }
-    }
+    deleteWeighting(option._id, weighting._id);
   };
 
   return (
@@ -273,18 +286,17 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
           ))}
         </Stack>
       </Stack>
-      <GeneralModal
-        title={"Edit Spec Weighting"}
+      <EditWeightingForm
         open={
           isWeightingFormOpen &&
           selectedOptionId === option._id &&
           selectedWeightingId === weighting._id
         }
         onClose={handleCloseWeightingForm}
-        onConfirm={handleConfirmWeightingChanges}
-      >
-        <EditSpecWeightingForm weightings={option.weightings} />
-      </GeneralModal>
+        onConfirm={handleConfirmSpecWeightChanges}
+        title={"Edit Spec Weighting"}
+        weightings={option.weightings}
+      />
     </>
   );
 };
@@ -294,56 +306,19 @@ type EditableRankingOption = {
 };
 
 const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
-  const { selectedQuestion, setSelectedQuestion } = useQuizEditorStore(
+  const { updateOptionTitle, addWeighting } = useRankingQuestionEditorStore(
     (state) => ({
-      selectedQuestion: state.selectedQuestion as IRankingQuestion,
-      setSelectedQuestion: state.setSelectedQuestion,
+      updateOptionTitle: state.updateOptionTitle,
+      addWeighting: state.addWeighting,
     })
   );
 
-  const handleOptionTextChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const updatedAnswerOptions = selectedQuestion.answerOptions.map((opt) =>
-      opt._id === option._id ? { ...opt, text: event.target.value } : opt
-    );
-
-    const updatedQuestion = {
-      ...selectedQuestion,
-      answerOptions: updatedAnswerOptions,
-    };
-
-    setSelectedQuestion(updatedQuestion);
-    console.log(updatedQuestion.answerOptions[0].text);
+  const handleOptionTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateOptionTitle(option._id, e.target.value);
   };
 
   const handleAddSpec = () => {
-    if (selectedQuestion?.questionType === "Ranking") {
-      const updatedAnswerOptions = selectedQuestion.answerOptions.map((opt) => {
-        if (opt._id === option._id) {
-          return {
-            ...opt,
-            weightings: [
-              ...opt.weightings,
-              {
-                _id: `new_weight_${opt.weightings.length + 1}`,
-                specializationName: `New Spec ${opt.weightings.length + 1}`,
-                weights: {
-                  "1": 0,
-                  "2": 0,
-                  "3": 0,
-                },
-              },
-            ],
-          };
-        }
-        return opt;
-      });
-      setSelectedQuestion({
-        ...selectedQuestion,
-        answerOptions: updatedAnswerOptions,
-      });
-    }
+    addWeighting(option._id);
   };
 
   return (
@@ -389,30 +364,16 @@ const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
   );
 };
 
-type RankingQuestionEditorProps = {
-  question: IRankingQuestion;
-};
-
-const RankingQuestionEditor: React.FC<RankingQuestionEditorProps> = ({
-  question,
-}) => {
+const RankingQuestionEditor: React.FC = () => {
   const theme = useTheme();
-  const { selectedQuestion, setSelectedQuestion } = useQuizEditorStore(
-    (state) => ({
-      selectedQuestion: state.selectedQuestion as IRankingQuestion,
-      setSelectedQuestion: state.setSelectedQuestion,
-    })
-  );
+  const { selectedQuestion, updateQuestionTitle } =
+    useRankingQuestionEditorStore((state) => ({
+      selectedQuestion: state.selectedQuestion,
+      updateQuestionTitle: state.updateQuestionTitle,
+    }));
 
-  const handleQuestionTextChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const updatedQuestion = {
-      ...selectedQuestion,
-      questionText: event.target.value,
-    };
-    setSelectedQuestion(updatedQuestion);
-    console.log(updatedQuestion.questionText);
+  const handleQuestionTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateQuestionTitle(e.target.value);
   };
 
   return (
@@ -425,12 +386,17 @@ const RankingQuestionEditor: React.FC<RankingQuestionEditorProps> = ({
     >
       <TextField
         label="Question Text"
-        value={selectedQuestion.questionText}
+        value={selectedQuestion?.questionText}
         onChange={handleQuestionTextChange}
         sx={{
           margin: "auto",
           maxWidth: "500px",
           width: "100%",
+        }}
+        inputProps={{
+          style: {
+            padding: 10,
+          },
         }}
       />
 
@@ -458,7 +424,7 @@ const RankingQuestionEditor: React.FC<RankingQuestionEditorProps> = ({
         </Stack>
       </Stack>
       <Stack spacing={2}>
-        {selectedQuestion.answerOptions.map((option, index) => (
+        {selectedQuestion?.answerOptions.map((option, index) => (
           <EditableRankingOption key={index} option={option} />
         ))}
       </Stack>
