@@ -92,6 +92,8 @@ const EditWeightingForm: React.FC<EditWeightingFormProps> = ({
     (s) => !existingSpecs.includes(s)
   );
 
+  const isInvalidSpec = !possibleSpecs.includes(localSpecializationName);
+
   const handleWeightChange = (rank: string, value: number) => {
     const newErrors = { ...errors };
     if (value < 1 || value > 10) {
@@ -135,7 +137,15 @@ const EditWeightingForm: React.FC<EditWeightingFormProps> = ({
             value={localSpecializationName}
             onChange={(_, newValue) => setLocalSpecializationName(newValue)}
             renderInput={(params) => (
-              <TextField {...params} label="Spec Name" fullWidth />
+              <TextField
+                {...params}
+                label="Spec Name"
+                error={isInvalidSpec}
+                helperText={
+                  isInvalidSpec ? "Please choose a specialization" : ""
+                }
+                fullWidth
+              />
             )}
             fullWidth
             disableClearable
@@ -286,7 +296,6 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
           ))}
         </Stack>
       </Stack>
-      {/* Conditionally render the EditWeightingForm */}
       {selectedOptionId === option._id &&
         selectedWeightingId === weighting._id && (
           <EditWeightingForm
