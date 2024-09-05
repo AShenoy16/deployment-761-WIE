@@ -81,7 +81,7 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
       case "MCQ": // Implement
         break;
       case "Ranking":
-        setSelectedRankingQuestion(question);
+        setSelectedRankingQuestion({ ...question });
         break;
       case "Slider": // Implement
         break;
