@@ -273,10 +273,26 @@ type EditableRankingOption = {
 const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
   const { selectedQuestion, setSelectedQuestion } = useQuizEditorStore(
     (state) => ({
-      selectedQuestion: state.selectedQuestion,
+      selectedQuestion: state.selectedQuestion as IRankingQuestion,
       setSelectedQuestion: state.setSelectedQuestion,
     })
   );
+
+  const handleOptionTextChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedAnswerOptions = selectedQuestion.answerOptions.map((opt) =>
+      opt._id === option._id ? { ...opt, text: event.target.value } : opt
+    );
+
+    const updatedQuestion = {
+      ...selectedQuestion,
+      answerOptions: updatedAnswerOptions,
+    };
+
+    setSelectedQuestion(updatedQuestion);
+    console.log(updatedQuestion.answerOptions[0].text);
+  };
 
   const handleAddSpec = () => {
     if (selectedQuestion?.questionType === "Ranking") {
@@ -324,15 +340,21 @@ const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
           >
             Spec
           </Button>
-          <Typography
+          <TextField
+            label="Option Text"
+            value={option.text}
+            onChange={handleOptionTextChange}
             sx={{
               position: "absolute",
               left: "50%",
               transform: "translateX(-50%)",
             }}
-          >
-            {option.text}
-          </Typography>
+            inputProps={{
+              style: {
+                padding: 5,
+              },
+            }}
+          />
         </Stack>
         <Stack width="100%" spacing={1}>
           {option.weightings.map((weighting, index) => (
@@ -352,6 +374,24 @@ const RankingQuestionEditor: React.FC<RankingQuestionEditorProps> = ({
   question,
 }) => {
   const theme = useTheme();
+  const { selectedQuestion, setSelectedQuestion } = useQuizEditorStore(
+    (state) => ({
+      selectedQuestion: state.selectedQuestion as IRankingQuestion,
+      setSelectedQuestion: state.setSelectedQuestion,
+    })
+  );
+
+  const handleQuestionTextChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedQuestion = {
+      ...selectedQuestion,
+      questionText: event.target.value,
+    };
+    setSelectedQuestion(updatedQuestion);
+    console.log(updatedQuestion.questionText);
+  };
+
   return (
     <Stack
       maxHeight={450}
@@ -360,9 +400,17 @@ const RankingQuestionEditor: React.FC<RankingQuestionEditorProps> = ({
       bgcolor={alpha(theme.palette.secondary.main, 0.17)}
       borderRadius={theme.shape.borderRadius}
     >
-      <Typography variant="h5" textAlign="center" marginBottom={2}>
-        {question.questionText}
-      </Typography>
+      <TextField
+        label="Question Text"
+        value={selectedQuestion.questionText}
+        onChange={handleQuestionTextChange}
+        sx={{
+          margin: "auto",
+          maxWidth: "500px",
+          width: "100%",
+        }}
+      />
+
       <Stack
         direction="row"
         justifyContent="flex-end"
@@ -370,7 +418,7 @@ const RankingQuestionEditor: React.FC<RankingQuestionEditorProps> = ({
         spacing={2}
         paddingX={2}
       >
-        <Typography> Ranks: </Typography>
+        <Typography>Ranks:</Typography>
         <Stack direction="row" spacing={1}>
           {Array.from({ length: 3 }).map((_, index) => (
             <Box
@@ -387,7 +435,7 @@ const RankingQuestionEditor: React.FC<RankingQuestionEditorProps> = ({
         </Stack>
       </Stack>
       <Stack spacing={2}>
-        {question.answerOptions.map((option, index) => (
+        {selectedQuestion.answerOptions.map((option, index) => (
           <EditableRankingOption key={index} option={option} />
         ))}
       </Stack>
