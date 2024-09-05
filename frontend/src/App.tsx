@@ -7,6 +7,7 @@ import SpecPage from "./pages/SpecPage";
 import SpecDetailPage from "./pages/SpecDetailPage";
 import GeneralLayout from "./layouts/GeneralLayout";
 import QuizResultsPage from "./pages/QuizResultsPage";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/quiz/results" element={<QuizResultsPage />} />
             <Route path="/spec-info" element={<SpecPage />} />
             <Route path="/specialisation/:id" element={<SpecDetailPage />} />
+            <Route path ="/login" element={<LoginPage />} />
           </Routes>
         </GeneralLayout>
       </BrowserRouter>
