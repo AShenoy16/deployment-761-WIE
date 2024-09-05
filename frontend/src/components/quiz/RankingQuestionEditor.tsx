@@ -166,6 +166,25 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
     reset();
   };
 
+  const handleDeleteWeighting = () => {
+    const updatedAnswerOptions = selectedQuestion.answerOptions.map((opt) => {
+      if (opt._id === option._id) {
+        return {
+          ...opt,
+          weightings: opt.weightings.filter((w) => w._id !== weighting._id),
+        };
+      }
+      return opt;
+    });
+
+    const updatedQuestion = {
+      ...selectedQuestion,
+      answerOptions: updatedAnswerOptions,
+    };
+
+    setSelectedQuestion(updatedQuestion);
+  };
+
   const handleConfirmWeightingChanges = () => {
     const hasErrors = Object.keys(errors).length > 0;
     if (hasErrors) {
@@ -220,7 +239,11 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
           spacing={2}
         >
           <Stack direction="row">
-            <IconButton color="error" sx={{ padding: "0.25rem" }}>
+            <IconButton
+              color="error"
+              sx={{ padding: "0.25rem" }}
+              onClick={handleDeleteWeighting}
+            >
               <DeleteIcon />
             </IconButton>
             <IconButton
