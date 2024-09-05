@@ -1,5 +1,4 @@
 // MCQ interfaces
-
 export interface IMCQAnswerOption {
   text: string;
   _id: string
@@ -10,7 +9,7 @@ export interface IMCQAnswerOption {
 export interface IMCQQuestion extends Document {
   questionType: "MCQ";
   questionText: string;
-  questionId: string;
+  _id: string;
   answerOptions: IMCQAnswerOption[];
   createdAt: Date;
   updatedAt: Date;
@@ -18,14 +17,20 @@ export interface IMCQQuestion extends Document {
 
 // Ranking interfaces
 
+export interface IRankingWeights {
+  _id: string; // ObjectId in string format
+  specializationName: string;
+  weights: { [rank: string]: number }; // Map of rank (string) to weight (number)
+}
+
 export interface IRankingAnswerOption {
   text: string;
   _id: string
   // map of rank to rank to weight
-  weightings: { [specializationName: string]: { [rank: number]: number } };
+  weightings: IRankingWeights[]; // Array of weightings
 }
 
-export interface IRankingQuestion extends Document {
+export interface IRankingQuestion {
   questionType: "Ranking";
   questionText: string;
   answerOptions: IRankingAnswerOption[];
@@ -44,7 +49,7 @@ export interface ISliderRange {
 export interface ISliderQuestion extends Document {
   questionType: "Slider";
   questionText: string;
-  questionId: string;
+  _id: string;
   sliderRange: ISliderRange;
   createdAt: Date;
   updatedAt: Date;
