@@ -3,15 +3,13 @@ import {IMCQQuestion, IMCQAnswerOption } from './interfaces';
 
 
 const mcqAnswerOptionSchema: Schema = new Schema({
-  optionId: { type: String, required: true },
   text: { type: String, required: true },
   weightings: { required: true, type: Map, of: Number },
 });
 
 const mcqQuestionSchema: Schema = new Schema({
-  questionType: "MCQ",
+  questionType: { type: String, default: "MCQ", required: true },
   questionText: { type: String, required: true },
-  questionNumber: { type: Number, required: true },
   answerOptions: {
     type: [mcqAnswerOptionSchema],
     validate: {
@@ -25,6 +23,7 @@ const mcqQuestionSchema: Schema = new Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
+
 
 const MCQQuestion = mongoose.model<IMCQQuestion>('MCQQuestion', mcqQuestionSchema);
 export default MCQQuestion;

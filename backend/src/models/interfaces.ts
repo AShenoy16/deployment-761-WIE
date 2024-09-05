@@ -1,8 +1,7 @@
 // MCQ interfaces
-
 export interface IMCQAnswerOption {
-  optionId: string;
   text: string;
+  _id: string
   // map of specname as string to number
   weightings: { [specializationName: string]: number };
 }
@@ -10,7 +9,7 @@ export interface IMCQAnswerOption {
 export interface IMCQQuestion extends Document {
   questionType: "MCQ";
   questionText: string;
-  questionNumber: number;
+  _id: string;
   answerOptions: IMCQAnswerOption[];
   createdAt: Date;
   updatedAt: Date;
@@ -18,17 +17,22 @@ export interface IMCQQuestion extends Document {
 
 // Ranking interfaces
 
-export interface IRankingAnswerOption {
-  optionId: string;
-  text: string;
-  // map of spec names to rank and weight
-  weightings: { [specializationName: string]: { [rank: number]: number } };
+export interface IRankingWeights {
+  _id: string; // ObjectId in string format
+  specializationName: string;
+  weights: { [rank: string]: number }; // Map of rank (string) to weight (number)
 }
 
-export interface IRankingQuestion extends Document {
+export interface IRankingAnswerOption {
+  text: string;
+  _id: string
+  // map of rank to rank to weight
+  weightings: IRankingWeights[]; // Array of weightings
+}
+
+export interface IRankingQuestion {
   questionType: "Ranking";
   questionText: string;
-  questionNumber: number;
   answerOptions: IRankingAnswerOption[];
   createdAt: Date;
   updatedAt: Date;
@@ -37,7 +41,6 @@ export interface IRankingQuestion extends Document {
 // Slider interfaces
 
 export interface ISliderRange {
-  sliderId: string;
   min: number;
   max: number;
   weightings: { [specializationName: string]: number[] };
@@ -46,7 +49,7 @@ export interface ISliderRange {
 export interface ISliderQuestion extends Document {
   questionType: "Slider";
   questionText: string;
-  questionNumber: number;
+  _id: string;
   sliderRange: ISliderRange;
   createdAt: Date;
   updatedAt: Date;
@@ -61,7 +64,6 @@ export interface IQuiz extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
-
 
 export interface Testimonial extends Document {
   testimonialId: string;
