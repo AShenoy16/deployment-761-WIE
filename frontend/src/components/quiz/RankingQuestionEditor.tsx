@@ -286,17 +286,17 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
           ))}
         </Stack>
       </Stack>
-      <EditWeightingForm
-        open={
-          isWeightingFormOpen &&
-          selectedOptionId === option._id &&
-          selectedWeightingId === weighting._id
-        }
-        onClose={handleCloseWeightingForm}
-        onConfirm={handleConfirmSpecWeightChanges}
-        title={"Edit Spec Weighting"}
-        weightings={option.weightings}
-      />
+      {/* Conditionally render the EditWeightingForm */}
+      {selectedOptionId === option._id &&
+        selectedWeightingId === weighting._id && (
+          <EditWeightingForm
+            open={isWeightingFormOpen}
+            onClose={handleCloseWeightingForm}
+            onConfirm={handleConfirmSpecWeightChanges}
+            title={"Edit Spec Weighting"}
+            weightings={option.weightings}
+          />
+        )}
     </>
   );
 };
