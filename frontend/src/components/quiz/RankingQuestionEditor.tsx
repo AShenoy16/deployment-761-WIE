@@ -378,11 +378,12 @@ const RankingQuestionEditor: React.FC = () => {
 
   return (
     <Stack
-      maxHeight={450}
+      maxHeight={500}
       overflow="auto"
       padding={2}
       bgcolor={alpha(theme.palette.secondary.main, 0.17)}
       borderRadius={theme.shape.borderRadius}
+      sx={{ scrollbarWidth: "thin" }}
     >
       <TextField
         label="Question Text"
