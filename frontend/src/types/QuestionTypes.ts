@@ -15,7 +15,7 @@ export interface IMCQQuestion {
 }
 
 // Ranking interfaces
-export interface IRankingWeights {
+export interface IRankingWeight {
   _id: string;
   specializationName: string;
   weights: { [rank: string]: number };
@@ -24,7 +24,7 @@ export interface IRankingWeights {
 export interface IRankingAnswerOption {
   _id: string;
   text: string;
-  weightings: IRankingWeights[];
+  weightings: IRankingWeight[];
 }
 
 export interface IRankingQuestion {

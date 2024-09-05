@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const rankingWeightingsFormSchema = z.object({
-  specName: z.string().min(1, "Spec Name is required"),
   weightings: z.record(
     z
       .number()

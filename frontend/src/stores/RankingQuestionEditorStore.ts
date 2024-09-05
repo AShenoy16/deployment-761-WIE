@@ -6,7 +6,7 @@ type RankingQuestionEditorStore = {
   selectedWeightingId: string;
   selectedSpecName: string;
   weightingsForSelectedSpec: { [rank: string]: number };
-  errors: { specName: string; weightings: string[] };
+  errors: { [rank: string]: string };
   setIsWeightingFormOpen: (isOpen: boolean) => void;
   setSelectedOptionAndWeighting: (
     optionId: string,
@@ -15,7 +15,7 @@ type RankingQuestionEditorStore = {
   setSelectedSpecName: (specName: string) => void;
   setWeightingsForSelectedSpec: (ranks: { [rank: string]: number }) => void;
   updateRankWeighting: (rank: string, value: number) => void;
-  setErrors: (errors: { specName: string; weightings: string[] }) => void;
+  setErrors: (errors: { [rank: string]: string }) => void;
   reset: () => void;
 };
 
@@ -26,7 +26,7 @@ export const useRankingQuestionEditorStore = create<RankingQuestionEditorStore>(
     selectedWeightingId: "",
     selectedSpecName: "",
     weightingsForSelectedSpec: {},
-    errors: { specName: "", weightings: [] },
+    errors: {},
 
     setIsWeightingFormOpen: (isOpen: boolean) =>
       set({ isWeightingFormOpen: isOpen }),
@@ -51,15 +51,14 @@ export const useRankingQuestionEditorStore = create<RankingQuestionEditorStore>(
         },
       })),
 
-    setErrors: (errors: { specName: string; weightings: string[] }) =>
-      set({ errors }),
+    setErrors: (errors: { [rank: string]: string }) => set({ errors }),
 
     reset: () =>
       set({
         isWeightingFormOpen: false,
         selectedSpecName: "",
         weightingsForSelectedSpec: {},
-        errors: { specName: "", weightings: [] },
+        errors: {},
       }),
   })
 );

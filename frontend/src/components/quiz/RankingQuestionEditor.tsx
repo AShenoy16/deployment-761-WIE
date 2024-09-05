@@ -19,9 +19,8 @@ import { useRankingQuestionEditorStore } from "../../stores/RankingQuestionEdito
 import {
   IRankingAnswerOption,
   IRankingQuestion,
-  IRankingWeights,
+  IRankingWeight,
 } from "../../types/QuestionTypes";
-import { rankingWeightingsFormSchema } from "../../util/FormSchema";
 import { useQuizEditorStore } from "../../stores/QuizEditorStore";
 
 const possibleSpecs = [
@@ -47,21 +46,35 @@ const EditSpecWeightingForm: React.FC<EditSpecWeightingFormProps> = ({
   const {
     selectedSpecName,
     weightingsForSelectedSpec,
-    setSelectedSpecName,
-    updateRank,
     errors,
+    setSelectedSpecName,
+    updateRankWeighting,
+    setErrors,
   } = useRankingQuestionEditorStore((state) => ({
     selectedSpecName: state.selectedSpecName,
     weightingsForSelectedSpec: state.weightingsForSelectedSpec,
     setSelectedSpecName: state.setSelectedSpecName,
-    updateRank: state.updateRankWeighting,
+    updateRankWeighting: state.updateRankWeighting,
     errors: state.errors,
+    setErrors: state.setErrors,
   }));
 
   const existingSpecs = weightings.map((w) => w.specializationName);
   const availableSpecs = possibleSpecs.filter(
     (s) => !existingSpecs.includes(s)
   );
+
+  const handleWeightChange = (rank: string, value: number) => {
+    if (value < 1 || value > 10) {
+      const newErrors = { ...errors };
+      newErrors[rank] = "Value must be between 1 and 10";
+      setErrors(newErrors);
+    } else {
+      const { [rank]: _, ...rest } = errors;
+      setErrors(rest);
+    }
+    updateRankWeighting(rank, value);
+  };
 
   return (
     <Stack spacing={2}>
@@ -87,12 +100,13 @@ const EditSpecWeightingForm: React.FC<EditSpecWeightingFormProps> = ({
           label={`Rank ${rank}`}
           type="number"
           value={isNaN(weight) ? "" : weight}
-          onChange={(e) => updateRank(rank, parseInt(e.target.value))}
-          error={!!errors.weightings[parseInt(rank) - 1]}
+          onChange={(e) => {
+            const value = parseInt(e.target.value);
+            handleWeightChange(rank, value);
+          }}
+          error={!!errors[rank]}
           helperText={
-            isNaN(weight)
-              ? "Please enter a number"
-              : errors.weightings[parseInt(rank) - 1]
+            errors[rank] || (isNaN(weight) ? "Please enter a number" : "")
           }
           fullWidth
         />
@@ -103,39 +117,35 @@ const EditSpecWeightingForm: React.FC<EditSpecWeightingFormProps> = ({
 
 type SpecWeightingProps = {
   option: IRankingAnswerOption;
-  weighting: IRankingWeights;
+  weighting: IRankingWeight;
 };
 
 const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
-  const { specializationName: specName, weights } = weighting;
+  const { specializationName, weights } = weighting;
   const {
     isWeightingFormOpen,
     selectedOptionId,
     selectedWeightingId,
-    selectedSpecName,
-    weightingsForSelectedSpec,
+    errors,
     setIsWeightingFormOpen,
     setSelectedOptionAndWeighting,
     setSelectedSpecName,
     setWeightingsForSelectedSpec,
     reset,
-    setErrors,
   } = useRankingQuestionEditorStore((state) => ({
     isWeightingFormOpen: state.isWeightingFormOpen,
     selectedOptionId: state.selectedOptionId,
     selectedWeightingId: state.selectedWeightingId,
-    selectedSpecName: state.selectedSpecName,
-    weightingsForSelectedSpec: state.weightingsForSelectedSpec,
+    errors: state.errors,
     setIsWeightingFormOpen: state.setIsWeightingFormOpen,
     setSelectedOptionAndWeighting: state.setSelectedOptionAndWeighting,
     setSelectedSpecName: state.setSelectedSpecName,
     setWeightingsForSelectedSpec: state.setWeightingsForSelectedSpec,
     reset: state.reset,
-    setErrors: state.setErrors,
   }));
 
   const handleOpenWeightingForm = () => {
-    setSelectedSpecName(specName);
+    setSelectedSpecName(specializationName);
     setWeightingsForSelectedSpec(weights);
     setSelectedOptionAndWeighting(option._id, weighting._id);
     setIsWeightingFormOpen(true);
@@ -146,26 +156,12 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
   };
 
   const handleConfirmWeightingChanges = () => {
-    const validation = rankingWeightingsFormSchema.safeParse({
-      specName: selectedSpecName,
-      weighting: weightingsForSelectedSpec,
-    });
-
-    if (validation.success) {
-      reset();
+    const hasErrors = Object.keys(errors).length > 0;
+    if (hasErrors) {
+      console.log("Cannot confirm weighting changes due to validation errors.");
     } else {
-      const fieldErrors: { specName: string; weightings: string[] } = {
-        specName: "",
-        weightings: [],
-      };
-      validation.error.errors.forEach((err) => {
-        if (err.path[0] === "specName") {
-          fieldErrors.specName = err.message;
-        } else if (err.path[0] === "weightings") {
-          fieldErrors.weightings = [...fieldErrors.weightings, err.message];
-        }
-      });
-      setErrors(fieldErrors);
+      console.log("Weighting changes confirmed.");
+      reset();
     }
   };
 
@@ -193,7 +189,7 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
               <EditIcon />
             </IconButton>
           </Stack>
-          <Typography>{specName}</Typography>
+          <Typography>{specializationName}</Typography>
         </Stack>
         <Stack direction="row" spacing={1}>
           {Object.entries(weights).map(([rank, value]) => (
