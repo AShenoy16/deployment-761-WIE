@@ -152,7 +152,7 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
       case "Ranking":
         return (
           <QuestionEditorLayout onCancel={handleOnCancel} onSave={handleOnSave}>
-            <RankingQuestionEditor question={selectedQuestion} />;
+            <RankingQuestionEditor question={selectedQuestion} />
           </QuestionEditorLayout>
         );
       case "Slider":
