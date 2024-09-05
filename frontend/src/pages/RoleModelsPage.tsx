@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Modal, Box, Typography, IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AddIcon from "@mui/icons-material/Add";
 
 const RoleModelsPage: React.FC = () => {
   // Define modal styles
@@ -71,6 +72,7 @@ const RoleModelsPage: React.FC = () => {
               color="primary"
               onClick={handleClose}
               sx={buttonStyle}
+              startIcon={<AddIcon />}
             >
               Add Role Model
             </Button>
