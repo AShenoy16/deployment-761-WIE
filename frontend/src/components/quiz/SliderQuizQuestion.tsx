@@ -6,10 +6,10 @@ import {
   useTheme,
 } from "@mui/material";
 import { useSliderQuestionStore } from "../../stores/SliderQuizQuestionStore";
-import { SliderQuestion } from "../../types/QuestionTypes";
+import { ISliderQuestion } from "../../types/QuestionTypes";
 
 type SliderQuizQuestionProps = {
-  question: SliderQuestion;
+  question: ISliderQuestion;
 };
 
 const sliderLabels = [
@@ -29,7 +29,7 @@ export const SliderQuizQuestion: React.FC<SliderQuizQuestionProps> = ({
   const { selectedValue, setSelectedValue } = useSliderQuestionStore();
 
   const handleSliderChange = (_event: Event, newValue: number | number[]) => {
-    setSelectedValue(question.questionNumber, newValue as number);
+    setSelectedValue(question._id, newValue as number);
   };
 
   return (
@@ -38,7 +38,7 @@ export const SliderQuizQuestion: React.FC<SliderQuizQuestionProps> = ({
       <Slider
         // Change orientation based on screen size
         orientation={isSmallScreen ? "vertical" : "horizontal"}
-        value={selectedValue[question.questionNumber] || 3}
+        value={selectedValue[question._id] || 3}
         onChange={handleSliderChange}
         aria-labelledby="slider-question"
         step={1}

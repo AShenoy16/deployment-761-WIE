@@ -7,6 +7,10 @@ import { User } from "../models/userModel";
 import Quiz from "../models/QuizModel";
 import Specialization from "../models/SpecializationModel";
 import RoleModel from "../models/RoleModel";
+import SliderQuestion from "../models/SliderModel";
+import RankingQuestion from "../models/RankingModel";
+import MCQQuestion from "../models/MCQModel";
+import { IRankingQuestion } from "../models/interfaces";
 
 // Dummy data for Quiz
 const quizData = {
@@ -15,7 +19,6 @@ const quizData = {
     {
       questionType: "MCQ",
       questionText: "What is your preferred engineering field?",
-      questionNumber: 1,
       answerOptions: [
         {
           optionId: "1",
@@ -38,7 +41,6 @@ const quizData = {
     {
       questionType: "Ranking",
       questionText: "Rank the following specializations",
-      questionNumber: 2,
       answerOptions: [
         {
           optionId: "1",
@@ -61,7 +63,6 @@ const quizData = {
     {
       questionType: "Slider",
       questionText: "Rate your interest in each specialization from 1 to 10",
-      questionNumber: 3,
       sliderRange: {
         sliderId: "1",
         min: 1,
@@ -231,7 +232,7 @@ async function run() {
 
   // add quiz info
   console.log("Adding Quiz Info...");
-  await addQuizInfo();
+  await populateNewQuiz();
   console.log();
 
   // add spec info
@@ -252,6 +253,9 @@ async function clearDatabase() {
   await User.deleteMany({});
   await Quiz.deleteMany({});
   await Specialization.deleteMany({});
+  await RankingQuestion.deleteMany({});
+  await SliderQuestion.deleteMany({});
+  await MCQQuestion.deleteMany({});
 
   console.log(`Cleared database`);
 }
@@ -288,6 +292,150 @@ async function addRoleModels() {
     console.log(
       `Spec Saveded _id${dbRoleModel._id}, name = ${dbRoleModel.name}`
     );
+  }
+}
+
+async function populateNewQuiz() {
+  try {
+    // Create multiple sample MCQ questions
+    const mcqQuestion1 = new MCQQuestion({
+      questionText: "What is your preferred engineering field?",
+      answerOptions: [
+        { text: "Mechanical", weightings: { Mechanical: 10, Electrical: 5 } },
+        { text: "Electrical", weightings: { Mechanical: 5, Electrical: 10 } },
+      ],
+    });
+
+    const mcqQuestion2 = new MCQQuestion({
+      questionText: "Which programming language do you prefer?",
+      answerOptions: [
+        { text: "Python", weightings: { Software: 10, Compsys: 8 } },
+        { text: "Java", weightings: { Software: 7, Compsys: 9 } },
+      ],
+    });
+
+    await mcqQuestion1.save();
+    await mcqQuestion2.save();
+
+    // Create multiple sample Ranking questions
+    const rankingQuestion1 = new RankingQuestion({
+      questionText: "Rank the following specializations",
+      answerOptions: [
+        {
+          text: "Sky Diving",
+          weightings: [
+            {
+              specializationName: "Mechanical",
+              weights: { "1": 10, "2": 8, "3": 5, "4": 0 },
+            },
+            {
+              specializationName: "Electrical",
+              weights: { "1": 10, "2": 8, "3": 5, "4": 0 },
+            },
+            {
+              specializationName: "Software",
+              weights: { "1": 15, "2": 8, "3": 5, "4": 0 },
+            },
+            {
+              specializationName: "Compsys",
+              weights: { "1": 20, "2": 8, "3": 5, "4": 0 },
+            },
+          ],
+        },
+        {
+          text: "Soldering",
+          weightings: [
+            {
+              specializationName: "Mechanical",
+              weights: { "1": 10, "2": 8, "3": 5, "4": 0 },
+            },
+            {
+              specializationName: "Electrical",
+              weights: { "1": 10, "2": 8, "3": 5, "4": 0 },
+            },
+            {
+              specializationName: "Software",
+              weights: { "1": 15, "2": 8, "3": 5, "4": 0 },
+            },
+            {
+              specializationName: "Compsys",
+              weights: { "1": 20, "2": 8, "3": 5, "4": 0 },
+            },
+          ],
+        },
+      ],
+    });
+
+    // const rankingQuestion2 = new RankingQuestion({
+    //   questionText: "Rank the following jobs",
+    //   answerOptions: [
+    //     {
+    //       text: "Civil Engineer",
+    //       weightings: {
+    //         "1": 8,
+    //         "2": 6,
+    //         "3": 5,
+    //         "4": 3,
+    //       },
+    //     },
+    //     {
+    //       text: "Robot Building",
+    //       weightings: {
+    //         "1": 15,
+    //         "2": 6,
+    //         "3": 5,
+    //         "4": 3,
+    //       },
+    //     },
+    //   ],
+    // });
+
+    await rankingQuestion1.save();
+    // await rankingQuestion2.save();
+
+    // Create multiple sample Slider questions
+    const sliderQuestion1 = new SliderQuestion({
+      questionText: "Rate your interest in Mechanical Engineering from 1 to 10",
+      sliderRange: {
+        min: 1,
+        max: 10,
+        weightings: { Mechanical: [1, 5, 10], Mechatronics: [1, 3, 5, 10] },
+      },
+    });
+
+    const sliderQuestion2 = new SliderQuestion({
+      questionText: "Rate your comfort with coding from 1 to 10",
+      sliderRange: {
+        min: 1,
+        max: 10,
+        weightings: {
+          Software: [1, 3, 8, 10],
+          Mechatronics: [1, 3, 5, 7],
+          Compsys: [1, 3, 5, 6],
+          Electrical: [1, 3, 5, 6],
+        },
+      },
+    });
+
+    await sliderQuestion1.save();
+    await sliderQuestion2.save();
+
+    // Create a quiz that references the created questions
+    const quiz = new Quiz({
+      quizName: "Engineering Specialization Quiz",
+      quizQuestions: [
+        mcqQuestion1._id,
+        mcqQuestion2._id,
+        rankingQuestion1._id,
+        // rankingQuestion2._id,
+        sliderQuestion1._id,
+        sliderQuestion2._id,
+      ],
+    });
+
+    await quiz.save();
+  } catch (error) {
+    console.error("Error populating data:", error);
   }
 }
 

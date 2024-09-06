@@ -1,11 +1,15 @@
-export type RoleModel = {
+export interface IRoleModel {
+  _id: number;
   name: string;
+  title: string;
   description: string;
   photoUrl: string;
-  socialMediaLinks: {
-    linkedin: string | undefined;
-    instagram: string | undefined;
-  };
+  bio?: string;
+  socialMediaLinks?: ISocialMediaLinks;
   createdAt: Date;
   updatedAt: Date;
-};
+}
+
+export interface ISocialMediaLinks {
+  linkedin?: string;
+}

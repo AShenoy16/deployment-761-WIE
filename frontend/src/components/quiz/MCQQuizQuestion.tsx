@@ -1,18 +1,18 @@
 import { Box, Stack, Typography, useTheme } from "@mui/material";
 import React from "react";
 import { useMCQQuestionStore } from "../../stores/MCQQuestionStore";
-import { MCQAnswerOption, MCQQuestion } from "../../types/QuestionTypes";
+import { IMCQAnswerOption, IMCQQuestion } from "../../types/QuestionTypes";
 
 type MCQOptionProps = {
-  option: MCQAnswerOption;
-  questionId: number;
+  option: IMCQAnswerOption;
+  questionId: string;
 };
 
 const MCQOption: React.FC<MCQOptionProps> = ({ option, questionId }) => {
   const theme = useTheme();
   const { selectedOptionId, selectOption } = useMCQQuestionStore();
 
-  const isSelected = selectedOptionId[questionId] === option.optionId;
+  const isSelected = selectedOptionId[questionId] === option._id;
 
   return (
     <Box
@@ -33,7 +33,7 @@ const MCQOption: React.FC<MCQOptionProps> = ({ option, questionId }) => {
       }}
       alignItems="center"
       justifyContent="center"
-      onClick={() => selectOption(questionId, option.optionId)}
+      onClick={() => selectOption(questionId, option._id)}
     >
       <Typography textAlign="center">{option.text}</Typography>
     </Box>
@@ -41,7 +41,7 @@ const MCQOption: React.FC<MCQOptionProps> = ({ option, questionId }) => {
 };
 
 type MCQQuizQuestionProps = {
-  question: MCQQuestion;
+  question: IMCQQuestion;
 };
 
 export const MCQQuizQuestion: React.FC<MCQQuizQuestionProps> = ({
@@ -61,9 +61,9 @@ export const MCQQuizQuestion: React.FC<MCQQuizQuestionProps> = ({
       >
         {question.answerOptions.map((option) => (
           <MCQOption
-            key={option.optionId}
+            key={option._id}
             option={option}
-            questionId={question.questionNumber} // Pass the question ID
+            questionId={question._id}
           />
         ))}
       </Stack>

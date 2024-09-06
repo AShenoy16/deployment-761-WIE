@@ -7,7 +7,10 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { RankingQuestion } from "../../types/QuestionTypes";
+import {
+  IRankingAnswerOption,
+  IRankingQuestion,
+} from "../../types/QuestionTypes";
 import { useRankingQuestionStore } from "../../stores/RankingQuizQuestionStore";
 
 type RankingOptionHeaderProps = {
@@ -46,7 +49,7 @@ const RankingOptionHeader: React.FC<RankingOptionHeaderProps> = ({
 };
 
 type RankingOptionProps = {
-  option: { optionId: string; text: string };
+  option: IRankingAnswerOption;
   rankingCount: number;
   selectedRank: number | undefined;
   onClick: (optionId: string, rank: number) => void;
@@ -86,7 +89,7 @@ const RankingOption: React.FC<RankingOptionProps> = ({
         {Array.from({ length: rankingCount }).map((_, rankIndex) => (
           <Box
             key={rankIndex}
-            role="button"
+            role="ranking-button"
             width="2rem"
             height="2rem"
             border="1px solid #ccc"
@@ -108,7 +111,7 @@ const RankingOption: React.FC<RankingOptionProps> = ({
             sx={{
               cursor: "pointer",
             }}
-            onClick={() => onClick(option.optionId, rankIndex + 1)}
+            onClick={() => onClick(option._id, rankIndex + 1)}
           />
         ))}
       </Box>
@@ -117,7 +120,7 @@ const RankingOption: React.FC<RankingOptionProps> = ({
 };
 
 type RankingQuizQuestionProps = {
-  question: RankingQuestion;
+  question: IRankingQuestion;
 };
 
 export const RankingQuizQuestion: React.FC<RankingQuizQuestionProps> = ({
@@ -130,13 +133,13 @@ export const RankingQuizQuestion: React.FC<RankingQuizQuestionProps> = ({
     (state) => state.setIsQuestionAnswered
   );
   const rankings = useRankingQuestionStore(
-    (state) => state.questionRankings[question.questionNumber] || {}
+    (state) => state.questionRankings[question._id] || {}
   );
 
   const handleRankingClick = (optionId: string, rank: number) => {
     const optionCount = question.answerOptions.length;
-    setQuestionRanking(question.questionNumber, optionId, rank);
-    setIsQuestionAnswered(question.questionNumber, optionCount);
+    setQuestionRanking(question._id, optionId, rank);
+    setIsQuestionAnswered(question._id, optionCount);
   };
 
   const rankingCount = question.answerOptions.length;
@@ -147,10 +150,10 @@ export const RankingQuizQuestion: React.FC<RankingQuizQuestionProps> = ({
       <RankingOptionHeader rankingCount={rankingCount} />
       {question.answerOptions.map((option) => (
         <RankingOption
-          key={option.optionId}
+          key={option._id}
           option={option}
           rankingCount={rankingCount}
-          selectedRank={rankings[option.optionId]}
+          selectedRank={rankings[option._id]}
           onClick={handleRankingClick}
         />
       ))}

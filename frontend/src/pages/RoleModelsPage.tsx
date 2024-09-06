@@ -1,9 +1,19 @@
 import React, { useState } from "react";
-import { Button, Modal, Box, Typography, IconButton } from "@mui/material";
+import {
+  Button,
+  Modal,
+  Box,
+  Typography,
+  IconButton,
+  Container,
+} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { RoleModel } from "../types/RoleModel";
+import { IRoleModel } from "../types/RoleModel";
 import EditModalRoleModels from "../components/rolemodel/EditModalRoleModels";
 import AddRoleModelModal from "../components/rolemodel/AddRoleModelModal";
+import { useNavigate } from "react-router-dom";
+import RoleModelModal from "../components/RoleModelModal";
+import RoleModelCard from "../components/RoleModelCard";
 
 // Define modal styles
 const modalStyle = {
@@ -28,40 +38,33 @@ const buttonStyle = {
   borderRadius: "12px",
 };
 
-// temporarily hard coded with mocked data
-const mockRoleModelData: RoleModel[] = [
+const mockRoleModels: IRoleModel[] = [
   {
-    name: "Jane",
-    description: "hi hi",
+    _id: 1,
+    name: "Alyssa Morris",
+    title: "Product Manager, Intel",
+    description:
+      "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
     photoUrl:
-      "https://upload.wikimedia.org/wikipedia/en/a/a6/Pokémon_Pikachu_art.png",
+      "https://www.womeninscience.africa/wp-content/uploads/2022/11/Unsung-Black-Female-Engineers.jpg", // updated to photoUrl
+    bio: "Alyssa Morris is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
     socialMediaLinks: {
-      linkedin: "https://linkedin.com",
-      instagram: "https://instagram.com",
+      linkedin: "https://www.linkedin.com/in/alyssamorris", // moved inside socialMediaLinks
     },
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
-    name: "Adi",
-    description: "bye bye",
+    _id: 2,
+    name: "Samantha Smith",
+    title: "Software Engineer, Google",
+    description:
+      "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
     photoUrl:
-      "https://upload.wikimedia.org/wikipedia/en/a/a6/Pokémon_Pikachu_art.png",
+      "https://nzmanufacturer.co.nz/wp-content/uploads/2023/08/Women-In-Engineering-PIC.jpg", // updated to photoUrl
+    bio: "Alyssa Morris is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
     socialMediaLinks: {
-      linkedin: "https://linkedin.com",
-      instagram: "https://instagram.com",
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    name: "Adi",
-    description: "bye bye",
-    photoUrl:
-      "https://upload.wikimedia.org/wikipedia/en/a/a6/Pokémon_Pikachu_art.png",
-    socialMediaLinks: {
-      linkedin: "https://linkedin.com",
-      instagram: "https://instagram.com",
+      linkedin: "https://www.linkedin.com/in/samanthasmith",
     },
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -69,30 +72,52 @@ const mockRoleModelData: RoleModel[] = [
 ];
 
 const RoleModelsPage: React.FC = () => {
-  const [open, setOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const [selectedRoleModel, setSelectedRoleModel] = useState<IRoleModel | null>(
+    null
+  );
+  const [openModal, setOpenModal] = useState(false);
+  const [openEditModal, setEditModal] = useState<boolean>(false);
 
-  const handleOpen = (): void => setOpen(true);
-  const handleClose = (): void => setOpen(false);
+  const handleOpen = (): void => setEditModal(true);
+  const handleClose = (): void => setEditModal(false);
+
+  const handleCardClick = (model: IRoleModel) => {
+    setSelectedRoleModel(model);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="start"
-      minHeight="100vh"
-    >
-      {/* Edit Button */}
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={handleOpen}
-        sx={buttonStyle}
+    <Container>
+      <Typography
+        variant="h4"
+        component="h1"
+        align="center"
+        gutterBottom
+        marginY={4}
+        sx={{ color: "#00467F" }}
       >
-        Edit
-      </Button>
+        Engineering Role Models
+      </Typography>
 
-      {/* Modal */}
-      <Modal open={open} onClose={handleClose}>
+      {/* Edit Button */}
+      <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 3 }}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleOpen}
+          sx={buttonStyle}
+        >
+          Edit
+        </Button>
+      </Box>
+
+      {/* Edit Modal */}
+      <Modal open={openEditModal} onClose={handleClose}>
         <Box sx={modalStyle}>
           {/* Header Section */}
           <Box
@@ -124,7 +149,7 @@ const RoleModelsPage: React.FC = () => {
               flexGrow: 1,
             }}
           >
-            {mockRoleModelData.map((roleModel, index) => (
+            {mockRoleModels.map((roleModel, index) => (
               <EditModalRoleModels key={index} {...roleModel} />
             ))}
           </Box>
@@ -140,7 +165,25 @@ const RoleModelsPage: React.FC = () => {
           </Box>
         </Box>
       </Modal>
-    </Box>
+
+      {/* Column layout for the role model cards */}
+      <Box display="flex" flexDirection="column" gap={3}>
+        {mockRoleModels.map((model) => (
+          <RoleModelCard
+            key={model._id}
+            model={model}
+            onClick={handleCardClick}
+          />
+        ))}
+      </Box>
+
+      {/* Modal component */}
+      <RoleModelModal
+        open={openModal}
+        onClose={handleCloseModal}
+        roleModel={selectedRoleModel}
+      />
+    </Container>
   );
 };
 
