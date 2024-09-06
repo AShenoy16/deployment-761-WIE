@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddIcon from "@mui/icons-material/Add";
+import { IRoleModel } from "../../types/RoleModel";
+import { useAddRoleModel } from "../../hooks/useRoleModel";
 
 const modalStyle = {
   position: "absolute" as const,
@@ -33,10 +35,15 @@ const buttonStyle = {
 };
 
 const AddRoleModelModal: React.FC = () => {
+  const addRoleModelMutation = useAddRoleModel();
+
   const [formOpen, setFormOpen] = useState<boolean>(false);
-  const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(
-    null
-  );
+  const [photo, setPhoto] = useState<string | ArrayBuffer | null>(null);
+  const [name, setName] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [bio, setBio] = useState<string>("");
+  const [linkedin, setLinkedin] = useState<string>("");
 
   const handleFormOpen = (): void => setFormOpen(true);
   const handleFormClose = (): void => setFormOpen(false);
@@ -46,9 +53,30 @@ const AddRoleModelModal: React.FC = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result);
+        setPhoto(reader.result);
       };
       reader.readAsDataURL(file); // Convert image to base64 string
+    }
+  };
+
+  const handleSubmit = async () => {
+    // Construct the role model object
+    const newRoleModel: IRoleModel = {
+      _id: Date.now(), // Temporary unique ID
+      name,
+      title,
+      description,
+      bio,
+      photoUrl: photo as string, // Store the base64 or upload to server
+      socialMediaLinks: { linkedin },
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    try {
+      addRoleModelMutation.mutate(newRoleModel);
+    } catch (error) {
+      console.error("Error adding role model:", error);
     }
   };
 
@@ -98,7 +126,7 @@ const AddRoleModelModal: React.FC = () => {
               }}
             >
               <Avatar
-                src={imagePreview ? (imagePreview as string) : undefined}
+                src={photo ? (photo as string) : undefined}
                 sx={{ width: 120, height: 120 }}
               />
               <Button
@@ -133,6 +161,7 @@ const AddRoleModelModal: React.FC = () => {
                 fullWidth
                 required
                 sx={{ mt: 2 }}
+                onChange={(e) => setName(e.target.value)}
               />
               <TextField
                 label="Title"
@@ -140,6 +169,7 @@ const AddRoleModelModal: React.FC = () => {
                 fullWidth
                 required
                 sx={{ mt: 2 }}
+                onChange={(e) => setTitle(e.target.value)}
               />
               <TextField
                 label="Bio"
@@ -147,6 +177,7 @@ const AddRoleModelModal: React.FC = () => {
                 fullWidth
                 required
                 sx={{ mt: 2 }}
+                onChange={(e) => setBio(e.target.value)}
               />
               <TextField
                 label="Description"
@@ -156,12 +187,14 @@ const AddRoleModelModal: React.FC = () => {
                 fullWidth
                 required
                 sx={{ mt: 2 }}
+                onChange={(e) => setDescription(e.target.value)}
               />
               <TextField
                 label="LinkedIn URL"
                 variant="outlined"
                 fullWidth
                 sx={{ mt: 2 }}
+                onChange={(e) => setLinkedin(e.target.value)}
               />
             </Box>
           </Box>
@@ -181,6 +214,7 @@ const AddRoleModelModal: React.FC = () => {
               color="primary"
               type="submit"
               sx={buttonStyle}
+              onClick={handleSubmit}
             >
               Add
             </Button>

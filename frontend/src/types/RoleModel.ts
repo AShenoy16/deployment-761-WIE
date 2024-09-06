@@ -4,7 +4,7 @@ export interface IRoleModel {
   title: string;
   description: string;
   photoUrl: string;
-  bio?: string;
+  bio: string;
   socialMediaLinks?: ISocialMediaLinks;
   createdAt: Date;
   updatedAt: Date;
