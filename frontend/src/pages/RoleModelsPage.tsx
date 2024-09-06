@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Button, Modal, Box, Typography, IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import AddIcon from "@mui/icons-material/Add";
 import { RoleModel } from "../types/RoleModel";
 import EditModalRoleModels from "../components/rolemodel/EditModalRoleModels";
+import AddRoleModelModal from "../components/rolemodel/AddRoleModelModal";
 
 // Define modal styles
 const modalStyle = {
@@ -113,15 +113,7 @@ const RoleModelsPage: React.FC = () => {
             >
               Edit Role Models
             </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleClose}
-              sx={buttonStyle}
-              startIcon={<AddIcon />}
-            >
-              Add Role Model
-            </Button>
+            <AddRoleModelModal />
           </Box>
           {/* Role models data display */}
           <Box
