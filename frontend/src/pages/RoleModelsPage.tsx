@@ -14,6 +14,7 @@ import AddRoleModelModal from "../components/rolemodel/AddRoleModelModal";
 import RoleModelModal from "../components/RoleModelModal";
 import RoleModelCard from "../components/RoleModelCard";
 import { Theme } from "@mui/material";
+import { getRoleModels } from "../hooks/useRoleModel";
 
 // Define modal styles
 const modalStyle = {
@@ -38,39 +39,6 @@ const buttonStyle = {
   borderRadius: "12px",
 };
 
-const mockRoleModels: IRoleModel[] = [
-  {
-    _id: 1,
-    name: "Alyssa Morris",
-    title: "Product Manager, Intel",
-    description:
-      "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
-    photoUrl:
-      "https://www.womeninscience.africa/wp-content/uploads/2022/11/Unsung-Black-Female-Engineers.jpg", // updated to photoUrl
-    bio: "Alyssa Morris is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
-    socialMediaLinks: {
-      linkedin: "https://www.linkedin.com/in/alyssamorris", // moved inside socialMediaLinks
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    _id: 2,
-    name: "Samantha Smith",
-    title: "Software Engineer, Google",
-    description:
-      "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
-    photoUrl:
-      "https://nzmanufacturer.co.nz/wp-content/uploads/2023/08/Women-In-Engineering-PIC.jpg", // updated to photoUrl
-    bio: "Alyssa Morris is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
-    socialMediaLinks: {
-      linkedin: "https://www.linkedin.com/in/samanthasmith",
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-];
-
 const RoleModelsPage: React.FC = () => {
   const [selectedRoleModel, setSelectedRoleModel] = useState<IRoleModel | null>(
     null
@@ -89,6 +57,9 @@ const RoleModelsPage: React.FC = () => {
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+
+  // retrieve role model data
+  const { roleModelsResult, isLoading, isError } = getRoleModels();
 
   return (
     <Container>
@@ -152,7 +123,7 @@ const RoleModelsPage: React.FC = () => {
               flexGrow: 1,
             }}
           >
-            {mockRoleModels.map((roleModel, index) => (
+            {roleModelsResult.map((roleModel, index) => (
               <EditModalRoleModels key={index} {...roleModel} />
             ))}
           </Box>
@@ -171,7 +142,7 @@ const RoleModelsPage: React.FC = () => {
 
       {/* Column layout for the role model cards */}
       <Box display="flex" flexDirection="column" gap={3}>
-        {mockRoleModels.map((model) => (
+        {roleModelsResult.map((model) => (
           <RoleModelCard
             key={model._id}
             model={model}
