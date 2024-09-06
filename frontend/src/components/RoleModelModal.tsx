@@ -25,7 +25,14 @@ const RoleModelModal: React.FC<RoleModelModalProps> = ({
 }) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-      <DialogContent>
+      <DialogContent
+        sx={{
+          // Gradient from top to bottom
+          background: "linear-gradient(180deg, #009AC7 0%, #00467F 100%)",
+          color: "white", // Ensure text is readable over the gradient
+          position: "relative",
+        }}
+      >
         {/* Close button */}
         <IconButton
           aria-label="close"
@@ -34,6 +41,7 @@ const RoleModelModal: React.FC<RoleModelModalProps> = ({
             position: "absolute",
             right: 16,
             top: 16,
+            color: "white",
           }}
         >
           <CloseIcon />
@@ -57,13 +65,22 @@ const RoleModelModal: React.FC<RoleModelModalProps> = ({
 
             {/* Text content below */}
             <Box marginTop={3}>
-              <Typography variant="h5" component="h2">
+              <Typography variant="h5" component="h2" sx={{ color: "white" }}>
                 {roleModel.name}
               </Typography>
-              <Typography variant="subtitle1" color="textSecondary">
+              <Typography
+                variant="subtitle1"
+                color="textSecondary"
+                sx={{ color: "white" }}
+              >
                 {roleModel.title}
               </Typography>
-              <Typography variant="body1" color="textSecondary" marginTop={2}>
+              <Typography
+                variant="body1"
+                color="textSecondary"
+                marginTop={2}
+                sx={{ color: "white" }}
+              >
                 {roleModel.bio}
               </Typography>
             </Box>
@@ -76,7 +93,7 @@ const RoleModelModal: React.FC<RoleModelModalProps> = ({
                   href={roleModel.socialMediaLinks.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  sx={{ color: "#0077b5" }} // LinkedIn brand color
+                  sx={{ color: "white" }} // LinkedIn brand color
                 >
                   <LinkedInIcon fontSize="large" />
                 </IconButton>
