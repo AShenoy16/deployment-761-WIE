@@ -5,7 +5,7 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import InstagramIcon from "@mui/icons-material/Instagram";
 
-const EditModal: React.FC<RoleModel> = (roleModel: RoleModel) => {
+const EditModalRoleModels: React.FC<RoleModel> = (roleModel: RoleModel) => {
   return (
     <Box
       sx={{
@@ -95,4 +95,4 @@ const EditModal: React.FC<RoleModel> = (roleModel: RoleModel) => {
   );
 };
 
-export default EditModal;
+export default EditModalRoleModels;

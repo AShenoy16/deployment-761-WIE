@@ -3,7 +3,7 @@ import { Button, Modal, Box, Typography, IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddIcon from "@mui/icons-material/Add";
 import { RoleModel } from "../types/RoleModel";
-import EditModal from "../components/rolemodel/EditModal";
+import EditModalRoleModels from "../components/rolemodel/EditModalRoleModels";
 
 // Define modal styles
 const modalStyle = {
@@ -133,7 +133,7 @@ const RoleModelsPage: React.FC = () => {
             }}
           >
             {mockRoleModelData.map((roleModel, index) => (
-              <EditModal key={index} {...roleModel} />
+              <EditModalRoleModels key={index} {...roleModel} />
             ))}
           </Box>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
