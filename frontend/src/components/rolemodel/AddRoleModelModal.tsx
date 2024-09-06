@@ -17,15 +17,20 @@ const modalStyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: { xs: "90%", sm: "70%", md: "600px" },
-  maxWidth: "600px",
-  maxHeight: "90vh",
-  background: "#fff",
-  border: "2px solid #000",
+  width: "80%",
+  maxWidth: "750px",
+  maxHeight: "80vh",
+  background: "#fff", // Temp
   boxShadow: 24,
   p: 4,
   display: "flex",
   flexDirection: "column",
+  borderRadius: 5,
+};
+
+const buttonStyle = {
+  textTransform: "none",
+  borderRadius: "12px",
 };
 
 const AddRoleModelModal: React.FC = () => {
@@ -74,18 +79,11 @@ const AddRoleModelModal: React.FC = () => {
       >
         <Box sx={modalStyle}>
           {/* First Layer: Header with Back Button and Title */}
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <IconButton>
+          <Box display="flex" alignItems="center" sx={{ marginBottom: 3 }}>
+            <IconButton onClick={handleFormClose}>
               <ArrowBackIcon />
             </IconButton>
             <Typography variant="h6">Add Role Model</Typography>
-            <IconButton>
-              <MoreVertIcon />
-            </IconButton>
           </Box>
 
           {/* Second Layer: Content with Two Columns */}
@@ -104,7 +102,12 @@ const AddRoleModelModal: React.FC = () => {
                 src={imagePreview ? (imagePreview as string) : undefined}
                 sx={{ width: 120, height: 120 }}
               />
-              <Button variant="contained" component="label" color="secondary">
+              <Button
+                variant="contained"
+                component="label"
+                color="secondary"
+                sx={buttonStyle}
+              >
                 Upload Photo
                 <input
                   type="file"
@@ -122,7 +125,7 @@ const AddRoleModelModal: React.FC = () => {
                 flexDirection: "column",
                 justifyContent: "center",
                 flex: 1,
-                ml: 2,
+                ml: 5,
               }}
             >
               <TextField label="Name" variant="outlined" fullWidth required />
@@ -156,10 +159,16 @@ const AddRoleModelModal: React.FC = () => {
               variant="contained"
               color="primary"
               onClick={handleFormClose}
+              sx={buttonStyle}
             >
               Cancel
             </Button>
-            <Button variant="contained" color="secondary" type="submit">
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              sx={buttonStyle}
+            >
               Add
             </Button>
           </Box>
