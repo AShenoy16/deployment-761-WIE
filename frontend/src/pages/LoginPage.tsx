@@ -7,13 +7,16 @@ import {
   SignInPage,
   AuthResponse,
 } from "@toolpad/core";
+import { useAuthStore } from "../stores/AuthenticationStore";
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = useAuthStore();
 
   // navigate to home page
   const handleSuccessfulLogin = () => {
     // set state to true
+    setIsLoggedIn(true);
     navigate("/");
   };
 
@@ -60,9 +63,14 @@ const LoginPage: React.FC = () => {
 
   const theme = useTheme();
 
+  // conditionally render signIn page if not signed in
   return (
     <AppProvider theme={theme}>
-      <SignInPage signIn={signIn} providers={providers} />
+      {isLoggedIn ? (
+        <div>ALREADY LOGGED IN</div>
+      ) : (
+        <SignInPage signIn={signIn} providers={providers} />
+      )}
     </AppProvider>
   );
 };
