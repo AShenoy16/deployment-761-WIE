@@ -13,7 +13,7 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useAuthStore();
 
-  // navigate to home page
+  // navigate to home page and set login state
   const handleSuccessfulLogin = () => {
     // set state to true
     setIsLoggedIn(true);
@@ -22,6 +22,7 @@ const LoginPage: React.FC = () => {
 
   const providers = [{ id: "credentials", name: "Email and Password" }];
 
+  // callback function called on sign in
   const signIn: (
     provider: AuthProvider,
     formData?: FormData
@@ -30,6 +31,7 @@ const LoginPage: React.FC = () => {
       const email = formData?.get("email");
       const password = formData?.get("password");
 
+      // TODO change to actual backend server
       fetch("http://localhost:5000/api/users", {
         method: "POST",
         headers: {

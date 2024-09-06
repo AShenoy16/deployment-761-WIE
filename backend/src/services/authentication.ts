@@ -30,8 +30,6 @@ export const loginAdmin = async (email: string, password: string) => {
  * @returns
  */
 const fetchAdmin = async (email: string, password: string) => {
-  console.log(email);
-  console.log(password);
   try {
     const admin = await User.findOne({
       email: email,
