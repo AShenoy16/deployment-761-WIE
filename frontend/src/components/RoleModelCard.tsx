@@ -9,15 +9,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-
-// Define the interface for props
-interface RoleModel {
-  id: number;
-  name: string;
-  title: string;
-  info: string;
-  image: string;
-}
+import { RoleModel } from "../pages/RoleModelsPage";
 
 interface RoleModelCardProps {
   model: RoleModel;
@@ -34,40 +26,39 @@ const RoleModelCard: React.FC<RoleModelCardProps> = ({ model, onClick }) => {
         display: "flex",
         borderRadius: 4,
         alignItems: "center",
-        flexDirection: isSmallScreen ? "column" : "row", // Switch layout based on screen size
+        flexDirection: isSmallScreen ? "column" : "row",
       }}
     >
       <CardActionArea
         sx={{
           display: "flex",
-          flexDirection: isSmallScreen ? "column" : "row", // Image above text on small screens
+          flexDirection: isSmallScreen ? "column" : "row",
           alignItems: "center",
         }}
         onClick={() => onClick(model)}
       >
-        {/* Image */}
+        {/* Updated to use photoUrl */}
         <CardMedia
           component="img"
           sx={{
-            width: 150, // Adjust width as needed
-            height: 150, // Adjust height as needed
+            width: 150,
+            height: 150,
             borderRadius: "50%",
-            objectFit: "cover", // Ensures image fits nicely
-            margin: 2, // Spacing around the image
+            objectFit: "cover",
+            margin: 2,
           }}
-          image={model.image}
+          image={model.photoUrl}
           alt={model.name}
         />
 
-        {/* Text content */}
         <CardContent
           sx={{ flex: 1, textAlign: isSmallScreen ? "center" : "left" }}
         >
-          <Typography variant="body2" color="textSecondary">
-            {model.info}
-          </Typography>
           <Typography variant="h6" component="div">
             {model.name}
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            {model.description}
           </Typography>
           <Typography variant="subtitle1" color="textSecondary">
             {model.title}

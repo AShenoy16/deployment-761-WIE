@@ -10,17 +10,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-
-// Define the interface for props
-interface RoleModel {
-  id: number;
-  name: string;
-  title: string;
-  info: string;
-  image: string;
-  bio?: string;
-  linkedin?: string;
-}
+import { RoleModel } from "../pages/RoleModelsPage";
 
 interface RoleModelModalProps {
   open: boolean;
@@ -61,7 +51,7 @@ const RoleModelModal: React.FC<RoleModelModalProps> = ({
                 objectFit: "cover",
                 margin: "0 auto", // Center the image
               }}
-              image={roleModel.image}
+              image={roleModel.photoUrl}
               alt={roleModel.name}
             />
 
@@ -80,10 +70,10 @@ const RoleModelModal: React.FC<RoleModelModalProps> = ({
 
             {/* Social media links at the bottom */}
             <Box marginTop={4}>
-              {roleModel.linkedin && (
+              {roleModel.socialMediaLinks?.linkedin && (
                 <IconButton
                   component="a"
-                  href={roleModel.linkedin}
+                  href={roleModel.socialMediaLinks.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{ color: "#0077b5" }} // LinkedIn brand color

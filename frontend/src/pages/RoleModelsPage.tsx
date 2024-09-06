@@ -1,31 +1,20 @@
 import React, { useState } from "react";
-import {
-  Container,
-  Typography,
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  CardActionArea,
-  useMediaQuery,
-  useTheme,
-  Dialog,
-  DialogContent,
-  IconButton,
-} from "@mui/material";
+import { Container, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import RoleModelModal from "../components/RoleModelModal";
 import RoleModelCard from "../components/RoleModelCard";
+export interface SocialMediaLinks {
+  linkedin?: string;
+}
 
-// Example role models data
-interface RoleModel {
+export interface RoleModel {
   id: number;
   name: string;
   title: string;
-  info: string;
-  image: string;
-  bio?: string; // Add more information if necessary
-  linkedin?: string; // LinkedIn profile link
+  description: string;
+  photoUrl: string;
+  bio?: string;
+  socialMediaLinks?: SocialMediaLinks;
 }
 
 const roleModels: RoleModel[] = [
@@ -33,21 +22,27 @@ const roleModels: RoleModel[] = [
     id: 1,
     name: "Alyssa Morris",
     title: "Product Manager, Intel",
-    info: "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
-    image:
-      "https://www.womeninscience.africa/wp-content/uploads/2022/11/Unsung-Black-Female-Engineers.jpg",
+    description:
+      "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
+    photoUrl:
+      "https://www.womeninscience.africa/wp-content/uploads/2022/11/Unsung-Black-Female-Engineers.jpg", // updated to photoUrl
     bio: "Alyssa Morris is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
-    linkedin: "https://www.linkedin.com/in/alyssamorris",
+    socialMediaLinks: {
+      linkedin: "https://www.linkedin.com/in/alyssamorris", // moved inside socialMediaLinks
+    },
   },
   {
     id: 2,
     name: "Samantha Smith",
     title: "Software Engineer, Google",
-    info: "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
-    image:
-      "https://nzmanufacturer.co.nz/wp-content/uploads/2023/08/Women-In-Engineering-PIC.jpg",
+    description:
+      "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
+    photoUrl:
+      "https://nzmanufacturer.co.nz/wp-content/uploads/2023/08/Women-In-Engineering-PIC.jpg", // updated to photoUrl
     bio: "Alyssa Morris is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
-    linkedin: "https://www.linkedin.com/in/alyssamorris",
+    socialMediaLinks: {
+      linkedin: "https://www.linkedin.com/in/samanthasmith",
+    },
   },
 ];
 
