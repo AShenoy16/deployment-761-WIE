@@ -19,7 +19,7 @@ const modalStyle = {
   width: "80%",
   maxWidth: "750px",
   maxHeight: "80vh",
-  background: "#fff", // Temp
+  background: "#fff",
   boxShadow: 24,
   p: 4,
   display: "flex",

@@ -13,6 +13,7 @@ import EditModalRoleModels from "../components/rolemodel/EditModalRoleModels";
 import AddRoleModelModal from "../components/rolemodel/AddRoleModelModal";
 import RoleModelModal from "../components/RoleModelModal";
 import RoleModelCard from "../components/RoleModelCard";
+import { Theme } from "@mui/material";
 
 // Define modal styles
 const modalStyle = {
@@ -23,7 +24,7 @@ const modalStyle = {
   width: "85%",
   maxWidth: "800px",
   maxHeight: "90vh",
-  bgcolor: "#009AC7", //TODO: needs linear background
+  background: (theme: Theme) => theme.palette.roleModelBg.main,
   boxShadow: 24,
   p: 4,
   display: "flex",
@@ -77,8 +78,8 @@ const RoleModelsPage: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openEditModal, setEditModal] = useState<boolean>(false);
 
-  const handleOpen = (): void => setEditModal(true);
-  const handleClose = (): void => setEditModal(false);
+  const handleEditModalOpen = (): void => setEditModal(true);
+  const handleEditModalClose = (): void => setEditModal(false);
 
   const handleCardClick = (model: IRoleModel) => {
     setSelectedRoleModel(model);
@@ -107,7 +108,7 @@ const RoleModelsPage: React.FC = () => {
         <Button
           variant="contained"
           color="secondary"
-          onClick={handleOpen}
+          onClick={handleEditModalOpen}
           sx={buttonStyle}
         >
           Edit
@@ -115,7 +116,7 @@ const RoleModelsPage: React.FC = () => {
       </Box>
 
       {/* Edit Modal */}
-      <Modal open={openEditModal} onClose={handleClose}>
+      <Modal open={openEditModal} onClose={handleEditModalClose}>
         <Box sx={modalStyle}>
           {/* Header Section */}
           <Box
@@ -126,7 +127,11 @@ const RoleModelsPage: React.FC = () => {
               mb: 2,
             }}
           >
-            <IconButton edge="start" color="inherit" onClick={handleClose}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleEditModalClose}
+            >
               <ArrowBackIcon sx={{ color: "white" }} />
             </IconButton>
             <Typography
@@ -155,7 +160,7 @@ const RoleModelsPage: React.FC = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={handleClose}
+              onClick={handleEditModalClose}
               sx={buttonStyle}
             >
               Save Changes

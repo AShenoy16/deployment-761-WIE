@@ -9,11 +9,12 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { RoleModel } from "../pages/RoleModelsPage";
+import { IRoleModel } from "../types/RoleModel";
+import { Theme } from "@mui/material";
 
 interface RoleModelCardProps {
-  model: RoleModel;
-  onClick: (model: RoleModel) => void;
+  model: IRoleModel;
+  onClick: (model: IRoleModel) => void;
 }
 
 const RoleModelCard: React.FC<RoleModelCardProps> = ({ model, onClick }) => {
@@ -28,7 +29,7 @@ const RoleModelCard: React.FC<RoleModelCardProps> = ({ model, onClick }) => {
         alignItems: "center",
         flexDirection: isSmallScreen ? "column" : "row",
         // Apply gradient background
-        background: "linear-gradient(180deg, #009AC7 0%, #00467F 100%)",
+        background: (theme: Theme) => theme.palette.roleModelBg.main,
         color: "white", // Ensure text is readable over the gradient
       }}
     >

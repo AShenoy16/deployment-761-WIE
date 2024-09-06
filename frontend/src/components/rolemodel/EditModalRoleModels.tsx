@@ -24,10 +24,10 @@ const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
           alignItems: "center",
         }}
       >
-        <IconButton>
+        <IconButton sx={{ color: "red" }}>
           <CloseIcon />
         </IconButton>
-        <IconButton>
+        <IconButton sx={{ color: "gray" }}>
           <EditNoteIcon />
         </IconButton>
       </Box>
@@ -53,7 +53,7 @@ const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
           <Avatar
             alt={roleModel.name}
             src={roleModel.photoUrl}
-            sx={{ width: 200, height: 200 }}
+            sx={{ width: 150, height: 150 }}
           />
         </Box>
 
@@ -77,6 +77,7 @@ const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
               component="a"
               href={roleModel.socialMediaLinks?.linkedin}
               target="_blank"
+              sx={{ color: "white" }}
             >
               <LinkedInIcon />
             </IconButton>
