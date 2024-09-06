@@ -1,10 +1,13 @@
 import { User } from "../models/userModel";
+import bcrypt from "bcrypt";
+
+const saltRounds = 10;
 
 /**
  * Will login admin, by making sure admin user with valid creds in db
- * @param email 
- * @param password 
- * @returns 
+ * @param email
+ * @param password
+ * @returns
  */
 export const loginAdmin = async (email: string, password: string) => {
   try {
@@ -27,14 +30,23 @@ export const loginAdmin = async (email: string, password: string) => {
  * @returns
  */
 const fetchAdmin = async (email: string, password: string) => {
+  console.log(email);
+  console.log(password);
   try {
     const admin = await User.findOne({
       email: email,
-      passwordHash: password,
       role: "admin",
-    })
-      .select("-createdAt -updatedAt -__v")
-      .exec();
+    });
+
+    if (!admin) {
+      return null;
+    }
+
+    // compare hashed password to the users
+    const match = await bcrypt.compare(password, admin.passwordHash);
+
+    // not a match
+    if (!match) return null;
 
     return admin;
   } catch (error) {
