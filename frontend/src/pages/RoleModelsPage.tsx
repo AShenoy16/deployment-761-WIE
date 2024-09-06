@@ -11,7 +11,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { IRoleModel } from "../types/RoleModel";
 import EditModalRoleModels from "../components/rolemodel/EditModalRoleModels";
 import AddRoleModelModal from "../components/rolemodel/AddRoleModelModal";
-import { useNavigate } from "react-router-dom";
 import RoleModelModal from "../components/RoleModelModal";
 import RoleModelCard from "../components/RoleModelCard";
 
@@ -72,7 +71,6 @@ const mockRoleModels: IRoleModel[] = [
 ];
 
 const RoleModelsPage: React.FC = () => {
-  const navigate = useNavigate();
   const [selectedRoleModel, setSelectedRoleModel] = useState<IRoleModel | null>(
     null
   );

@@ -1,11 +1,10 @@
 import { Box, Typography, IconButton, Avatar } from "@mui/material";
-import { RoleModel } from "../../types/RoleModel";
+import { IRoleModel } from "../../types/RoleModel";
 import CloseIcon from "@mui/icons-material/Close";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import InstagramIcon from "@mui/icons-material/Instagram";
 
-const EditModalRoleModels: React.FC<RoleModel> = (roleModel: RoleModel) => {
+const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
   return (
     <Box
       sx={{
@@ -76,17 +75,10 @@ const EditModalRoleModels: React.FC<RoleModel> = (roleModel: RoleModel) => {
           <Box display="flex" alignItems="center" marginLeft={-1}>
             <IconButton
               component="a"
-              href={roleModel.socialMediaLinks.linkedin}
+              href={roleModel.socialMediaLinks?.linkedin}
               target="_blank"
             >
               <LinkedInIcon />
-            </IconButton>
-            <IconButton
-              component="a"
-              href={roleModel.socialMediaLinks.instagram}
-              target="_blank"
-            >
-              <InstagramIcon />
             </IconButton>
           </Box>
         </Box>

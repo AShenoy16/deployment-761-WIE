@@ -9,7 +9,6 @@ import {
   IconButton,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddIcon from "@mui/icons-material/Add";
 
 const modalStyle = {
@@ -140,12 +139,6 @@ const AddRoleModelModal: React.FC = () => {
               />
               <TextField
                 label="LinkedIn URL"
-                variant="outlined"
-                fullWidth
-                sx={{ mt: 2 }}
-              />
-              <TextField
-                label="Instagram URL"
                 variant="outlined"
                 fullWidth
                 sx={{ mt: 2 }}
