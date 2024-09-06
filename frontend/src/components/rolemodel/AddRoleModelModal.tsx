@@ -127,7 +127,27 @@ const AddRoleModelModal: React.FC = () => {
                 ml: 5,
               }}
             >
-              <TextField label="Name" variant="outlined" fullWidth required />
+              <TextField
+                label="Name"
+                variant="outlined"
+                fullWidth
+                required
+                sx={{ mt: 2 }}
+              />
+              <TextField
+                label="Title"
+                variant="outlined"
+                fullWidth
+                required
+                sx={{ mt: 2 }}
+              />
+              <TextField
+                label="Bio"
+                variant="outlined"
+                fullWidth
+                required
+                sx={{ mt: 2 }}
+              />
               <TextField
                 label="Description"
                 variant="outlined"
