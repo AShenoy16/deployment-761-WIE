@@ -68,8 +68,22 @@ const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
             color: "white",
           }}
         >
-          <Typography variant="h6">{roleModel.name}</Typography>
-          <Typography variant="body1">{roleModel.description}</Typography>
+          <Typography
+            variant="body1"
+            marginBottom="5px"
+          >{`Name: ${roleModel.name}`}</Typography>
+          <Typography
+            variant="body1"
+            marginBottom="5px"
+          >{`Title: ${roleModel.title}`}</Typography>
+          <Typography
+            variant="body1"
+            marginBottom="5px"
+          >{`Bio: ${roleModel.bio}`}</Typography>
+          <Typography
+            variant="body1"
+            marginBottom="5px"
+          >{`Description: ${roleModel.description}`}</Typography>
 
           {/* Social Media Links */}
           <Box display="flex" alignItems="center" marginLeft={-1}>

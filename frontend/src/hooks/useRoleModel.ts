@@ -1,6 +1,5 @@
 import { IRoleModel } from "../types/RoleModel";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { addRoleModelType } from "../components/rolemodel/AddRoleModelModal";
 import { getRoleModels, postRoleModel } from "../services/RoleModelService";
 

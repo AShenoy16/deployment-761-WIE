@@ -61,7 +61,7 @@ const RoleModelsPage: React.FC = () => {
   // retrieve role model data
   const { roleModelsResult, isLoading, isError } = useGetRoleModels();
   console.log(roleModelsResult);
-  
+
   return (
     <Container>
       <Typography
@@ -143,7 +143,7 @@ const RoleModelsPage: React.FC = () => {
       </Modal>
 
       {/* Column layout for the role model cards */}
-      <Box display="flex" flexDirection="column" gap={3}>
+      <Box display="flex" flexDirection="column" gap={3} marginBottom={5}>
         {roleModelsResult.map((model) => (
           <RoleModelCard
             key={model._id}
