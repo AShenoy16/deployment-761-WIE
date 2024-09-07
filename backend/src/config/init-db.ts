@@ -178,34 +178,43 @@ const dummySpecializations = [
 
 const dummyRoleModels = [
   {
+    name: "Alyssa Morris",
+    title: "Product Manager, Intel",
+    description:
+      "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
+    photoUrl:
+      "https://www.womeninscience.africa/wp-content/uploads/2022/11/Unsung-Black-Female-Engineers.jpg",
+    bio: "Alyssa Morris is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
+    socialMediaLinks: {
+      linkedin: "https://www.linkedin.com/in/alyssamorris",
+    },
+    createdAt: new Date("2024-01-03T00:00:00Z"),
+    updatedAt: new Date("2024-01-03T00:00:00Z"),
+  },
+  {
+    name: "Samantha Smith",
+    title: "Software Engineer, Google",
+    description:
+      "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
+    photoUrl:
+      "https://nzmanufacturer.co.nz/wp-content/uploads/2023/08/Women-In-Engineering-PIC.jpg",
+    bio: "Alyssa Morris is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
+    socialMediaLinks: {
+      linkedin: "https://www.linkedin.com/in/samanthasmith",
+    },
+    createdAt: new Date("2024-01-03T00:00:00Z"),
+    updatedAt: new Date("2024-01-03T00:00:00Z"),
+  },
+  {
     name: "Jane Doe",
-    description: "An inspiring role model in engineering.",
-    photoUrl: "https://example.com/photos/jane_doe.jpg",
+    title: "Software Engineer, Meta",
+    description:
+      "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
+    photoUrl:
+      "https://nzmanufacturer.co.nz/wp-content/uploads/2023/08/Women-In-Engineering-PIC.jpg",
+    bio: "Jane Doe is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
     socialMediaLinks: {
-      linkedin: "https://linkedin.com/in/jane-doe",
-      instagram: "https://instagram.com/jane_doe",
-    },
-    createdAt: new Date("2024-01-01T00:00:00Z"),
-    updatedAt: new Date("2024-01-01T00:00:00Z"),
-  },
-  {
-    name: "John Smith",
-    description: "A renowned figure in the field of software development.",
-    photoUrl: "https://example.com/photos/john_smith.jpg",
-    socialMediaLinks: {
-      linkedin: "https://linkedin.com/in/john-smith",
-      instagram: "https://instagram.com/john_smith",
-    },
-    createdAt: new Date("2024-01-02T00:00:00Z"),
-    updatedAt: new Date("2024-01-02T00:00:00Z"),
-  },
-  {
-    name: "Alice Johnson",
-    description: "A leading advocate for diversity in STEM.",
-    photoUrl: "https://example.com/photos/alice_johnson.jpg",
-    socialMediaLinks: {
-      linkedin: "https://linkedin.com/in/alice-johnson",
-      instagram: "https://instagram.com/alice_johnson",
+      linkedin: "https://www.linkedin.com/in/janedoe",
     },
     createdAt: new Date("2024-01-03T00:00:00Z"),
     updatedAt: new Date("2024-01-03T00:00:00Z"),
@@ -256,6 +265,7 @@ async function clearDatabase() {
   await RankingQuestion.deleteMany({});
   await SliderQuestion.deleteMany({});
   await MCQQuestion.deleteMany({});
+  await RoleModel.deleteMany({});
 
   console.log(`Cleared database`);
 }
