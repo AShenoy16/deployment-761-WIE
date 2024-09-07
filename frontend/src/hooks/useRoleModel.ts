@@ -1,17 +1,20 @@
 import { IRoleModel } from "../types/RoleModel";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { mockRoleModels } from "../util/mockRoleModelData";
 import axios from "axios";
 import { addRoleModelType } from "../components/rolemodel/AddRoleModelModal";
+import { getRoleModels, postRoleModel } from "../services/RoleModelService";
 
-export const getRoleModels = () => {
+export const useGetRoleModels = () => {
   const {
     data: roleModelsResult = [],
     isLoading,
     isError,
   } = useQuery<IRoleModel[]>({
     queryKey: ["RoleModels"],
-    queryFn: mockRoleModels, // TODO: Replace with actual API call later
+    queryFn: async () => {
+      const data = await getRoleModels();
+      return data;
+    },
   });
 
   return { roleModelsResult, isLoading, isError };
@@ -21,16 +24,18 @@ export const useAddRoleModel = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (roleModel: addRoleModelType) => {
-      return axios.post("/api/role-models", roleModel);
+    mutationFn: async (roleModel: addRoleModelType) => {
+      const data = await postRoleModel(roleModel);
+      return data;
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["RoleModels"], (oldData: IRoleModel[]) => {
-        return {
-          ...oldData,
-          data: [...(oldData || []), data],
-        };
-      });
+    onSuccess: (newRoleModel) => {
+      queryClient.setQueryData(
+        ["RoleModels"],
+        (oldData: IRoleModel[] | undefined) => {
+          const previousData = oldData ?? [];
+          return [...previousData, newRoleModel];
+        }
+      );
       console.log("role model added"); // For testing purposes
     },
   });

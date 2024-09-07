@@ -14,7 +14,7 @@ import AddRoleModelModal from "../components/rolemodel/AddRoleModelModal";
 import RoleModelModal from "../components/RoleModelModal";
 import RoleModelCard from "../components/RoleModelCard";
 import { Theme } from "@mui/material";
-import { getRoleModels } from "../hooks/useRoleModel";
+import { useGetRoleModels } from "../hooks/useRoleModel";
 
 // Define modal styles
 const modalStyle = {
@@ -59,8 +59,9 @@ const RoleModelsPage: React.FC = () => {
   };
 
   // retrieve role model data
-  const { roleModelsResult, isLoading, isError } = getRoleModels();
-
+  const { roleModelsResult, isLoading, isError } = useGetRoleModels();
+  console.log(roleModelsResult);
+  
   return (
     <Container>
       <Typography
@@ -123,9 +124,10 @@ const RoleModelsPage: React.FC = () => {
               flexGrow: 1,
             }}
           >
-            {roleModelsResult.map((roleModel, index) => (
-              <EditModalRoleModels key={index} {...roleModel} />
-            ))}
+            {roleModelsResult &&
+              roleModelsResult.map((roleModel, index) => (
+                <EditModalRoleModels key={index} {...roleModel} />
+              ))}
           </Box>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Button

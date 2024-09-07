@@ -34,7 +34,7 @@ const buttonStyle = {
   borderRadius: "12px",
 };
 
-export type addRoleModelType = Omit<IRoleModel, "_id">
+export type addRoleModelType = Omit<IRoleModel, "_id">;
 
 const AddRoleModelModal: React.FC = () => {
   const addRoleModelMutation = useAddRoleModel();
