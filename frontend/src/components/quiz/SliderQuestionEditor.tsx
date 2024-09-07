@@ -7,105 +7,222 @@ import {
   useTheme,
   Button,
   IconButton,
+  Modal,
+  Autocomplete,
 } from "@mui/material";
 import { sliderLabels } from "./SliderQuizQuestion";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import React from "react";
+import React, { useState } from "react";
+
+const possibleSpecs = [
+  "Biomedical",
+  "Chemmat",
+  "Civil",
+  "Compsys",
+  "Electrical",
+  "Engsci",
+  "Mechanical",
+  "Mechatronics",
+  "Software",
+  "Structural",
+];
+
+type EditSpecWeightingProps = {
+  open: boolean;
+  onClose: () => void;
+};
+
+const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
+  open,
+  onClose,
+}) => {
+  //todo: implement saving
+  const handleSave = () => {
+    console.log("saved changes");
+  };
+
+  return (
+    <Modal open={open}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          width: 600,
+          transform: "translate(-50%, -50%)",
+          bgcolor: "background.paper",
+          borderRadius: "0.5rem",
+          boxShadow: 24,
+          p: 4,
+        }}
+      >
+        <Typography variant="h5" marginBottom={4}>
+          Edit Spec Weighting
+        </Typography>
+        <Stack spacing={2}>
+          <Autocomplete
+            options={possibleSpecs}
+            value="Spec"
+            renderInput={(params) => (
+              <TextField {...params} label="Spec Name" fullWidth />
+            )}
+            fullWidth
+            disableClearable
+          />
+          <TextField
+            label={`Strongly Disagree`}
+            type="number"
+            value={5}
+            fullWidth
+          />
+          <TextField
+            label={`Strongly Disagree`}
+            type="number"
+            value={5}
+            fullWidth
+          />
+          <TextField
+            label={`Strongly Disagree`}
+            type="number"
+            value={5}
+            fullWidth
+          />
+          <TextField
+            label={`Strongly Disagree`}
+            type="number"
+            value={5}
+            fullWidth
+          />
+          <TextField
+            label={`Strongly Disagree`}
+            type="number"
+            value={5}
+            fullWidth
+          />
+          <Stack direction="row" justifyContent="flex-end" spacing={2}>
+            <Button variant="outlined" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button variant="contained" color="primary" onClick={handleSave}>
+              Confirm
+            </Button>
+          </Stack>
+        </Stack>
+      </Box>
+    </Modal>
+  );
+};
 
 const SpecialisationOption: React.FC = () => {
-  return (
-    <Stack
-      direction="row"
-      width="100%"
-      alignItems="center"
-      justifyContent="center"
-      gap={10}
-    >
-      <Stack
-        direction="row"
-        alignItems="center"
-        bgcolor="white"
-        borderRadius="2rem"
-        width="40%"
-        p={0.7}
-      >
-        <IconButton color="error">
-          <DeleteIcon />
-        </IconButton>
-        <IconButton color="primary">
-          <EditIcon />
-        </IconButton>
-        <Typography ml={2}>Specialisation</Typography>
-      </Stack>
+  const [isEditSpecWeightingOpen, setIsEditSpecWeightingOpen] = useState(false);
 
+  const handleOpenEditSpecWeighting = () => {
+    setIsEditSpecWeightingOpen(true);
+  };
+
+  const handleCloseEditSpecWeighting = () => {
+    setIsEditSpecWeightingOpen(false);
+  };
+
+  return (
+    <>
       <Stack
         direction="row"
-        bgcolor="white"
-        width="50%"
-        borderRadius="2rem"
-        gap={5}
+        width="100%"
+        alignItems="center"
         justifyContent="center"
-        p={0.8}
+        gap={10}
       >
-        <Box
-          display="flex"
+        <Stack
+          direction="row"
           alignItems="center"
-          justifyContent="center"
-          width="2.5rem"
-          height="2.5rem"
-          bgcolor="#f5e1a4"
-          borderRadius="50%"
+          bgcolor="white"
+          borderRadius="2rem"
+          width="40%"
+          p={0.7}
         >
-          <Typography>-4</Typography>
-        </Box>
-        <Box
-          display="flex"
-          alignItems="center"
+          <IconButton color="error">
+            <DeleteIcon />
+          </IconButton>
+          <IconButton color="primary" onClick={handleOpenEditSpecWeighting}>
+            <EditIcon />
+          </IconButton>
+          <Typography ml={2}>Specialisation</Typography>
+        </Stack>
+
+        <Stack
+          direction="row"
+          bgcolor="white"
+          width="50%"
+          borderRadius="2rem"
+          gap={5}
           justifyContent="center"
-          width="2.5rem"
-          height="2.5rem"
-          bgcolor="#f5e1a4"
-          borderRadius="50%"
+          p={0.8}
         >
-          <Typography>-4</Typography>
-        </Box>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          width="2.5rem"
-          height="2.5rem"
-          bgcolor="#f5e1a4"
-          borderRadius="50%"
-        >
-          <Typography>-4</Typography>
-        </Box>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          width="2.5rem"
-          height="2.5rem"
-          bgcolor="#f5e1a4"
-          borderRadius="50%"
-        >
-          <Typography>-4</Typography>
-        </Box>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          width="2.5rem"
-          height="2.5rem"
-          bgcolor="#f5e1a4"
-          borderRadius="50%"
-        >
-          <Typography>10</Typography>
-        </Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            width="2.5rem"
+            height="2.5rem"
+            bgcolor="#f5e1a4"
+            borderRadius="50%"
+          >
+            <Typography>-4</Typography>
+          </Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            width="2.5rem"
+            height="2.5rem"
+            bgcolor="#f5e1a4"
+            borderRadius="50%"
+          >
+            <Typography>-4</Typography>
+          </Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            width="2.5rem"
+            height="2.5rem"
+            bgcolor="#f5e1a4"
+            borderRadius="50%"
+          >
+            <Typography>-4</Typography>
+          </Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            width="2.5rem"
+            height="2.5rem"
+            bgcolor="#f5e1a4"
+            borderRadius="50%"
+          >
+            <Typography>-4</Typography>
+          </Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            width="2.5rem"
+            height="2.5rem"
+            bgcolor="#f5e1a4"
+            borderRadius="50%"
+          >
+            <Typography>10</Typography>
+          </Box>
+        </Stack>
       </Stack>
-    </Stack>
+      <EditSpecWeighting
+        open={isEditSpecWeightingOpen}
+        onClose={handleCloseEditSpecWeighting}
+      />
+    </>
   );
 };
 
