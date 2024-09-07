@@ -157,7 +157,7 @@ export const mockQuestions: IQuestion[] = [
       max: 5,
       weightings: {
         Engsci: [1, 2, 3, 4, 5],
-        Biomedical: [2, 3, 4, 5],
+        Biomedical: [1, 2, 3, 4, 5],
       },
     },
     createdAt: new Date(),
@@ -172,7 +172,7 @@ export const mockQuestions: IQuestion[] = [
       max: 5,
       weightings: {
         Mechatronics: [1, 2, 3, 4, 5],
-        Mechanical: [2, 3, 4, 5],
+        Mechanical: [1, 2, 3, 4, 5],
       },
     },
     createdAt: new Date(),

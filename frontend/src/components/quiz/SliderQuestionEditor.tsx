@@ -15,6 +15,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import React, { useState } from "react";
+import { useSliderQuestionEditorStore } from "../../stores/SliderQuestionEditorStore";
 
 const possibleSpecs = [
   "Biomedical",
@@ -32,6 +33,11 @@ const possibleSpecs = [
 type EditSpecWeightingProps = {
   open: boolean;
   onClose: () => void;
+};
+
+type SpecialisationOptionProps = {
+  spec: string;
+  weightings: number[];
 };
 
 const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
@@ -115,9 +121,13 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   );
 };
 
-const SpecialisationOption: React.FC = () => {
+const SpecialisationOption: React.FC<SpecialisationOptionProps> = ({
+  spec,
+  weightings,
+}) => {
   const [isEditSpecWeightingOpen, setIsEditSpecWeightingOpen] = useState(false);
 
+  //todo: add dynamic showing of current spec being edited
   const handleOpenEditSpecWeighting = () => {
     setIsEditSpecWeightingOpen(true);
   };
@@ -149,7 +159,7 @@ const SpecialisationOption: React.FC = () => {
           <IconButton color="primary" onClick={handleOpenEditSpecWeighting}>
             <EditIcon />
           </IconButton>
-          <Typography ml={2}>Specialisation</Typography>
+          <Typography ml={2}>{spec}</Typography>
         </Stack>
 
         <Stack
@@ -161,61 +171,20 @@ const SpecialisationOption: React.FC = () => {
           justifyContent="center"
           p={0.8}
         >
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            width="2.5rem"
-            height="2.5rem"
-            bgcolor="#f5e1a4"
-            borderRadius="50%"
-          >
-            <Typography>-4</Typography>
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            width="2.5rem"
-            height="2.5rem"
-            bgcolor="#f5e1a4"
-            borderRadius="50%"
-          >
-            <Typography>-4</Typography>
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            width="2.5rem"
-            height="2.5rem"
-            bgcolor="#f5e1a4"
-            borderRadius="50%"
-          >
-            <Typography>-4</Typography>
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            width="2.5rem"
-            height="2.5rem"
-            bgcolor="#f5e1a4"
-            borderRadius="50%"
-          >
-            <Typography>-4</Typography>
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            width="2.5rem"
-            height="2.5rem"
-            bgcolor="#f5e1a4"
-            borderRadius="50%"
-          >
-            <Typography>10</Typography>
-          </Box>
+          {weightings.map((weight, index) => (
+            <Box
+              key={index}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              width="2.5rem"
+              height="2.5rem"
+              bgcolor="#f5e1a4"
+              borderRadius="50%"
+            >
+              <Typography>{weight}</Typography>
+            </Box>
+          ))}
         </Stack>
       </Stack>
       <EditSpecWeighting
@@ -228,6 +197,17 @@ const SpecialisationOption: React.FC = () => {
 
 const SliderQuestionEditor: React.FC = () => {
   const theme = useTheme();
+  const { selectedQuestion } = useSliderQuestionEditorStore((state) => ({
+    selectedQuestion: state.selectedQuestion,
+  }));
+
+  const { updateQuestionTitle } = useSliderQuestionEditorStore((state) => ({
+    updateQuestionTitle: state.updateQuestionTitle,
+  }));
+
+  const handleQuestionTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateQuestionTitle(e.target.value);
+  };
 
   return (
     <Stack
@@ -242,6 +222,8 @@ const SliderQuestionEditor: React.FC = () => {
     >
       <TextField
         label="Question Text"
+        value={selectedQuestion?.questionText}
+        onChange={handleQuestionTextChange}
         sx={{
           margin: "auto",
           maxWidth: "500px",
@@ -277,10 +259,15 @@ const SliderQuestionEditor: React.FC = () => {
         </Stack>
       </Stack>
 
-      <SpecialisationOption />
-      <SpecialisationOption />
-      <SpecialisationOption />
-      <SpecialisationOption />
+      {Object.entries(selectedQuestion?.sliderRange.weightings || {}).map(
+        ([spec, weighting], index) => (
+          <SpecialisationOption
+            key={index}
+            spec={spec}
+            weightings={weighting}
+          />
+        )
+      )}
     </Stack>
   );
 };
