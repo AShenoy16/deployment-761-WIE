@@ -34,6 +34,8 @@ const buttonStyle = {
   borderRadius: "12px",
 };
 
+export type addRoleModelType = Omit<IRoleModel, "_id">
+
 const AddRoleModelModal: React.FC = () => {
   const addRoleModelMutation = useAddRoleModel();
 
@@ -61,8 +63,7 @@ const AddRoleModelModal: React.FC = () => {
 
   const handleSubmit = async () => {
     // Construct the role model object
-    const newRoleModel: IRoleModel = {
-      _id: Date.now(), // Temporary unique ID
+    const newRoleModel: addRoleModelType = {
       name,
       title,
       description,

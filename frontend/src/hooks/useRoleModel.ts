@@ -2,6 +2,7 @@ import { IRoleModel } from "../types/RoleModel";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { mockRoleModels } from "../util/mockRoleModelData";
 import axios from "axios";
+import { addRoleModelType } from "../components/rolemodel/AddRoleModelModal";
 
 export const getRoleModels = () => {
   const {
@@ -20,7 +21,7 @@ export const useAddRoleModel = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (roleModel: IRoleModel) => {
+    mutationFn: (roleModel: addRoleModelType) => {
       return axios.post("/api/role-models", roleModel);
     },
     onSuccess: (data) => {
