@@ -5,6 +5,7 @@ import RoleModelModal from "../components/rolemodel/RoleModelModal";
 import RoleModelCard from "../components/rolemodel/RoleModelCard";
 import { useGetRoleModels } from "../hooks/useRoleModel";
 import EditModalRoleModel from "../components/rolemodel/EditModalRoleModel";
+import { useAuthStore } from "../stores/AuthenticationStore";
 
 const buttonStyle = {
   textTransform: "none",
@@ -18,6 +19,7 @@ const RoleModelsPage: React.FC = () => {
   );
   const [openModal, setOpenModal] = useState(false);
   const [openEditModal, setEditModal] = useState<boolean>(false);
+  const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   const handleEditModalOpen = (): void => setEditModal(true);
   const handleEditModalClose = (): void => setEditModal(false);
@@ -48,16 +50,20 @@ const RoleModelsPage: React.FC = () => {
       </Typography>
 
       {/* Edit Button */}
-      <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 3 }}>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleEditModalOpen}
-          sx={buttonStyle}
+      {isAdminLoggedIn && (
+        <Box
+          sx={{ display: "flex", justifyContent: "center", marginBottom: 3 }}
         >
-          Edit
-        </Button>
-      </Box>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleEditModalOpen}
+            sx={buttonStyle}
+          >
+            Edit
+          </Button>
+        </Box>
+      )}
 
       {/* Edit Modal */}
       <EditModalRoleModel
