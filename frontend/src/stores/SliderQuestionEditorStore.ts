@@ -7,11 +7,20 @@ type SliderQuestionEditorStore = {
   updateQuestionTitle: (newTitle: string) => void;
   updateSpecName: (oldSpec: string, newSpec: string) => void;
   updateSpecWeightings: (spec: string, newWeightings: number[]) => void;
+  specError: string | null;
+  weightingErrors: (string | null)[];
+  setSpecError: (error: string | null) => void;
+  setWeightingErrors: (errors: (string | null)[]) => void;
+  validateSpecName: (spec: string, availableSpecs: string[]) => boolean;
+  validateWeightings: (weightings: number[]) => boolean;
 };
 
 export const useSliderQuestionEditorStore = create<SliderQuestionEditorStore>(
   (set) => ({
     selectedQuestion: null,
+    specError: null,
+    weightingErrors: [],
+
     updateQuestionTitle: (newTitle: string) =>
       set((state) => {
         if (!state.selectedQuestion) return state;
@@ -62,5 +71,30 @@ export const useSliderQuestionEditorStore = create<SliderQuestionEditorStore>(
           },
         };
       }),
+
+    setSpecError: (error) => set({ specError: error }),
+
+    setWeightingErrors: (errors) => set({ weightingErrors: errors }),
+
+    validateSpecName: (spec, availableSpecs) => {
+      if (!availableSpecs.includes(spec)) {
+        set({ specError: "Invalid or duplicate spec name" });
+        return false;
+      }
+      set({ specError: null });
+      return true;
+    },
+
+    validateWeightings: (weightings) => {
+      const errors = weightings.map((weight) => {
+        if (weight < 1 || weight > 5) {
+          return "Weighting must be between 1 and 5";
+        }
+        return null;
+      });
+
+      set({ weightingErrors: errors });
+      return errors.every((error) => error === null);
+    },
   })
 );

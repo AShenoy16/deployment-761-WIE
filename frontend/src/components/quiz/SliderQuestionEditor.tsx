@@ -14,7 +14,7 @@ import { sliderLabels } from "./SliderQuizQuestion";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSliderQuestionEditorStore } from "../../stores/SliderQuestionEditorStore";
 
 const possibleSpecs = [
@@ -53,21 +53,60 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
 }) => {
   const [editedSpec, setEditedSpec] = useState(spec);
   const [editedWeightings, setEditedWeightings] = useState(weightings);
+  const [isValid, setIsValid] = useState(true);
 
-  const { updateSpecName, updateSpecWeightings } = useSliderQuestionEditorStore(
-    (state) => ({
-      updateSpecName: state.updateSpecName,
-      updateSpecWeightings: state.updateSpecWeightings,
-    })
+  const {
+    selectedQuestion,
+    updateSpecName,
+    updateSpecWeightings,
+    specError,
+    weightingErrors,
+    validateSpecName,
+    validateWeightings,
+    setSpecError,
+  } = useSliderQuestionEditorStore((state) => ({
+    selectedQuestion: state.selectedQuestion,
+    updateSpecName: state.updateSpecName,
+    updateSpecWeightings: state.updateSpecWeightings,
+    specError: state.specError,
+    weightingErrors: state.weightingErrors,
+    validateSpecName: state.validateSpecName,
+    validateWeightings: state.validateWeightings,
+    setSpecError: state.setSpecError,
+  }));
+
+  const availableSpecs = possibleSpecs.filter(
+    (specName) =>
+      specName === spec ||
+      !Object.keys(selectedQuestion?.sliderRange.weightings || {}).includes(
+        specName
+      )
   );
 
+  //  Error checking
+  useEffect(() => {
+    const specIsValid = validateSpecName(editedSpec, availableSpecs);
+    const weightingsAreValid = validateWeightings(editedWeightings);
+    setIsValid(specIsValid && weightingsAreValid);
+  }, [editedSpec, editedWeightings, validateSpecName, validateWeightings]);
+
+  // revert to previously saved values when edit is cancelled
+  useEffect(() => {
+    setEditedSpec(spec);
+    setEditedWeightings(weightings);
+  }, [open]);
+
   const handleSave = () => {
-    if (editedSpec !== spec) {
-      updateSpecName(spec, editedSpec);
+    if (isValid) {
+      if (editedSpec !== spec) {
+        setSpecError(null);
+        updateSpecName(spec, editedSpec);
+      }
+      updateSpecWeightings(editedSpec, editedWeightings);
+      onClose();
     }
-    updateSpecWeightings(editedSpec, editedWeightings);
-    onClose();
   };
+
   return (
     <Modal open={open}>
       <Box
@@ -88,11 +127,17 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
         </Typography>
         <Stack spacing={2}>
           <Autocomplete
-            options={possibleSpecs}
+            options={availableSpecs}
             value={editedSpec}
             onChange={(_, newValue) => setEditedSpec(newValue || "")}
             renderInput={(params) => (
-              <TextField {...params} label="Spec Name" fullWidth />
+              <TextField
+                {...params}
+                label="Spec Name"
+                fullWidth
+                error={Boolean(specError)}
+                helperText={specError || ""}
+              />
             )}
             fullWidth
             disableClearable
@@ -103,11 +148,15 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
               label={labels[index]}
               type="number"
               value={weight}
-              onChange={(e) =>
+              error={Boolean(weightingErrors[index])}
+              helperText={weightingErrors[index] || ""}
+              onChange={(e) => {
                 setEditedWeightings((prev) =>
-                  prev.map((w, i) => (i === index ? Number(e.target.value) : w))
-                )
-              }
+                  prev.map((w, i) =>
+                    i === index ? parseInt(e.target.value) : w
+                  )
+                );
+              }}
               fullWidth
             />
           ))}
@@ -115,7 +164,12 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
             <Button variant="outlined" onClick={onClose}>
               Cancel
             </Button>
-            <Button variant="contained" color="primary" onClick={handleSave}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSave}
+              disabled={!isValid}
+            >
               Confirm
             </Button>
           </Stack>
@@ -136,7 +190,6 @@ const SpecialisationOption: React.FC<SpecialisationOptionProps> = ({
 }) => {
   const [isEditSpecWeightingOpen, setIsEditSpecWeightingOpen] = useState(false);
 
-  //todo: add dynamic showing of current spec being edited
   const handleOpenEditSpecWeighting = () => {
     setIsEditSpecWeightingOpen(true);
   };
