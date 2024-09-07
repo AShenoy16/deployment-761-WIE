@@ -9,7 +9,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { IRoleModel } from "../types/RoleModel";
+import { IRoleModel } from "../../types/RoleModel";
 import { Theme } from "@mui/material";
 
 interface RoleModelCardProps {

@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import { IRoleModel } from "../types/RoleModel";
+import { IRoleModel } from "../../types/RoleModel";
 import { Theme } from "@mui/material";
 
 interface RoleModelModalProps {
