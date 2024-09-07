@@ -10,9 +10,9 @@ type AuthWrapperProps = {
  * Checks if admin is logged in when navigating to specific route(s)
  */
 const AuthWrapper: React.FC<AuthWrapperProps> = ({ children }) => {
-  const { isLoggedIn } = useAuthStore();
+  const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
-  if (!isLoggedIn) {
+  if (!isAdminLoggedIn) {
     return <Navigate to="/login" />;
   }
 
