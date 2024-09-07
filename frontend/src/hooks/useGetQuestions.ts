@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Question } from "../types/QuestionTypes";
+import { IQuestion } from "../types/QuestionTypes";
 import { mockFetchQuizQuestions } from "../util/mockQuizData";
 
 export const useGetQuestions = () => {
@@ -7,7 +7,7 @@ export const useGetQuestions = () => {
     data: questions = [], // Default to empty array if questions is undefined
     isLoading,
     isError,
-  } = useQuery<Question[]>({
+  } = useQuery<IQuestion[]>({
     queryKey: ["questions"],
     queryFn: mockFetchQuizQuestions, // TODO: Replace with actual API call later
   });

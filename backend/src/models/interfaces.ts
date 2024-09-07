@@ -1,7 +1,7 @@
 // MCQ interfaces
 export interface IMCQAnswerOption {
   text: string;
-  _id: string
+  _id: string;
   // map of specname as string to number
   weightings: { [specializationName: string]: number };
 }
@@ -25,7 +25,7 @@ export interface IRankingWeights {
 
 export interface IRankingAnswerOption {
   text: string;
-  _id: string
+  _id: string;
   // map of rank to rank to weight
   weightings: IRankingWeights[]; // Array of weightings
 }
@@ -87,12 +87,12 @@ export interface Specialization extends Document {
 
 export interface ISocialMediaLinks {
   linkedin: string;
-  instagram: string;
 }
 
 export interface IRoleModel extends Document {
   name: string;
   description: string;
+  bio: string;
   photoUrl: string;
   socialMediaLinks: ISocialMediaLinks;
   createdAt: Date;

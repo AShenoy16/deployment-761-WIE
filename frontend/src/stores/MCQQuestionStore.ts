@@ -1,15 +1,15 @@
 import { create } from "zustand";
 
 type MCQState = {
-  selectedOptionId: { [questionId: number]: string | null };
-  isQuestionAnsweredMap: { [questionNumber: number]: boolean };
-  selectOption: (questionId: number, optionId: string) => void;
+  selectedOptionId: { [questionId: string]: string | null };
+  isQuestionAnsweredMap: { [questionId: string]: boolean };
+  selectOption: (questionId: string, optionId: string) => void;
 };
 
 export const useMCQQuestionStore = create<MCQState>((set) => ({
   selectedOptionId: {},
   isQuestionAnsweredMap: {},
-  selectOption: (questionId: number, optionId: string) =>
+  selectOption: (questionId: string, optionId: string) =>
     set((state) => ({
       selectedOptionId: {
         ...state.selectedOptionId,

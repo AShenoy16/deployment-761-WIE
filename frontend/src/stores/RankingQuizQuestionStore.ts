@@ -3,25 +3,21 @@ import { create } from "zustand";
 type RankingState = { [optionId: string]: number };
 
 type RankingQuestionStore = {
-  questionRankings: { [questionNumber: number]: RankingState };
+  questionRankings: { [questionId: string]: RankingState };
   setQuestionRanking: (
-    questionNumber: number,
+    questionId: string,
     optionId: string,
     rank: number
   ) => void;
-  isQuestionAnsweredMap: { [questionNumber: number]: boolean };
-  setIsQuestionAnswered: (questionNumber: number, optionCount: number) => void;
+  isQuestionAnsweredMap: { [questionId: string]: boolean };
+  setIsQuestionAnswered: (questionId: string, optionCount: number) => void;
 };
 
 export const useRankingQuestionStore = create<RankingQuestionStore>((set) => ({
   questionRankings: {},
-  setQuestionRanking: (
-    questionNumber: number,
-    optionId: string,
-    rank: number
-  ) => {
+  setQuestionRanking: (questionId: string, optionId: string, rank: number) => {
     set((state) => {
-      const newRankings = { ...state.questionRankings[questionNumber] };
+      const newRankings = { ...state.questionRankings[questionId] };
 
       const currentOptionId = Object.keys(newRankings).find(
         (id) => newRankings[id] === rank
@@ -34,22 +30,22 @@ export const useRankingQuestionStore = create<RankingQuestionStore>((set) => ({
       return {
         questionRankings: {
           ...state.questionRankings,
-          [questionNumber]: newRankings,
+          [questionId]: newRankings,
         },
       };
     });
   },
 
   isQuestionAnsweredMap: {},
-  setIsQuestionAnswered: (questionNumber: number, optionCount: number) => {
+  setIsQuestionAnswered: (questionId: string, optionCount: number) => {
     set((state) => {
-      const rankings = state.questionRankings[questionNumber] || {};
+      const rankings = state.questionRankings[questionId] || {};
       const isQuestionAnswered = Object.keys(rankings).length === optionCount;
 
       return {
         isQuestionAnsweredMap: {
           ...state.isQuestionAnsweredMap,
-          [questionNumber]: isQuestionAnswered,
+          [questionId]: isQuestionAnswered,
         },
       };
     });
