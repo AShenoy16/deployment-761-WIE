@@ -46,9 +46,13 @@ const AddRoleModelModal: React.FC = () => {
   const [description, setDescription] = useState<string>("");
   const [bio, setBio] = useState<string>("");
   const [linkedin, setLinkedin] = useState<string>("");
+  const [error, setError] = useState<string | undefined>(undefined);
 
   const handleFormOpen = (): void => setFormOpen(true);
-  const handleFormClose = (): void => setFormOpen(false);
+  const handleFormClose = (): void => {
+    setFormOpen(false);
+    setError(undefined);
+  };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -58,10 +62,18 @@ const AddRoleModelModal: React.FC = () => {
         setPhoto(reader.result);
       };
       reader.readAsDataURL(file); // Convert image to base64 string
+    } else {
+      setError("Please upload a valid image.");
     }
   };
 
   const handleSubmit = async () => {
+    // validate fields
+    if (!name || !title || !bio || !description || !photo) {
+      setError("All fields* are required, including the image.");
+      return;
+    }
+
     // Construct the role model object
     const newRoleModel: addRoleModelType = {
       name,
@@ -113,6 +125,13 @@ const AddRoleModelModal: React.FC = () => {
             </IconButton>
             <Typography variant="h6">Add Role Model</Typography>
           </Box>
+
+          {/* Error message */}
+          {error && (
+            <Typography color="error" sx={{}}>
+              {error}
+            </Typography>
+          )}
 
           {/* Second Layer: Content with Two Columns */}
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
