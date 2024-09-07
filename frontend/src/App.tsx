@@ -9,6 +9,7 @@ import GeneralLayout from "./layouts/GeneralLayout";
 import QuizResultsPage from "./pages/QuizResultsPage";
 import QuizEditingPage from "./pages/QuizEditingPage";
 import RoleModelsPage from "./pages/RoleModelsPage";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/spec-info" element={<SpecPage />} />
             <Route path="/specialisation/:id" element={<SpecDetailPage />} />
             <Route path="/role-models" element={<RoleModelsPage />} />
+            <Route path ="/login" element={<LoginPage />} />
           </Routes>
         </GeneralLayout>
       </BrowserRouter>
