@@ -19,7 +19,7 @@ export const useGetRoleModels = () => {
   return { roleModelsResult, isLoading, isError };
 };
 
-export const useAddRoleModel = () => {
+export const useAddRoleModel = async () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -36,6 +36,9 @@ export const useAddRoleModel = () => {
         }
       );
       console.log("role model added"); // For testing purposes
+    },
+    onError: (error) => {
+      console.error("Error adding role model:", error);
     },
   });
 
