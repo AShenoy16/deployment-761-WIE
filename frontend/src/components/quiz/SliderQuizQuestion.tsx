@@ -12,7 +12,7 @@ type SliderQuizQuestionProps = {
   question: ISliderQuestion;
 };
 
-const sliderLabels = [
+export const sliderLabels = [
   "Strongly Disagree", // 1
   "Disagree", // 2
   "Neutral", // 3
