@@ -3,8 +3,15 @@ import { IRoleModel } from "../../types/RoleModel";
 import CloseIcon from "@mui/icons-material/Close";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import { useDeleteRoleModel } from "../../hooks/useRoleModel";
 
 const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
+  const deleteRoleModelMutation = useDeleteRoleModel();
+
+  const handleDeleteRoleModel = async () => {
+    (await deleteRoleModelMutation).mutate(roleModel._id);
+  };
+
   return (
     <Box
       sx={{
@@ -24,7 +31,7 @@ const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
           alignItems: "center",
         }}
       >
-        <IconButton sx={{ color: "red" }}>
+        <IconButton sx={{ color: "red" }} onClick={handleDeleteRoleModel}>
           <CloseIcon />
         </IconButton>
         <IconButton sx={{ color: "gray" }}>
