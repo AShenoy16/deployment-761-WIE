@@ -33,16 +33,23 @@ const possibleSpecs = [
 type EditSpecWeightingProps = {
   open: boolean;
   onClose: () => void;
-};
-
-type SpecialisationOptionProps = {
   spec: string;
   weightings: number[];
 };
 
+const labels = [
+  "Strongly Disagree",
+  "Disagree",
+  "Neutral",
+  "Agree",
+  "Strongly Agree",
+];
+
 const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   open,
   onClose,
+  spec,
+  weightings,
 }) => {
   //todo: implement saving
   const handleSave = () => {
@@ -70,43 +77,22 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
         <Stack spacing={2}>
           <Autocomplete
             options={possibleSpecs}
-            value="Spec"
+            value={spec}
             renderInput={(params) => (
               <TextField {...params} label="Spec Name" fullWidth />
             )}
             fullWidth
             disableClearable
           />
-          <TextField
-            label={`Strongly Disagree`}
-            type="number"
-            value={5}
-            fullWidth
-          />
-          <TextField
-            label={`Strongly Disagree`}
-            type="number"
-            value={5}
-            fullWidth
-          />
-          <TextField
-            label={`Strongly Disagree`}
-            type="number"
-            value={5}
-            fullWidth
-          />
-          <TextField
-            label={`Strongly Disagree`}
-            type="number"
-            value={5}
-            fullWidth
-          />
-          <TextField
-            label={`Strongly Disagree`}
-            type="number"
-            value={5}
-            fullWidth
-          />
+          {weightings.map((weight, index) => (
+            <TextField
+              key={index}
+              label={labels[index]}
+              type="number"
+              value={weight}
+              fullWidth
+            />
+          ))}
           <Stack direction="row" justifyContent="flex-end" spacing={2}>
             <Button variant="outlined" onClick={onClose}>
               Cancel
@@ -121,6 +107,10 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   );
 };
 
+type SpecialisationOptionProps = {
+  spec: string;
+  weightings: number[];
+};
 const SpecialisationOption: React.FC<SpecialisationOptionProps> = ({
   spec,
   weightings,
@@ -190,6 +180,8 @@ const SpecialisationOption: React.FC<SpecialisationOptionProps> = ({
       <EditSpecWeighting
         open={isEditSpecWeightingOpen}
         onClose={handleCloseEditSpecWeighting}
+        spec={spec}
+        weightings={weightings}
       />
     </>
   );
