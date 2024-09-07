@@ -17,6 +17,8 @@ import { useQuizEditorStore } from "../../stores/QuizEditorStore";
 import RankingQuestionEditor from "./RankingQuestionEditor";
 import QuestionEditorLayout from "../../layouts/QuestionEditorLayout";
 import { useRankingQuestionEditorStore } from "../../stores/RankingQuestionEditorStore";
+import { useSliderQuestionEditorStore } from "../../stores/SliderQuestionEditorStore";
+import SliderQuestionEditor from "./SliderQuestionEditor";
 
 const EditableQuestion = ({
   question,
@@ -70,6 +72,9 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
   const setSelectedRankingQuestion = useRankingQuestionEditorStore(
     (state) => state.setSelectedQuestion
   );
+  const setSelectedSliderQuestion = useSliderQuestionEditorStore(
+    (state) => state.setSelectedQuestion
+  );
 
   const onClickAddQuestion = (question: IQuestion) => {
     console.log(question._id);
@@ -84,6 +89,7 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
         setSelectedRankingQuestion({ ...question });
         break;
       case "Slider": // Implement
+        setSelectedSliderQuestion({ ...question });
         break;
       default:
         throw new Error("Invalid question type");
@@ -175,7 +181,11 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
           </QuestionEditorLayout>
         );
       case "Slider":
-        break; // Implement
+        return (
+          <QuestionEditorLayout onCancel={handleOnCancel} onSave={handleOnSave}>
+            <SliderQuestionEditor />
+          </QuestionEditorLayout>
+        );
       default:
         throw new Error("Invalid question type");
     }
