@@ -51,11 +51,23 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   spec,
   weightings,
 }) => {
-  //todo: implement saving
-  const handleSave = () => {
-    console.log("saved changes");
-  };
+  const [editedSpec, setEditedSpec] = useState(spec);
+  const [editedWeightings, setEditedWeightings] = useState(weightings);
 
+  const { updateSpecName, updateSpecWeightings } = useSliderQuestionEditorStore(
+    (state) => ({
+      updateSpecName: state.updateSpecName,
+      updateSpecWeightings: state.updateSpecWeightings,
+    })
+  );
+
+  const handleSave = () => {
+    if (editedSpec !== spec) {
+      updateSpecName(spec, editedSpec);
+    }
+    updateSpecWeightings(editedSpec, editedWeightings);
+    onClose();
+  };
   return (
     <Modal open={open}>
       <Box
@@ -77,19 +89,25 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
         <Stack spacing={2}>
           <Autocomplete
             options={possibleSpecs}
-            value={spec}
+            value={editedSpec}
+            onChange={(_, newValue) => setEditedSpec(newValue || "")}
             renderInput={(params) => (
               <TextField {...params} label="Spec Name" fullWidth />
             )}
             fullWidth
             disableClearable
           />
-          {weightings.map((weight, index) => (
+          {editedWeightings.map((weight, index) => (
             <TextField
               key={index}
               label={labels[index]}
               type="number"
               value={weight}
+              onChange={(e) =>
+                setEditedWeightings((prev) =>
+                  prev.map((w, i) => (i === index ? Number(e.target.value) : w))
+                )
+              }
               fullWidth
             />
           ))}
@@ -111,6 +129,7 @@ type SpecialisationOptionProps = {
   spec: string;
   weightings: number[];
 };
+
 const SpecialisationOption: React.FC<SpecialisationOptionProps> = ({
   spec,
   weightings,
