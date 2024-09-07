@@ -18,6 +18,7 @@ import { IQuestion } from "../types/QuestionTypes";
 import { useNavigate } from "react-router-dom";
 import { MCQQuizQuestion } from "../components/quiz/MCQQuizQuestion";
 import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
+import { useAuthStore } from "../stores/AuthenticationStore";
 
 const renderQuestionComponent = (question: IQuestion) => {
   switch (question.questionType) {
@@ -36,7 +37,7 @@ const StartingScreen: React.FC = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const startQuiz = useQuizStore((state) => state.startQuiz);
-  const [isAdminLoggedIn, _] = React.useState(true); // TODO: Replace with actual auth state
+  const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const navigate = useNavigate();
 
   const onClickEdit = () => {
