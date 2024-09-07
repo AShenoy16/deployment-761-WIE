@@ -10,12 +10,13 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import { RoleModel } from "../pages/RoleModelsPage";
+import { IRoleModel } from "../../types/RoleModel";
+import { Theme } from "@mui/material";
 
 interface RoleModelModalProps {
   open: boolean;
   onClose: () => void;
-  roleModel: RoleModel | null;
+  roleModel: IRoleModel | null;
 }
 
 const RoleModelModal: React.FC<RoleModelModalProps> = ({
@@ -28,7 +29,7 @@ const RoleModelModal: React.FC<RoleModelModalProps> = ({
       <DialogContent
         sx={{
           // Gradient from top to bottom
-          background: "linear-gradient(180deg, #009AC7 0%, #00467F 100%)",
+          background: (theme: Theme) => theme.palette.roleModelBg.main,
           color: "white", // Ensure text is readable over the gradient
           position: "relative",
         }}
