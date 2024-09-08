@@ -6,7 +6,7 @@ import {
   getRoleModels,
   postRoleModel,
 } from "../services/RoleModelService";
-import { useSnackbarStore } from "../stores/SnackBarStore";
+import useSnackBar from "./useSnackBar";
 
 export const useGetRoleModels = () => {
   const {
@@ -26,6 +26,7 @@ export const useGetRoleModels = () => {
 
 export const useAddRoleModel = () => {
   const queryClient = useQueryClient();
+  const showSnackbar = useSnackBar();
 
   const mutation = useMutation<IRoleModel, Error, addRoleModelType>({
     mutationFn: async (roleModel: addRoleModelType) => {
@@ -40,8 +41,10 @@ export const useAddRoleModel = () => {
           return [...previousData, newRoleModel];
         }
       );
+      showSnackbar("Successfully added role model");
     },
     onError: (error) => {
+      showSnackbar("Error adding role model, please try again");
       console.error("Error adding role model:", error);
     },
   });
@@ -51,13 +54,7 @@ export const useAddRoleModel = () => {
 
 export const useDeleteRoleModel = () => {
   const queryClient = useQueryClient();
-  const setMessage = useSnackbarStore((state) => state.setMessage);
-  const setIsOpen = useSnackbarStore((state) => state.setIsOpen);
-
-  const triggerSnackbar = (message: string) => {
-    setMessage(message);
-    setIsOpen(true);
-  };
+  const showSnackbar = useSnackBar();
 
   const mutation = useMutation<void, Error, string>({
     mutationFn: async (roleModelId: string) => {
@@ -66,11 +63,11 @@ export const useDeleteRoleModel = () => {
     onSuccess: () => {
       // Invalidate the role models query to refresh the list after deletion
       queryClient.invalidateQueries({ queryKey: ["RoleModels"] });
-      triggerSnackbar("Successfully deleted role model");
+      showSnackbar("Successfully deleted role model");
     },
     onError: (error) => {
       console.error("Error deleting role model:", error);
-      triggerSnackbar("Error deleting role model, please try again");
+      showSnackbar("Error deleting role model, please try again");
     },
   });
 
