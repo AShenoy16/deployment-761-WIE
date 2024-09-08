@@ -141,6 +141,14 @@ const dummySpecializations = [
     experiencedSalary: 120000,
     jobAvailability: "High",
     testimonials: [dummyTestimonials[0], dummyTestimonials[1]], // Include some testimonials
+    header:
+      " Software engineers are problem-solvers who design, develop, and optimize software systems that power the digital world.",
+    leftDetail:
+      "Software engineering is an innovative field that combines creativity and problem-solving to build the technology we use every day.",
+    rightDetail:
+      "As a software engineer, you have the opportunity to make a significant impact by creating solutions that improve people's lives and businesses. Your work can streamline processes, enhance user experiences, and bring innovation to industries  like healthcare, education, and finance. By building scalable, reliable software, you can help companies grow, empower individuals through accessible technology, and contribute to solving global challenges.",
+    rightImage: "https://example.com/software-engineering.jpg",
+    leftImage: "https://example.com/software-engineering.jpg",
     createdAt: new Date(),
     updatedAt: new Date(),
   },

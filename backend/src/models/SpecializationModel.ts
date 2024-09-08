@@ -13,6 +13,11 @@ const SpecializationSchema = new Schema<Specialization>({
   experiencedSalary: { type: Number, required: true },
   jobAvailability: { type: String, required: true },
   testimonials: [TestimonialSchema],
+  header: { type: String, required: false }, 
+  leftDetail: { type: String, required: false },
+  rightDetail: { type: String, required: false },
+  rightImage: { type: String, required: false },
+  leftImage: { type: String, required: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

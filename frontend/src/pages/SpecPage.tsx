@@ -23,7 +23,7 @@ const specialisations: Specialisation[] = [
   { id: 6, name: "Engineering Science" },
   { id: 7, name: "Mechanical" },
   { id: 8, name: "Mechatronics" },
-  { id: 9, name: "Software" },
+  { id: 9, name: "Software Engineering" },
   { id: 10, name: "Structural" },
 ];
 

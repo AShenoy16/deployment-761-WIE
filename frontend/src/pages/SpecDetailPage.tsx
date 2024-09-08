@@ -1,15 +1,61 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Grid, Typography, Box, Card, CardContent } from "@mui/material";
-import uoaEngBuilding from "../assets/engineering-building.jpg";
+import { useParams } from "react-router-dom"; // To access route params
+import axios from "axios";
 
-const SpecDetailPage = () => {
+// Define the interface for the Specialization object
+interface Specialization {
+  name: string;
+  description: string;
+  photoUrl: string;
+  careerPathways: string[];
+  startingSalary: number;
+  medianSalary: number;
+  experiencedSalary: number;
+  jobAvailability: string;
+  header: string;
+  leftDetail: string;
+  rightDetail: string;
+  leftImage: string;
+  rightImage: string;
+}
+
+const SpecDetailPage: React.FC = () => {
+  const { name } = useParams<{ name: string }>(); // Get specialization name from route params
+  const [specialization, setSpecialization] = useState<Specialization | null>(
+    null
+  );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch specialization details from the backend
+  useEffect(() => {
+    const fetchSpecialization = async () => {
+      try {
+        const response = await axios.get(`/api/specializations/${name}`);
+        setSpecialization(response.data);
+      } catch (err) {
+        setError("Failed to fetch specialization details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSpecialization();
+  }, [name]);
+
+  // Handle loading and error states
+  if (loading) return <Typography>Loading...</Typography>;
+  if (error) return <Typography>{error}</Typography>;
+  if (!specialization) return <Typography>Specialization not found</Typography>;
+
   return (
     <Box sx={{ overflowX: "hidden" }}>
       {/* Top Section */}
       <Box
         sx={{
           position: "relative",
-          backgroundImage: `url(${uoaEngBuilding})`,
+          backgroundImage: `url(${specialization.photoUrl})`, // Dynamically use image from API
           backgroundSize: "cover",
           backgroundPosition: "center",
           color: "white",
@@ -64,7 +110,7 @@ const SpecDetailPage = () => {
               paddingBottom: "20px",
             }}
           >
-            Software Engineering
+            {specialization.name}
           </Typography>
           <Typography
             variant="h6"
@@ -78,8 +124,7 @@ const SpecDetailPage = () => {
               },
             }}
           >
-            Software engineers are problem-solvers who design, develop, and
-            optimize software systems that power the digital world.
+            {specialization.header}
           </Typography>
         </Box>
       </Box>
@@ -87,6 +132,7 @@ const SpecDetailPage = () => {
       {/* Impact Section */}
       <Box sx={{ minHeight: "100vh" }}>
         <Grid container>
+          {/* Left Detail */}
           <Grid item xs={12} md={6}>
             <Card sx={{ minHeight: "50vh", alignContent: "center" }}>
               <CardContent
@@ -129,31 +175,18 @@ const SpecDetailPage = () => {
                     fontSize: "1.2rem",
                   }}
                 >
-                  Software engineering is an innovative field that combines
-                  creativity and problem-solving to build the technology we use
-                  every day.
-                </Typography>
-                <Typography
-                  variant="body1"
-                  paragraph
-                  sx={{
-                    color: "#00467F",
-                    fontWeight: "bold",
-                    fontSize: "1.2rem",
-                  }}
-                >
-                  It allows you to design, develop, and maintain software
-                  systems that solve real-world challenges, from healthcare to
-                  business solutions.
+                  {specialization.leftDetail}
                 </Typography>
               </CardContent>
             </Card>
           </Grid>
+
+          {/* Left Image */}
           <Grid item xs={12} md={6}>
             <Box
               sx={{
                 height: "100%",
-                backgroundImage: `url(${uoaEngBuilding})`,
+                backgroundImage: `url(${specialization.leftImage})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 display: "flex",
@@ -163,7 +196,10 @@ const SpecDetailPage = () => {
             />
           </Grid>
         </Grid>
+
+        {/* Right Detail */}
         <Grid container>
+          {/* Right Image */}
           <Grid
             item
             xs={12}
@@ -178,7 +214,7 @@ const SpecDetailPage = () => {
             <Box
               sx={{
                 height: "100%",
-                backgroundImage: `url(${uoaEngBuilding})`,
+                backgroundImage: `url(${specialization.rightImage})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 display: "flex",
@@ -187,6 +223,8 @@ const SpecDetailPage = () => {
               }}
             />
           </Grid>
+
+          {/* Right Detail */}
           <Grid item xs={12} md={6}>
             <Card
               sx={{
@@ -220,24 +258,7 @@ const SpecDetailPage = () => {
                     fontSize: "1.2rem",
                   }}
                 >
-                  As a software engineer, you have the opportunity to make a
-                  significant impact by creating solutions that improve people's
-                  lives and businesses. Your work can streamline processes,
-                  enhance user experiences, and bring innovation to industries
-                  like healthcare, education, and finance.
-                </Typography>
-                <Typography
-                  variant="body1"
-                  paragraph
-                  sx={{
-                    color: "#00467F",
-                    fontWeight: "bold",
-                    fontSize: "1.2rem",
-                  }}
-                >
-                  By building scalable, reliable software, you can help
-                  companies grow, empower individuals through accessible
-                  technology, and contribute to solving global challenges.
+                  {specialization.rightDetail}
                 </Typography>
               </CardContent>
             </Card>
@@ -271,38 +292,12 @@ const SpecDetailPage = () => {
         >
           Career Pathways
         </Typography>
-        <Typography
-          variant="h6"
-          gutterBottom
-          sx={{
-            fontWeight: "bold",
-            fontSize: {
-              xs: "1rem",
-              sm: "1.25rem",
-              md: "1.5rem",
-            },
-          }}
-        >
-          Potential Career options as a Software Engineer Graduate
-        </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <ul>
-              <li>Software Engineer</li>
-              <li>Software Tester</li>
-              <li>AI/Machine Learning Engineer</li>
-              <li>IT Consultant</li>
-              <li>Information Systems Manager</li>
-              <li>Game Developer</li>
-            </ul>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <ul>
-              <li>Application Analyst</li>
-              <li>Database Administrator</li>
-              <li>Forensic Computer Analyst</li>
-              <li>IT Technical Support Officer</li>
-              <li>Systems Analyst</li>
+              {specialization.careerPathways.map((pathway, index) => (
+                <li key={index}>{pathway}</li>
+              ))}
             </ul>
           </Grid>
         </Grid>
