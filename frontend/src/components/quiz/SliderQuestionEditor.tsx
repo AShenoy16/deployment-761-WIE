@@ -261,9 +261,12 @@ const SpecialisationOption: React.FC<SpecialisationOptionProps> = ({
 
 const SliderQuestionEditor: React.FC = () => {
   const theme = useTheme();
-  const { selectedQuestion } = useSliderQuestionEditorStore((state) => ({
-    selectedQuestion: state.selectedQuestion,
-  }));
+  const { selectedQuestion, addNewSpec, specError } =
+    useSliderQuestionEditorStore((state) => ({
+      selectedQuestion: state.selectedQuestion,
+      addNewSpec: state.addNewSpec,
+      specError: state.specError,
+    }));
 
   const { updateQuestionTitle } = useSliderQuestionEditorStore((state) => ({
     updateQuestionTitle: state.updateQuestionTitle,
@@ -271,6 +274,17 @@ const SliderQuestionEditor: React.FC = () => {
 
   const handleQuestionTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateQuestionTitle(e.target.value);
+  };
+
+  const handleAddSpec = () => {
+    // Default name and weightings for a new spec
+    const defaultSpecName = generateUniqueSpecName(
+      Object.keys(selectedQuestion?.sliderRange.weightings || {})
+    );
+    const defaultWeightings = [1, 1, 1, 1, 1];
+
+    // Add the new spec to the store
+    addNewSpec(defaultSpecName, defaultWeightings);
   };
 
   return (
@@ -295,8 +309,21 @@ const SliderQuestionEditor: React.FC = () => {
         }}
       />
 
+      {
+        // temp error handling, can probs move up to layout component and disable save button
+      }
+      {specError && (
+        <Typography color="error" textAlign="center">
+          You have an invalid spec name!
+        </Typography>
+      )}
+
       <Stack direction="row" width="90%">
-        <Button startIcon={<AddIcon />} variant="outlined">
+        <Button
+          startIcon={<AddIcon />}
+          variant="outlined"
+          onClick={handleAddSpec}
+        >
           Spec
         </Button>
         <Stack
@@ -334,6 +361,16 @@ const SliderQuestionEditor: React.FC = () => {
       )}
     </Stack>
   );
+};
+
+const generateUniqueSpecName = (existingSpecs: string[]): string => {
+  let count = 1;
+  let newSpecName = "New Spec";
+  while (existingSpecs.includes(newSpecName)) {
+    newSpecName = `New Spec ${count}`;
+    count++;
+  }
+  return newSpecName;
 };
 
 export default SliderQuestionEditor;

@@ -7,6 +7,7 @@ type SliderQuestionEditorStore = {
   updateQuestionTitle: (newTitle: string) => void;
   updateSpecName: (oldSpec: string, newSpec: string) => void;
   updateSpecWeightings: (spec: string, newWeightings: number[]) => void;
+  addNewSpec: (spec: string, weightings: number[]) => void;
   specError: string | null;
   weightingErrors: (string | null)[];
   setSpecError: (error: string | null) => void;
@@ -72,13 +73,30 @@ export const useSliderQuestionEditorStore = create<SliderQuestionEditorStore>(
         };
       }),
 
+    addNewSpec: (spec, weightings) =>
+      set((state) => {
+        if (!state.selectedQuestion) return state;
+        return {
+          selectedQuestion: {
+            ...state.selectedQuestion,
+            sliderRange: {
+              ...state.selectedQuestion.sliderRange,
+              weightings: {
+                ...state.selectedQuestion.sliderRange.weightings,
+                [spec]: weightings,
+              },
+            },
+          },
+        };
+      }),
+
     setSpecError: (error) => set({ specError: error }),
 
     setWeightingErrors: (errors) => set({ weightingErrors: errors }),
 
     validateSpecName: (spec, availableSpecs) => {
       if (!availableSpecs.includes(spec)) {
-        set({ specError: "Invalid or duplicate spec name" });
+        set({ specError: "Invalid spec name" });
         return false;
       }
       set({ specError: null });
