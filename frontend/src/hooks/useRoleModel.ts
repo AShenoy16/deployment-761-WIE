@@ -6,6 +6,7 @@ import {
   getRoleModels,
   postRoleModel,
 } from "../services/RoleModelService";
+import { useSnackbarStore } from "../stores/SnackBarStore";
 
 export const useGetRoleModels = () => {
   const {
@@ -23,10 +24,10 @@ export const useGetRoleModels = () => {
   return { roleModelsResult, isLoading, isError };
 };
 
-export const useAddRoleModel = async () => {
+export const useAddRoleModel = () => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  const mutation = useMutation<IRoleModel, Error, addRoleModelType>({
     mutationFn: async (roleModel: addRoleModelType) => {
       const data = await postRoleModel(roleModel);
       return data;
@@ -48,19 +49,30 @@ export const useAddRoleModel = async () => {
   return mutation;
 };
 
-export const useDeleteRoleModel = async () => {
+export const useDeleteRoleModel = () => {
   const queryClient = useQueryClient();
+  const setMessage = useSnackbarStore((state) => state.setMessage);
+  const setIsOpen = useSnackbarStore((state) => state.setIsOpen);
 
-  return useMutation<void, Error, string>({
+  const triggerSnackbar = (message: string) => {
+    setMessage(message);
+    setIsOpen(true);
+  };
+
+  const mutation = useMutation<void, Error, string>({
     mutationFn: async (roleModelId: string) => {
       await deleteRoleModel(roleModelId);
     },
     onSuccess: () => {
       // Invalidate the role models query to refresh the list after deletion
       queryClient.invalidateQueries({ queryKey: ["RoleModels"] });
+      triggerSnackbar("Successfully deleted role model");
     },
     onError: (error) => {
       console.error("Error deleting role model:", error);
+      triggerSnackbar("Error deleting role model, please try again");
     },
   });
+
+  return { mutation };
 };

@@ -18,7 +18,7 @@ import { useState } from "react";
 
 const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
-  const deleteRoleModelMutation = useDeleteRoleModel();
+  const { mutation } = useDeleteRoleModel();
 
   const handleClickDeleteRoleModel = () => {
     setDeleteDialogOpen(true);
@@ -29,7 +29,7 @@ const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
   };
 
   const deleteRoleModel = async () => {
-    (await deleteRoleModelMutation).mutate(roleModel._id);
+    mutation.mutate(roleModel._id);
   };
 
   return (

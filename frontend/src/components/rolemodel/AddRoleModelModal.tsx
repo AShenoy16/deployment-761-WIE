@@ -88,7 +88,7 @@ const AddRoleModelModal: React.FC = () => {
 
     try {
       setError(undefined);
-      (await addRoleModelMutation).mutate(newRoleModel);
+      addRoleModelMutation.mutate(newRoleModel);
       handleFormClose();
     } catch (error) {
       console.error("Error adding role model:", error);
