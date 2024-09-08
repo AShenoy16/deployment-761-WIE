@@ -1,10 +1,37 @@
-import { Box, Typography, IconButton, Avatar } from "@mui/material";
+import {
+  Box,
+  Typography,
+  IconButton,
+  Avatar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import { IRoleModel } from "../../types/RoleModel";
 import CloseIcon from "@mui/icons-material/Close";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import { useDeleteRoleModel } from "../../hooks/useRoleModel";
+import { useState } from "react";
 
 const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+  const { mutation } = useDeleteRoleModel();
+
+  const handleClickDeleteRoleModel = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const deleteRoleModel = async () => {
+    mutation.mutate(roleModel._id);
+  };
+
   return (
     <Box
       sx={{
@@ -24,13 +51,22 @@ const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
           alignItems: "center",
         }}
       >
-        <IconButton sx={{ color: "red" }}>
+        <IconButton sx={{ color: "red" }} onClick={handleClickDeleteRoleModel}>
           <CloseIcon />
         </IconButton>
         <IconButton sx={{ color: "gray" }}>
           <EditNoteIcon />
         </IconButton>
       </Box>
+      {/* Dialog for deleting role model */}
+      <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>{`Delete role model: ${roleModel.name}?`}</DialogTitle>
+        <DialogContent>This cannot be undone</DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog}>Cancel</Button>
+          <Button onClick={deleteRoleModel}>Delete</Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Second Row Layer */}
       <Box

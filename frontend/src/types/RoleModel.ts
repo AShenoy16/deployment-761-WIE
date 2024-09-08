@@ -1,5 +1,5 @@
 export interface IRoleModel {
-  _id: number;
+  _id: string;
   name: string;
   title: string;
   description: string;

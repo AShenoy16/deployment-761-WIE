@@ -2,8 +2,8 @@ import EditModalRoleModels from "./EditModalRoleModelCard";
 import AddRoleModelModal from "./AddRoleModelModal";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button, Modal, Box, Typography, IconButton } from "@mui/material";
-import { Theme } from "@mui/material";
 import { IRoleModel } from "../../types/RoleModel";
+import GradientBox from "../GradientBox";
 
 // Define modal styles
 const modalStyle = {
@@ -14,7 +14,6 @@ const modalStyle = {
   width: "85%",
   maxWidth: "800px",
   maxHeight: "90vh",
-  background: (theme: Theme) => theme.palette.roleModelBg.main,
   boxShadow: 24,
   p: 4,
   display: "flex",
@@ -41,7 +40,7 @@ const EditModalRoleModel: React.FC<EditModalRoleModelProps> = ({
 }) => {
   return (
     <Modal open={open} onClose={onClose}>
-      <Box sx={modalStyle}>
+      <GradientBox sx={modalStyle}>
         {/* Header Section */}
         <Box
           sx={{
@@ -87,7 +86,7 @@ const EditModalRoleModel: React.FC<EditModalRoleModelProps> = ({
             Save Changes
           </Button>
         </Box>
-      </Box>
+      </GradientBox>
     </Modal>
   );
 };

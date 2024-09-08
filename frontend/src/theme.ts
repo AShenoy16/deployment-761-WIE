@@ -1,15 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 const generalComponentStyles = {};
 
-declare module "@mui/material/styles" {
-  interface Palette {
-    roleModelBg: Palette["primary"];
-  }
-  interface PaletteOptions {
-    roleModelBg?: PaletteOptions["primary"];
-  }
-}
-
 export const lightTheme = createTheme({
   palette: {
     mode: "light",
@@ -21,9 +12,6 @@ export const lightTheme = createTheme({
     },
     secondary: {
       main: "#00467F",
-    },
-    roleModelBg: {
-      main: "linear-gradient(180deg, #009AC7 0%, #00467F 100%)",
     },
   },
   components: {
