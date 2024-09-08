@@ -19,10 +19,15 @@ export const getSpecs = async (req: Request, res: Response) => {
 export const getSpecByName = async (req: Request, res: Response) => {
   const { name } = req.params;
   try {
-    const specialization = await Specialization.findOne({ name });
+    // Case-insensitive search using regex with the 'i' flag
+    const specialization = await Specialization.findOne({
+      name: { $regex: new RegExp(`^${name}$`, "i") },
+    });
+
     if (!specialization) {
       return res.status(404).json({ message: "Specialization not found" });
     }
+
     return res.status(200).json(specialization);
   } catch (error) {
     console.error("Error fetching specialization by name:", error);

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Grid, Typography, Box, Card, CardContent } from "@mui/material";
 import { useParams } from "react-router-dom"; // To access route params
 import uoaEngBuilding from "/engineering-building.jpg";
+import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
+
 import axios from "axios";
 
 // Define the interface for the Specialization object
@@ -27,16 +29,23 @@ const SpecDetailPage: React.FC = () => {
     null
   );
   const [loading, setLoading] = useState(true);
+  
   const [error, setError] = useState<string | null>(null);
+  // Convert hyphenated name to a format the API expects
+  const formattedName = name?.replace(/-/g, " ") || ""; 
 
   // Fetch specialization details from the backend
   useEffect(() => {
     const fetchSpecialization = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/specializations/Software Engineering`);
-
+        const response = await axios.get(
+          `http://localhost:5000/api/specializations/${encodeURIComponent(
+            formattedName
+          )}`
+        );
         setSpecialization(response.data);
       } catch (err) {
+        console.error("Error fetching specialization:", err);
         setError("Failed to fetch specialization details.");
       } finally {
         setLoading(false);
@@ -47,7 +56,7 @@ const SpecDetailPage: React.FC = () => {
   }, [name]);
 
   // Handle loading and error states
-  if (loading) return <Typography>Loading...</Typography>;
+  if (loading) return <LoadingSpinnerScreen/>;
   if (error) return <Typography>{error}</Typography>;
   if (!specialization) return <Typography>Specialization not found</Typography>;
 
