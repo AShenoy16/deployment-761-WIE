@@ -16,6 +16,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import React, { useEffect, useState } from "react";
 import { useSliderQuestionEditorStore } from "../../stores/SliderQuestionEditorStore";
+import { useQuizEditorStore } from "../../stores/QuizEditorStore";
 
 const possibleSpecs = [
   "Biomedical",
@@ -268,6 +269,10 @@ const SliderQuestionEditor: React.FC = () => {
       specError: state.specError,
     }));
 
+  const { setMainSelectedQuestion } = useQuizEditorStore((state) => ({
+    setMainSelectedQuestion: state.setSelectedQuestion,
+  }));
+
   const { updateQuestionTitle } = useSliderQuestionEditorStore((state) => ({
     updateQuestionTitle: state.updateQuestionTitle,
   }));
@@ -286,6 +291,10 @@ const SliderQuestionEditor: React.FC = () => {
     // Add the new spec to the store
     addNewSpec(defaultSpecName, defaultWeightings);
   };
+
+  useEffect(() => {
+    setMainSelectedQuestion(selectedQuestion);
+  }, [selectedQuestion]);
 
   return (
     <Stack
