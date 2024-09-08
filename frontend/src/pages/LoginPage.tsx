@@ -9,6 +9,8 @@ import {
 } from "@toolpad/core";
 import { useAuthStore } from "../stores/AuthenticationStore";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useAuthStore();
@@ -32,7 +34,7 @@ const LoginPage: React.FC = () => {
       const password = formData?.get("password");
 
       // TODO change to actual backend server
-      fetch("http://localhost:5000/api/users", {
+      fetch(`${API_BASE_URL}/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
