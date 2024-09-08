@@ -1,5 +1,6 @@
 // services/roleModelService.ts
 import RoleModel from "../models/RoleModel";
+import { IRoleModel } from "../models/interfaces";
 
 /**
  * Service to get all role models from the database
@@ -28,6 +29,21 @@ export const addRoleModel = async (roleModelData: any) => {
     return newRoleModel;
   } catch (error) {
     console.error("Error adding new role model:", error);
+    return null;
+  }
+};
+
+/**
+ * Service to delete a role model
+ * @param roleModelId String representing the role model ID
+ * @returns
+ */
+export const deleteRoleModelById = async (roleModelId: string) => {
+  try {
+    const result = await RoleModel.findByIdAndDelete(roleModelId);
+    return result;
+  } catch (error) {
+    console.error("Error deleting role model:", error);
     return null;
   }
 };
