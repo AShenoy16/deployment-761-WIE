@@ -8,6 +8,7 @@ type SliderQuestionEditorStore = {
   updateSpecName: (oldSpec: string, newSpec: string) => void;
   updateSpecWeightings: (spec: string, newWeightings: number[]) => void;
   addNewSpec: (spec: string, weightings: number[]) => void;
+  deleteSpec: (spec: string) => void;
   specError: string | null;
   weightingErrors: (string | null)[];
   setSpecError: (error: string | null) => void;
@@ -85,6 +86,24 @@ export const useSliderQuestionEditorStore = create<SliderQuestionEditorStore>(
                 ...state.selectedQuestion.sliderRange.weightings,
                 [spec]: weightings,
               },
+            },
+          },
+        };
+      }),
+
+    deleteSpec: (spec) =>
+      set((state) => {
+        if (!state.selectedQuestion) return state;
+        const updatedWeightings = {
+          ...state.selectedQuestion.sliderRange.weightings,
+        };
+        delete updatedWeightings[spec]; // Remove the spec and its weightings
+        return {
+          selectedQuestion: {
+            ...state.selectedQuestion,
+            sliderRange: {
+              ...state.selectedQuestion.sliderRange,
+              weightings: updatedWeightings,
             },
           },
         };

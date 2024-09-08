@@ -191,12 +191,20 @@ const SpecialisationOption: React.FC<SpecialisationOptionProps> = ({
 }) => {
   const [isEditSpecWeightingOpen, setIsEditSpecWeightingOpen] = useState(false);
 
+  const { deleteSpec } = useSliderQuestionEditorStore((state) => ({
+    deleteSpec: state.deleteSpec,
+  }));
+
   const handleOpenEditSpecWeighting = () => {
     setIsEditSpecWeightingOpen(true);
   };
 
   const handleCloseEditSpecWeighting = () => {
     setIsEditSpecWeightingOpen(false);
+  };
+
+  const handleDelete = () => {
+    deleteSpec(spec);
   };
 
   return (
@@ -216,7 +224,7 @@ const SpecialisationOption: React.FC<SpecialisationOptionProps> = ({
           width="40%"
           p={0.7}
         >
-          <IconButton color="error">
+          <IconButton color="error" onClick={handleDelete}>
             <DeleteIcon />
           </IconButton>
           <IconButton color="primary" onClick={handleOpenEditSpecWeighting}>
@@ -292,6 +300,10 @@ const SliderQuestionEditor: React.FC = () => {
     addNewSpec(defaultSpecName, defaultWeightings);
   };
 
+  const specOptions = Object.entries(
+    selectedQuestion?.sliderRange.weightings || {}
+  );
+
   useEffect(() => {
     setMainSelectedQuestion(selectedQuestion);
   }, [selectedQuestion]);
@@ -359,14 +371,19 @@ const SliderQuestionEditor: React.FC = () => {
         </Stack>
       </Stack>
 
-      {Object.entries(selectedQuestion?.sliderRange.weightings || {}).map(
-        ([spec, weighting], index) => (
+      {/* Render specialisation options or show no specs error */}
+      {specOptions.length > 0 ? (
+        specOptions.map(([spec, weighting], index) => (
           <SpecialisationOption
             key={index}
             spec={spec}
             weightings={weighting}
           />
-        )
+        ))
+      ) : (
+        <Typography textAlign="center" color="error">
+          No specs available! Please add at least one spec.
+        </Typography>
       )}
     </Stack>
   );
