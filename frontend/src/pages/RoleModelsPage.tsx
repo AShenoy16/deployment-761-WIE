@@ -1,59 +1,28 @@
 import React, { useState } from "react";
-import { Container, Typography, Box } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import RoleModelModal from "../components/RoleModelModal";
-import RoleModelCard from "../components/RoleModelCard";
-export interface SocialMediaLinks {
-  linkedin?: string;
-}
+import { Button, Box, Typography, Container } from "@mui/material";
+import { IRoleModel } from "../types/RoleModel";
+import RoleModelModal from "../components/rolemodel/RoleModelModal";
+import RoleModelCard from "../components/rolemodel/RoleModelCard";
+import { useGetRoleModels } from "../hooks/useRoleModel";
+import EditModalRoleModel from "../components/rolemodel/EditModalRoleModel";
 
-export interface RoleModel {
-  id: number;
-  name: string;
-  title: string;
-  description: string;
-  photoUrl: string;
-  bio?: string;
-  socialMediaLinks?: SocialMediaLinks;
-}
-
-const roleModels: RoleModel[] = [
-  {
-    id: 1,
-    name: "Alyssa Morris",
-    title: "Product Manager, Intel",
-    description:
-      "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
-    photoUrl:
-      "https://www.womeninscience.africa/wp-content/uploads/2022/11/Unsung-Black-Female-Engineers.jpg", // updated to photoUrl
-    bio: "Alyssa Morris is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
-    socialMediaLinks: {
-      linkedin: "https://www.linkedin.com/in/alyssamorris", // moved inside socialMediaLinks
-    },
-  },
-  {
-    id: 2,
-    name: "Samantha Smith",
-    title: "Software Engineer, Google",
-    description:
-      "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
-    photoUrl:
-      "https://nzmanufacturer.co.nz/wp-content/uploads/2023/08/Women-In-Engineering-PIC.jpg", // updated to photoUrl
-    bio: "Alyssa Morris is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
-    socialMediaLinks: {
-      linkedin: "https://www.linkedin.com/in/samanthasmith",
-    },
-  },
-];
+const buttonStyle = {
+  textTransform: "none",
+  textDecorationLine: "underline",
+  borderRadius: "12px",
+};
 
 const RoleModelsPage: React.FC = () => {
-  const navigate = useNavigate();
-  const [selectedRoleModel, setSelectedRoleModel] = useState<RoleModel | null>(
+  const [selectedRoleModel, setSelectedRoleModel] = useState<IRoleModel | null>(
     null
   );
   const [openModal, setOpenModal] = useState(false);
+  const [openEditModal, setEditModal] = useState<boolean>(false);
 
-  const handleCardClick = (model: RoleModel) => {
+  const handleEditModalOpen = (): void => setEditModal(true);
+  const handleEditModalClose = (): void => setEditModal(false);
+
+  const handleCardClick = (model: IRoleModel) => {
     setSelectedRoleModel(model);
     setOpenModal(true);
   };
@@ -61,6 +30,9 @@ const RoleModelsPage: React.FC = () => {
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+
+  // retrieve role model data
+  const { roleModelsResult, isLoading, isError } = useGetRoleModels();
 
   return (
     <Container>
@@ -75,11 +47,30 @@ const RoleModelsPage: React.FC = () => {
         Engineering Role Models
       </Typography>
 
+      {/* Edit Button */}
+      <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 3 }}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleEditModalOpen}
+          sx={buttonStyle}
+        >
+          Edit
+        </Button>
+      </Box>
+
+      {/* Edit Modal */}
+      <EditModalRoleModel
+        open={openEditModal}
+        onClose={handleEditModalClose}
+        roleModelsResult={roleModelsResult}
+      />
+
       {/* Column layout for the role model cards */}
-      <Box display="flex" flexDirection="column" gap={3}>
-        {roleModels.map((model) => (
+      <Box display="flex" flexDirection="column" gap={3} marginBottom={5}>
+        {roleModelsResult.map((model) => (
           <RoleModelCard
-            key={model.id}
+            key={model._id}
             model={model}
             onClick={handleCardClick}
           />
