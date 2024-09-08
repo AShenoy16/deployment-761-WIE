@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Typography, Box, Card, CardContent } from "@mui/material";
 import { useParams } from "react-router-dom"; // To access route params
+import uoaEngBuilding from "/engineering-building.jpg";
 import axios from "axios";
 
 // Define the interface for the Specialization object
@@ -32,7 +33,8 @@ const SpecDetailPage: React.FC = () => {
   useEffect(() => {
     const fetchSpecialization = async () => {
       try {
-        const response = await axios.get(`/api/specializations/${name}`);
+        const response = await axios.get(`http://localhost:5000/api/specializations/Software Engineering`);
+
         setSpecialization(response.data);
       } catch (err) {
         setError("Failed to fetch specialization details.");
@@ -55,7 +57,7 @@ const SpecDetailPage: React.FC = () => {
       <Box
         sx={{
           position: "relative",
-          backgroundImage: `url(${specialization.photoUrl})`, // Dynamically use image from API
+          backgroundImage: `url(${uoaEngBuilding})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           color: "white",
@@ -292,12 +294,34 @@ const SpecDetailPage: React.FC = () => {
         >
           Career Pathways
         </Typography>
-        <Grid container spacing={2}>
+        <Typography variant="h6" gutterBottom>
+          {`Potential Career options as a ${specialization.name} Graduate`}
+        </Typography>
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            marginLeft: "10px",
+            paddingTop: "20px",
+          }}
+        >
           <Grid item xs={12} md={6}>
-            <ul>
-              {specialization.careerPathways.map((pathway, index) => (
-                <li key={index}>{pathway}</li>
-              ))}
+            <ul
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 1fr)",
+                gridAutoRows: "auto",
+                rowGap: "10px",
+                columnGap: "20px",
+                padding: 0,
+                margin: 0,
+              }}
+            >
+              {specialization.careerPathways
+                .slice(0, 6)
+                .map((pathway, index) => (
+                  <li key={index}>{pathway}</li>
+                ))}
             </ul>
           </Grid>
         </Grid>

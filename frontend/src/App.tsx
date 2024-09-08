@@ -21,7 +21,7 @@ function App() {
             <Route path="/quiz/results" element={<QuizResultsPage />} />
             <Route path="/quiz/edit" element={<QuizEditingPage />} />
             <Route path="/spec-info" element={<SpecPage />} />
-            <Route path="/specialisation/:id" element={<SpecDetailPage />} />
+            <Route path="/specialisation/:name" element={<SpecDetailPage />} />
           </Routes>
         </GeneralLayout>
       </BrowserRouter>
