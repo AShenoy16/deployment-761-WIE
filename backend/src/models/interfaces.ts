@@ -81,6 +81,11 @@ export interface Specialization extends Document {
   experiencedSalary: number;
   jobAvailability: string;
   testimonials: Testimonial[];
+  header: string;
+  leftDetail: string;
+  rightDetail: string;
+  rightImage: string;
+  leftImage: string;
   createdAt: Date;
   updatedAt: Date;
 }

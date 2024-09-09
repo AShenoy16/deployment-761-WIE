@@ -15,23 +15,29 @@ interface Specialisation {
 }
 
 const specialisations: Specialisation[] = [
-  { id: 1, name: "Biomedical" },
-  { id: 2, name: "Chemical and Materials" },
-  { id: 3, name: "Civil" },
-  { id: 4, name: "Computer Systems" },
-  { id: 5, name: "Electrical and Electronic" },
+  { id: 1, name: "Biomedical Engineering" },
+  { id: 2, name: "Chemical and Materials Engineering" },
+  { id: 3, name: "Civil Engineering" },
+  { id: 4, name: "Computer Systems Engineering" },
+  { id: 5, name: "Electrical Engineering" },
   { id: 6, name: "Engineering Science" },
-  { id: 7, name: "Mechanical" },
-  { id: 8, name: "Mechatronics" },
-  { id: 9, name: "Software" },
-  { id: 10, name: "Structural" },
+  { id: 7, name: "Mechanical Engineering" },
+  { id: 8, name: "Mechatronics Engineering" },
+  { id: 9, name: "Software Engineering" },
+  { id: 10, name: "Structural Engineering" },
 ];
+
+// Utility function to slugify specialisation names
+const slugify = (name: string) => {
+  return name.toLowerCase().replace(/\s+/g, "-");
+};
 
 const SpecPage: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleCardClick = (id: number) => {
-    navigate(`/specialisation/${id}`);
+  const handleCardClick = (id: string) => {
+    const slug = slugify(id);
+    navigate(`/specialisation/${slug}`);
   };
 
   return (
@@ -41,12 +47,14 @@ const SpecPage: React.FC = () => {
         component="h1"
         align="center"
         gutterBottom
+        paddingTop={2}
+        paddingBottom={2}
         sx={{ color: "#00467F" }}
       >
         Specialisations
       </Typography>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={3} paddingTop={3}>
         {specialisations.map((spec) => (
           <Grid item xs={12} sm={6} md={4} key={spec.id}>
             <Card
@@ -56,7 +64,7 @@ const SpecPage: React.FC = () => {
                 borderRadius: 4,
               }}
             >
-              <CardActionArea onClick={() => handleCardClick(spec.id)}>
+              <CardActionArea onClick={() => handleCardClick(spec.name)}>
                 <CardContent>
                   <Typography variant="h6" component="h2">
                     {spec.name}
