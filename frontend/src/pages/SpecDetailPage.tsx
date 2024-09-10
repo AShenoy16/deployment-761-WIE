@@ -1,10 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Typography, Box, Card, CardContent } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  Box,
+  Card,
+  CardContent,
+  Button,
+} from "@mui/material";
 import { useParams } from "react-router-dom"; // To access route params
 import uoaEngBuilding from "/engineering-building.jpg";
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
-
 import axios from "axios";
+import { useAuthStore } from "../stores/AuthenticationStore";
+import EditModalSpecInfo from "../components/specinfo/EditModalSpecInfo";
+
+const buttonStyle = {
+  textTransform: "none",
+  textDecorationLine: "underline",
+  borderRadius: "12px",
+};
 
 // Define the interface for the Specialization object
 interface Specialization {
@@ -25,23 +39,31 @@ interface Specialization {
 
 const SpecDetailPage: React.FC = () => {
   const { name } = useParams<{ name: string }>(); // Get specialization name from route params
+  const formattedName = name?.replace(/-/g, " ") || "";
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const [openEditModal, setEditModal] = useState<boolean>(false);
+  const handleEditModalOpen = (): void => setEditModal(true);
+  const handleEditModalClose = (): void => setEditModal(false);
+
   const [specialization, setSpecialization] = useState<Specialization | null>(
     null
   );
   const [loading, setLoading] = useState(true);
-  
+
   const [error, setError] = useState<string | null>(null);
-  // Convert hyphenated name to a format the API expects
-  const formattedName = name?.replace(/-/g, " ") || ""; 
+
+  const handleSaveChanges = (updatedSpecialization: Specialization) => {
+    setSpecialization(updatedSpecialization);
+  };
+
 
   // Fetch specialization details from the backend
   useEffect(() => {
     const fetchSpecialization = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/specializations/${encodeURIComponent(
-            formattedName
-          )}`
+          `${API_BASE_URL}/specializations/${encodeURIComponent(formattedName)}`
         );
         setSpecialization(response.data);
       } catch (err) {
@@ -56,7 +78,7 @@ const SpecDetailPage: React.FC = () => {
   }, [name]);
 
   // Handle loading and error states
-  if (loading) return <LoadingSpinnerScreen/>;
+  if (loading) return <LoadingSpinnerScreen />;
   if (error) return <Typography>{error}</Typography>;
   if (!specialization) return <Typography>Specialization not found</Typography>;
 
@@ -188,6 +210,33 @@ const SpecDetailPage: React.FC = () => {
                 >
                   {specialization.leftDetail}
                 </Typography>
+                {/* Edit Button */}
+                {isAdminLoggedIn && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginBottom: 3,
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={handleEditModalOpen}
+                      sx={buttonStyle}
+                    >
+                      Edit
+                    </Button>
+                  </Box>
+                )}
+                {/* Edit Modal */}
+                <EditModalSpecInfo
+                  open={openEditModal}
+                  onClose={handleEditModalClose}
+                  specInfoResult={specialization}
+                  name={formattedName}
+                  onSave={handleSaveChanges} 
+                />
               </CardContent>
             </Card>
           </Grid>
