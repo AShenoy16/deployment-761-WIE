@@ -7,7 +7,7 @@ import {
   CardContent,
   Button,
 } from "@mui/material";
-import { useParams } from "react-router-dom"; // To access route params
+import { useParams } from "react-router-dom";
 import uoaEngBuilding from "/engineering-building.jpg";
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 import axios from "axios";
@@ -15,10 +15,14 @@ import { useAuthStore } from "../stores/AuthenticationStore";
 import EditModalSpecInfo from "../components/specinfo/EditModalSpecInfo";
 
 const buttonStyle = {
-  textTransform: "none",
-  textDecorationLine: "underline",
-  borderRadius: "12px",
+  textTransform: "none", 
+  textDecorationLine: "underline", 
+  borderRadius: "12px", 
+  fontSize: "1.25rem", 
+  padding: "12px 24px",
+  height: "48px", 
 };
+
 
 // Define the interface for the Specialization object
 interface Specialization {
@@ -53,9 +57,16 @@ const SpecDetailPage: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
 
-  const handleSaveChanges = (updatedSpecialization: Specialization) => {
-    setSpecialization(updatedSpecialization);
-  };
+ const handleSaveChanges = (updatedData: Partial<Specialization>) => {
+   if (specialization) {
+     const updatedSpecialization = {
+       ...specialization, // Keep all existing fields
+       ...updatedData, // Override with updated fields from modal
+     };
+     setSpecialization(updatedSpecialization); // Update state
+   }
+ };
+
 
 
   // Fetch specialization details from the backend
@@ -159,6 +170,19 @@ const SpecDetailPage: React.FC = () => {
           >
             {specialization.header}
           </Typography>
+          {/* Edit Button */}
+          {isAdminLoggedIn && (
+            <Box mt={"3rem"}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleEditModalOpen}
+                sx={buttonStyle}
+              >
+                Edit
+              </Button>
+            </Box>
+          )}
         </Box>
       </Box>
 
@@ -210,32 +234,14 @@ const SpecDetailPage: React.FC = () => {
                 >
                   {specialization.leftDetail}
                 </Typography>
-                {/* Edit Button */}
-                {isAdminLoggedIn && (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginBottom: 3,
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={handleEditModalOpen}
-                      sx={buttonStyle}
-                    >
-                      Edit
-                    </Button>
-                  </Box>
-                )}
+
                 {/* Edit Modal */}
                 <EditModalSpecInfo
                   open={openEditModal}
                   onClose={handleEditModalClose}
                   specInfoResult={specialization}
                   name={formattedName}
-                  onSave={handleSaveChanges} 
+                  onSave={handleSaveChanges}
                 />
               </CardContent>
             </Card>

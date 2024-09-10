@@ -11,6 +11,7 @@ import {
 import { useState, useEffect } from "react";
 import GradientBox from "../GradientBox";
 import axios from "axios";
+import { Specialization } from "../../types/Specialization";
 
 const modalStyle = {
   position: "absolute" as const,
@@ -44,13 +45,9 @@ interface EditModalSpecInfoProps {
     rightDetail: string;
   } | null;
   name: string;
-  onSave: (updatedSpecialization: {
-    careerPathways: string[];
-    header: string;
-    leftDetail: string;
-    rightDetail: string;
-  }) => void;
+  onSave: (updatedSpecialization: Partial<Specialization>) => void; 
 }
+
 
 
 const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
