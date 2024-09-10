@@ -8,7 +8,7 @@ import {
   TextField,
   TextareaAutosize,
 } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import GradientBox from "../GradientBox";
 import axios from "axios";
 import { Specialization } from "../../types/Specialization";
@@ -63,6 +63,9 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
   const [rightDetail, setRightDetail] = useState<string>("");
   const [leftImage, setLeftImage] = useState<File | null>(null);
   const [rightImage, setRightImage] = useState<File | null>(null);
+
+  const leftImageInputRef = useRef<HTMLInputElement | null>(null);
+  const rightImageInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (specInfoResult) {
@@ -130,8 +133,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
         }
       );
 
-      // Assuming the API returns the updated specialization data, update the parent component
-      onSave(response.data);
+      onSave(response.data); // Update the parent component with the new data
       onClose();
     } catch (error) {
       console.error("Error updating specialization:", error);
@@ -191,7 +193,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
                 }}
                 InputLabelProps={{
                   sx: {
-                    transform: "translate(5px, -18px) scale(1)", // Adjust the label position and size
+                    transform: "translate(5px, -15px) scale(0.85)",
                     marginTop: "-5px",
                     color: "black",
                   },
@@ -247,6 +249,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
               resize: "none",
             }}
           />
+
           {/* Upload Right Image */}
           <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
             Upload Right Image
@@ -254,8 +257,18 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
           <input
             type="file"
             accept="image/*"
+            ref={rightImageInputRef}
+            style={{ display: "none" }}
             onChange={(e) => handleImageChange(e, setRightImage)}
           />
+          <Button
+            variant="contained"
+            sx={{ marginBottom: "10px" }}
+            onClick={() => rightImageInputRef.current?.click()}
+          >
+            Choose Right Image
+          </Button>
+
           {/* Edit Right Detail */}
           <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
             Right Detail
@@ -282,8 +295,17 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
           <input
             type="file"
             accept="image/*"
+            ref={leftImageInputRef}
+            style={{ display: "none" }}
             onChange={(e) => handleImageChange(e, setLeftImage)}
           />
+          <Button
+            variant="contained"
+            sx={{ marginBottom: "10px" }}
+            onClick={() => leftImageInputRef.current?.click()}
+          >
+            Choose Left Image
+          </Button>
         </Box>
 
         {/* Save Button */}

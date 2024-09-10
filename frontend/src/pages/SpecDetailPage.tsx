@@ -8,7 +8,7 @@ import {
   Button,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
-import uoaEngBuilding from "/engineering-building.jpg"; // Fallback image
+import uoaEngBuilding from "/engineering-building.jpg";
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 import axios from "axios";
 import { useAuthStore } from "../stores/AuthenticationStore";
@@ -92,12 +92,9 @@ const SpecDetailPage: React.FC = () => {
   if (!specialization) return <Typography>Specialization not found</Typography>;
 
   // Get the image URLs from the API or fall back to uoaengbuilding
-   const leftImageUrl = specialization.leftImage
-     ? `${BASE_URL}${specialization.leftImage}`
-     : uoaEngBuilding;
-  const rightImageUrl = specialization.rightImage
-    ? `${BASE_URL}${specialization.rightImage}`
-    : uoaEngBuilding;
+   const leftImageUrl = `${BASE_URL}${specialization.leftImage}`
+  const rightImageUrl = `${BASE_URL}${specialization.rightImage}`;
+
 
   return (
     <Box sx={{ overflowX: "hidden" }}>
