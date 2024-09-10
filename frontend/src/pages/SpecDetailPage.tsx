@@ -8,23 +8,23 @@ import {
   Button,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
-import uoaEngBuilding from "/engineering-building.jpg";
+import uoaEngBuilding from "/engineering-building.jpg"; // Fallback image
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 import axios from "axios";
 import { useAuthStore } from "../stores/AuthenticationStore";
 import EditModalSpecInfo from "../components/specinfo/EditModalSpecInfo";
 
+// Button styles
 const buttonStyle = {
-  textTransform: "none", 
-  textDecorationLine: "underline", 
-  borderRadius: "12px", 
-  fontSize: "1.25rem", 
+  textTransform: "none",
+  textDecorationLine: "underline",
+  borderRadius: "12px",
+  fontSize: "1.25rem",
   padding: "12px 24px",
-  height: "48px", 
+  height: "48px",
 };
 
-
-// Define the interface for the Specialization object
+// Specialization interface
 interface Specialization {
   name: string;
   description: string;
@@ -43,31 +43,29 @@ interface Specialization {
 
 const SpecDetailPage: React.FC = () => {
   const { name } = useParams<{ name: string }>(); // Get specialization name from route params
-  const formattedName = name?.replace(/-/g, " ") || "";
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const [openEditModal, setEditModal] = useState<boolean>(false);
-  const handleEditModalOpen = (): void => setEditModal(true);
-  const handleEditModalClose = (): void => setEditModal(false);
+  const formattedName = name?.replace(/-/g, " ") || ""; // Format name by replacing hyphens with spaces
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Get the API base URL from environment variables
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+  const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn); // Check if admin is logged in
+  const [openEditModal, setEditModal] = useState<boolean>(false); // State for edit modal
+  const handleEditModalOpen = (): void => setEditModal(true); // Open edit modal
+  const handleEditModalClose = (): void => setEditModal(false); // Close edit modal
 
   const [specialization, setSpecialization] = useState<Specialization | null>(
     null
   );
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
 
-  const [error, setError] = useState<string | null>(null);
-
- const handleSaveChanges = (updatedData: Partial<Specialization>) => {
-   if (specialization) {
-     const updatedSpecialization = {
-       ...specialization, // Keep all existing fields
-       ...updatedData, // Override with updated fields from modal
-     };
-     setSpecialization(updatedSpecialization); // Update state
-   }
- };
-
-
+  const handleSaveChanges = (updatedData: Partial<Specialization>) => {
+    if (specialization) {
+      const updatedSpecialization = {
+        ...specialization, // Keep existing fields
+        ...updatedData, // Override with updated fields from modal
+      };
+      setSpecialization(updatedSpecialization); // Update state with the new specialization data
+    }
+  };
 
   // Fetch specialization details from the backend
   useEffect(() => {
@@ -76,12 +74,12 @@ const SpecDetailPage: React.FC = () => {
         const response = await axios.get(
           `${API_BASE_URL}/specializations/${encodeURIComponent(formattedName)}`
         );
-        setSpecialization(response.data);
+        setSpecialization(response.data); // Set the fetched specialization data
       } catch (err) {
         console.error("Error fetching specialization:", err);
         setError("Failed to fetch specialization details.");
       } finally {
-        setLoading(false);
+        setLoading(false); // Turn off loading state
       }
     };
 
@@ -92,6 +90,14 @@ const SpecDetailPage: React.FC = () => {
   if (loading) return <LoadingSpinnerScreen />;
   if (error) return <Typography>{error}</Typography>;
   if (!specialization) return <Typography>Specialization not found</Typography>;
+
+  // Get the image URLs from the API or fall back to uoaengbuilding
+   const leftImageUrl = specialization.leftImage
+     ? `${BASE_URL}${specialization.leftImage}`
+     : uoaEngBuilding;
+  const rightImageUrl = specialization.rightImage
+    ? `${BASE_URL}${specialization.rightImage}`
+    : uoaEngBuilding;
 
   return (
     <Box sx={{ overflowX: "hidden" }}>
@@ -109,7 +115,7 @@ const SpecDetailPage: React.FC = () => {
           },
           display: "flex",
           alignItems: "center",
-          minHeight: "100vh", // Ensure it at least covers the viewport height
+          minHeight: "100vh",
         }}
       >
         {/* Overlay */}
@@ -252,7 +258,7 @@ const SpecDetailPage: React.FC = () => {
             <Box
               sx={{
                 height: "100%",
-                backgroundImage: `url(${specialization.leftImage})`,
+                backgroundImage: `url(${rightImageUrl})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 display: "flex",
@@ -280,7 +286,7 @@ const SpecDetailPage: React.FC = () => {
             <Box
               sx={{
                 height: "100%",
-                backgroundImage: `url(${specialization.rightImage})`,
+                backgroundImage: `url(${leftImageUrl})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 display: "flex",

@@ -34,7 +34,6 @@ const buttonStyle = {
   borderRadius: "12px",
 };
 
-
 interface EditModalSpecInfoProps {
   open: boolean;
   onClose: () => void;
@@ -43,25 +42,27 @@ interface EditModalSpecInfoProps {
     header: string;
     leftDetail: string;
     rightDetail: string;
+    leftImage: string;
+    rightImage: string;
   } | null;
   name: string;
-  onSave: (updatedSpecialization: Partial<Specialization>) => void; 
+  onSave: (updatedSpecialization: Partial<Specialization>) => void;
 }
-
-
 
 const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
   open,
   onClose,
   specInfoResult,
   name,
-  onSave
+  onSave,
 }) => {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [careerPathways, setCareerPathways] = useState<string[]>([]);
   const [header, setHeader] = useState<string>("");
   const [leftDetail, setLeftDetail] = useState<string>("");
   const [rightDetail, setRightDetail] = useState<string>("");
+  const [leftImage, setLeftImage] = useState<File | null>(null);
+  const [rightImage, setRightImage] = useState<File | null>(null);
 
   useEffect(() => {
     if (specInfoResult) {
@@ -87,25 +88,54 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
     setCareerPathways(newCareerPathways);
   };
 
+  const handleImageChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setImage: (file: File | null) => void
+  ) => {
+    const file = e.target.files?.[0] || null;
+    setImage(file);
+  };
+
   const handleSaveChanges = async () => {
-    // Sanitize the fields
     const sanitizedHeader = header.trim().replace(/\s+/g, " ");
     const sanitizedLeftDetail = leftDetail.trim().replace(/\s+/g, " ");
     const sanitizedRightDetail = rightDetail.trim().replace(/\s+/g, " ");
     const sanitizedCareerPathways = careerPathways.map((pathway) =>
       pathway.trim().replace(/\s+/g, " ")
     );
-    const response = await axios.patch(
-      `${API_BASE_URL}/specializations/${encodeURIComponent(name)}`,
-      {
-        header: sanitizedHeader,
-        careerPathways: sanitizedCareerPathways,
-        leftDetail: sanitizedLeftDetail,
-        rightDetail: sanitizedRightDetail,
-      }
-    );
-    onSave(response.data);
-    onClose();
+
+    const formData = new FormData();
+
+    formData.append("header", sanitizedHeader);
+    formData.append("careerPathways", JSON.stringify(sanitizedCareerPathways));
+    formData.append("leftDetail", sanitizedLeftDetail);
+    formData.append("rightDetail", sanitizedRightDetail);
+
+    if (leftImage) {
+      formData.append("leftImage", leftImage);
+    }
+
+    if (rightImage) {
+      formData.append("rightImage", rightImage);
+    }
+
+    try {
+      const response = await axios.patch(
+        `${API_BASE_URL}/specializations/${encodeURIComponent(name)}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      // Assuming the API returns the updated specialization data, update the parent component
+      onSave(response.data);
+      onClose();
+    } catch (error) {
+      console.error("Error updating specialization:", error);
+    }
   };
 
   return (
@@ -131,7 +161,6 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
           </Typography>
         </Box>
 
-        {/* Form Content */}
         <Box
           sx={{
             overflowY: "auto",
@@ -155,13 +184,14 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
                 label={`Pathway ${index + 1}`}
                 sx={{
                   mr: 2,
+                  mt: 1,
                   backgroundColor: "white",
                   borderRadius: "8px",
                   marginBottom: "10px",
                 }}
                 InputLabelProps={{
                   sx: {
-                    transform: "translate(5px, -15px) scale(0.85)", // Adjust the label position and size
+                    transform: "translate(5px, -18px) scale(1)", // Adjust the label position and size
                     marginTop: "-5px",
                     color: "black",
                   },
@@ -217,7 +247,15 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
               resize: "none",
             }}
           />
-
+          {/* Upload Right Image */}
+          <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+            Upload Right Image
+          </Typography>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleImageChange(e, setRightImage)}
+          />
           {/* Edit Right Detail */}
           <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
             Right Detail
@@ -235,6 +273,16 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
               whiteSpace: "pre-wrap",
               resize: "none",
             }}
+          />
+
+          {/* Upload Left Image */}
+          <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+            Upload Left Image
+          </Typography>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleImageChange(e, setLeftImage)}
           />
         </Box>
 
