@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+     "typeRoots": ["./types", "./node_modules/@types"], // Add ./types here
+    "types": ["node", "express"], // Include express and node types
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
     /* Projects */

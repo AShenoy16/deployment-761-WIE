@@ -1,12 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Typography, Box, Card, CardContent } from "@mui/material";
-import { useParams } from "react-router-dom"; // To access route params
+import {
+  Grid,
+  Typography,
+  Box,
+  Card,
+  CardContent,
+  Button,
+} from "@mui/material";
+import { useParams } from "react-router-dom";
 import uoaEngBuilding from "/engineering-building.jpg";
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
-
 import axios from "axios";
+import { useAuthStore } from "../stores/AuthenticationStore";
+import EditModalSpecInfo from "../components/specinfo/EditModalSpecInfo";
 
-// Define the interface for the Specialization object
+// Button styles
+const buttonStyle = {
+  textTransform: "none",
+  textDecorationLine: "underline",
+  borderRadius: "12px",
+  fontSize: "1.25rem",
+  padding: "12px 24px",
+  height: "48px",
+};
+
+// Specialization interface
 interface Specialization {
   name: string;
   description: string;
@@ -25,30 +43,43 @@ interface Specialization {
 
 const SpecDetailPage: React.FC = () => {
   const { name } = useParams<{ name: string }>(); // Get specialization name from route params
+  const formattedName = name?.replace(/-/g, " ") || ""; // Format name by replacing hyphens with spaces
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Get the API base URL from environment variables
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+  const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn); // Check if admin is logged in
+  const [openEditModal, setEditModal] = useState<boolean>(false); // State for edit modal
+  const handleEditModalOpen = (): void => setEditModal(true); // Open edit modal
+  const handleEditModalClose = (): void => setEditModal(false); // Close edit modal
+
   const [specialization, setSpecialization] = useState<Specialization | null>(
     null
   );
-  const [loading, setLoading] = useState(true);
-  
-  const [error, setError] = useState<string | null>(null);
-  // Convert hyphenated name to a format the API expects
-  const formattedName = name?.replace(/-/g, " ") || ""; 
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
+
+  const handleSaveChanges = (updatedData: Partial<Specialization>) => {
+    if (specialization) {
+      const updatedSpecialization = {
+        ...specialization, // Keep existing fields
+        ...updatedData, // Override with updated fields from modal
+      };
+      setSpecialization(updatedSpecialization); // Update state with the new specialization data
+    }
+  };
 
   // Fetch specialization details from the backend
   useEffect(() => {
     const fetchSpecialization = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/specializations/${encodeURIComponent(
-            formattedName
-          )}`
+          `${API_BASE_URL}/specializations/${encodeURIComponent(formattedName)}`
         );
-        setSpecialization(response.data);
+        setSpecialization(response.data); // Set the fetched specialization data
       } catch (err) {
         console.error("Error fetching specialization:", err);
         setError("Failed to fetch specialization details.");
       } finally {
-        setLoading(false);
+        setLoading(false); // Turn off loading state
       }
     };
 
@@ -56,9 +87,14 @@ const SpecDetailPage: React.FC = () => {
   }, [name]);
 
   // Handle loading and error states
-  if (loading) return <LoadingSpinnerScreen/>;
+  if (loading) return <LoadingSpinnerScreen />;
   if (error) return <Typography>{error}</Typography>;
   if (!specialization) return <Typography>Specialization not found</Typography>;
+
+  // Get the image URLs from the API or fall back to uoaengbuilding
+   const leftImageUrl = `${BASE_URL}${specialization.leftImage}`
+  const rightImageUrl = `${BASE_URL}${specialization.rightImage}`;
+
 
   return (
     <Box sx={{ overflowX: "hidden" }}>
@@ -76,7 +112,7 @@ const SpecDetailPage: React.FC = () => {
           },
           display: "flex",
           alignItems: "center",
-          minHeight: "100vh", // Ensure it at least covers the viewport height
+          minHeight: "100vh",
         }}
       >
         {/* Overlay */}
@@ -137,6 +173,19 @@ const SpecDetailPage: React.FC = () => {
           >
             {specialization.header}
           </Typography>
+          {/* Edit Button */}
+          {isAdminLoggedIn && (
+            <Box mt={"3rem"}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleEditModalOpen}
+                sx={buttonStyle}
+              >
+                Edit
+              </Button>
+            </Box>
+          )}
         </Box>
       </Box>
 
@@ -188,6 +237,15 @@ const SpecDetailPage: React.FC = () => {
                 >
                   {specialization.leftDetail}
                 </Typography>
+
+                {/* Edit Modal */}
+                <EditModalSpecInfo
+                  open={openEditModal}
+                  onClose={handleEditModalClose}
+                  specInfoResult={specialization}
+                  name={formattedName}
+                  onSave={handleSaveChanges}
+                />
               </CardContent>
             </Card>
           </Grid>
@@ -197,7 +255,7 @@ const SpecDetailPage: React.FC = () => {
             <Box
               sx={{
                 height: "100%",
-                backgroundImage: `url(${specialization.leftImage})`,
+                backgroundImage: `url(${rightImageUrl})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 display: "flex",
@@ -225,7 +283,7 @@ const SpecDetailPage: React.FC = () => {
             <Box
               sx={{
                 height: "100%",
-                backgroundImage: `url(${specialization.rightImage})`,
+                backgroundImage: `url(${leftImageUrl})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 display: "flex",
