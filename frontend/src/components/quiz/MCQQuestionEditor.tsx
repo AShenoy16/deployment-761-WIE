@@ -1,20 +1,19 @@
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   alpha,
   Box,
   Button,
   IconButton,
-  Modal,
   Paper,
   Stack,
   TextField,
   Typography,
   useTheme,
 } from "@mui/material";
-import { IMCQAnswerOption, IMCQQuestion } from "../../types/QuestionTypes";
 import { useMCQQuestionEditorStore } from "../../stores/MCQQuestionEditorStore";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import { IMCQAnswerOption } from "../../types/QuestionTypes";
 const possibleSpecs = [
   "Biomedical",
   "Chemmat",
@@ -33,13 +32,19 @@ type EditableMCQOption = {
 };
 
 const EditableMCQOption: React.FC<EditableMCQOption> = ({ option }) => {
-  const { updateOptionTitle } = useMCQQuestionEditorStore((state) => ({
+  const { updateOptionTitle, addSpec } = useMCQQuestionEditorStore((state) => ({
     updateOptionTitle: state.updateOptionTitle,
+    addSpec: state.addSpec,
   }));
 
   const handleOptionTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateOptionTitle(option._id, e.target.value);
   };
+
+  const handleAddSpec = () => {
+    addSpec(option._id);
+  };
+
   return (
     <Paper sx={{ padding: 2, borderRadius: "1rem", position: "relative" }}>
       <Stack alignItems="center" spacing={2}>
@@ -50,7 +55,11 @@ const EditableMCQOption: React.FC<EditableMCQOption> = ({ option }) => {
           justifyContent="space-between"
           position="relative"
         >
-          <Button startIcon={<AddIcon />} sx={{ flexShrink: 0 }}>
+          <Button
+            startIcon={<AddIcon />}
+            sx={{ flexShrink: 0 }}
+            onClick={handleAddSpec}
+          >
             Spec
           </Button>
           <TextField
