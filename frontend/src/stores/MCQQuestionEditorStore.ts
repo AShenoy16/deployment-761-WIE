@@ -7,6 +7,7 @@ type MCQQuestionEditorStore = {
   updateQuestionTitle: (newTitle: string) => void;
   updateOptionTitle: (optionId: string, newTitle: string) => void;
   addSpec: (optionId: string) => void;
+  deleteSpec: (optionId: string, spec: string) => void;
 };
 
 export const useMCQQuestionEditorStore = create<MCQQuestionEditorStore>(
@@ -56,6 +57,32 @@ export const useMCQQuestionEditorStore = create<MCQQuestionEditorStore>(
               return {
                 ...option,
                 weightings: { ...option.weightings, ...newWeighting },
+              };
+            }
+            return option;
+          }
+        );
+        return {
+          selectedQuestion: {
+            ...state.selectedQuestion,
+            answerOptions: updatedOptions,
+          },
+        };
+      }),
+
+    deleteSpec: (optionId: string, spec: string) =>
+      set((state) => {
+        if (!state.selectedQuestion) return state;
+        const updatedOptions = state.selectedQuestion.answerOptions.map(
+          (option) => {
+            if (option._id === optionId) {
+              const updatedWeightings = {
+                ...option.weightings,
+              };
+              delete updatedWeightings[spec];
+              return {
+                ...option,
+                weightings: updatedWeightings,
               };
             }
             return option;

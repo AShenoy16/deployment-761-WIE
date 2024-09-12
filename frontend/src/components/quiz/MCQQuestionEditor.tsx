@@ -83,7 +83,7 @@ const EditableMCQOption: React.FC<EditableMCQOption> = ({ option }) => {
             // <Typography>
             //   <strong>{weighting}</strong>
             // </Typography>
-            <SpecWeighting key={index} weighting={weighting} />
+            <SpecWeighting key={index} option={option} weighting={weighting} />
           ))}
         </Stack>
       </Stack>
@@ -92,10 +92,21 @@ const EditableMCQOption: React.FC<EditableMCQOption> = ({ option }) => {
 };
 
 type SpecWeightingProps = {
+  option: IMCQAnswerOption;
   weighting: [string, number];
 };
 
-const SpecWeighting: React.FC<SpecWeightingProps> = ({ weighting }) => {
+const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
+  const specializationName = weighting[0];
+  const weight = weighting[1];
+
+  const { deleteSpec } = useMCQQuestionEditorStore((state) => ({
+    deleteSpec: state.deleteSpec,
+  }));
+
+  const handleDeleteSpec = () => {
+    deleteSpec(option._id, specializationName);
+  };
   return (
     <>
       <Stack direction="row" alignItems="center" spacing={1}>
@@ -109,7 +120,11 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ weighting }) => {
           spacing={2}
         >
           <Stack direction="row">
-            <IconButton color="error" sx={{ padding: "0.25rem" }}>
+            <IconButton
+              color="error"
+              sx={{ padding: "0.25rem" }}
+              onClick={handleDeleteSpec}
+            >
               <DeleteIcon />
             </IconButton>
             <IconButton color="primary" sx={{ padding: "0.25rem" }}>
