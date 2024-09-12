@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   IconButton,
+  Modal,
   Paper,
   Stack,
   TextField,
@@ -32,6 +33,13 @@ type EditableMCQOption = {
 };
 
 const EditableMCQOption: React.FC<EditableMCQOption> = ({ option }) => {
+  const { updateOptionTitle } = useMCQQuestionEditorStore((state) => ({
+    updateOptionTitle: state.updateOptionTitle,
+  }));
+
+  const handleOptionTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateOptionTitle(option._id, e.target.value);
+  };
   return (
     <Paper sx={{ padding: 2, borderRadius: "1rem", position: "relative" }}>
       <Stack alignItems="center" spacing={2}>
@@ -48,6 +56,7 @@ const EditableMCQOption: React.FC<EditableMCQOption> = ({ option }) => {
           <TextField
             label="Option Text"
             value={option.text}
+            onChange={handleOptionTextChange}
             sx={{
               position: "absolute",
               left: "50%",
