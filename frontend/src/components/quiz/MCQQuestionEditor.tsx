@@ -3,9 +3,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   alpha,
+  Autocomplete,
   Box,
   Button,
   IconButton,
+  Modal,
   Paper,
   Stack,
   TextField,
@@ -14,6 +16,7 @@ import {
 } from "@mui/material";
 import { useMCQQuestionEditorStore } from "../../stores/MCQQuestionEditorStore";
 import { IMCQAnswerOption } from "../../types/QuestionTypes";
+import { useState } from "react";
 const possibleSpecs = [
   "Biomedical",
   "Chemmat",
@@ -26,6 +29,98 @@ const possibleSpecs = [
   "Software",
   "Structural",
 ];
+
+type EditSpecWeightingProps = {
+  open: boolean;
+  onClose: () => void;
+  spec: string;
+  weightings: IMCQAnswerOption["weightings"];
+};
+
+const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
+  open,
+  onClose,
+  spec,
+  weightings,
+}) => {
+  const [editedSpec, setEditedSpec] = useState<string>(spec);
+  const [editedWeightings, setEditedWeightings] = useState(weightings);
+
+  const existingSpecs = Object.keys(weightings);
+
+  const availableSpecs = possibleSpecs.filter(
+    (spec) => !existingSpecs.includes(spec)
+  );
+  const isInvalidSpec = !possibleSpecs.includes(editedSpec);
+
+  const handleWeightChange = (value: number) => {
+    setEditedWeightings((prev) => ({ ...prev, [editedSpec]: value }));
+  };
+
+  return (
+    <Modal open={open} onClose={onClose}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          width: 500,
+          transform: "translate(-50%, -50%)",
+          bgcolor: "background.paper",
+          borderRadius: "0.5rem",
+          boxShadow: 24,
+          p: 4,
+        }}
+      >
+        <Typography variant="h6" component="h2" marginBottom={2}>
+          {spec}
+        </Typography>
+        <Stack spacing={2}>
+          <Autocomplete
+            options={availableSpecs}
+            value={editedSpec}
+            onChange={(_, newSpec) => setEditedSpec(newSpec)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Spec Name"
+                error={isInvalidSpec}
+                helperText={
+                  isInvalidSpec ? "Please choose a specialization" : ""
+                }
+                fullWidth
+              />
+            )}
+            fullWidth
+            disableClearable
+          />
+          <TextField
+            label={`Weighting`}
+            type="number"
+            value={
+              isNaN(editedWeightings[editedSpec])
+                ? ""
+                : editedWeightings[editedSpec]
+            }
+            onChange={(e) => {
+              const value = parseInt(e.target.value);
+              handleWeightChange(value);
+            }}
+            fullWidth
+          />
+          <Stack direction="row" justifyContent="flex-end" spacing={2}>
+            <Button variant="outlined" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button variant="contained" color="primary">
+              Confirm
+            </Button>
+          </Stack>
+        </Stack>
+      </Box>
+    </Modal>
+  );
+};
 
 type EditableMCQOption = {
   option: IMCQAnswerOption;
@@ -79,12 +174,16 @@ const EditableMCQOption: React.FC<EditableMCQOption> = ({ option }) => {
           />
         </Stack>
         <Stack width="100%" spacing={1}>
-          {Object.entries(option.weightings).map((weighting, index) => (
-            // <Typography>
-            //   <strong>{weighting}</strong>
-            // </Typography>
-            <SpecWeighting key={index} option={option} weighting={weighting} />
-          ))}
+          {Object.entries(option.weightings).map(
+            ([specializationName, weight], index) => (
+              <SpecWeighting
+                key={specializationName || index}
+                option={option}
+                specializationName={specializationName}
+                weight={weight}
+              />
+            )
+          )}
         </Stack>
       </Stack>
     </Paper>
@@ -93,13 +192,24 @@ const EditableMCQOption: React.FC<EditableMCQOption> = ({ option }) => {
 
 type SpecWeightingProps = {
   option: IMCQAnswerOption;
-  weighting: [string, number];
+  specializationName: string;
+  weight: number;
 };
 
-const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
-  const specializationName = weighting[0];
-  const weight = weighting[1];
+const SpecWeighting: React.FC<SpecWeightingProps> = ({
+  option,
+  specializationName,
+  weight,
+}) => {
+  const [isEditSpecWeightingOpen, setIsEditSpecWeightingOpen] = useState(false);
 
+  const handleOpenEditSpecWeighting = () => {
+    setIsEditSpecWeightingOpen(true);
+  };
+
+  const handleCloseEditSpecWeighting = () => {
+    setIsEditSpecWeightingOpen(false);
+  };
   const { deleteSpec } = useMCQQuestionEditorStore((state) => ({
     deleteSpec: state.deleteSpec,
   }));
@@ -127,11 +237,15 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
             >
               <DeleteIcon />
             </IconButton>
-            <IconButton color="primary" sx={{ padding: "0.25rem" }}>
+            <IconButton
+              color="primary"
+              sx={{ padding: "0.25rem" }}
+              onClick={handleOpenEditSpecWeighting}
+            >
               <EditIcon />
             </IconButton>
           </Stack>
-          <Typography>{weighting[0]}</Typography>
+          <Typography>{specializationName}</Typography>
         </Stack>
         <Box
           display="flex"
@@ -144,10 +258,16 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
           border={1}
         >
           <Typography>
-            <strong>{weighting[1]}</strong>
+            <strong>{weight}</strong>
           </Typography>
         </Box>
       </Stack>
+      <EditSpecWeighting
+        open={isEditSpecWeightingOpen}
+        onClose={handleCloseEditSpecWeighting}
+        spec={specializationName}
+        weightings={option.weightings}
+      />
     </>
   );
 };
