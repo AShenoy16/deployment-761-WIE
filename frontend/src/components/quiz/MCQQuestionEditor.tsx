@@ -203,16 +203,16 @@ const EditableMCQOption: React.FC<EditableMCQOption> = ({ option }) => {
           />
         </Stack>
         <Stack width="100%" spacing={1}>
-          {Object.entries(option.weightings).map(
-            ([specializationName, weight], index) => (
+          {Object.entries(option.weightings)
+            .sort(([, weightA], [, weightB]) => weightB - weightA)
+            .map(([specializationName, weight], index) => (
               <SpecWeighting
                 key={specializationName || index}
                 option={option}
                 specializationName={specializationName}
                 weight={weight}
               />
-            )
-          )}
+            ))}
         </Stack>
       </Stack>
     </Paper>
