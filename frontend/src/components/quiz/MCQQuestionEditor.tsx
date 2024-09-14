@@ -34,15 +34,27 @@ type EditSpecWeightingProps = {
   open: boolean;
   onClose: () => void;
   spec: string;
-  weightings: IMCQAnswerOption["weightings"];
+  option: IMCQAnswerOption;
 };
 
 const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   open,
   onClose,
   spec,
-  weightings,
+  option,
 }) => {
+  const weightings = option.weightings;
+  const { updateSpecName } = useMCQQuestionEditorStore((state) => ({
+    updateSpecName: state.updateSpecName,
+  }));
+
+  const handleOnConfirm = () => {
+    if (editedSpec !== spec) {
+      updateSpecName(option._id, spec, editedSpec);
+    }
+    onClose();
+  };
+
   const [editedSpec, setEditedSpec] = useState<string>(spec);
   const [editedWeightings, setEditedWeightings] = useState(weightings);
 
@@ -112,7 +124,11 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
             <Button variant="outlined" onClick={onClose}>
               Cancel
             </Button>
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleOnConfirm}
+            >
               Confirm
             </Button>
           </Stack>
@@ -201,6 +217,10 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({
   specializationName,
   weight,
 }) => {
+  const { deleteSpec } = useMCQQuestionEditorStore((state) => ({
+    deleteSpec: state.deleteSpec,
+  }));
+
   const [isEditSpecWeightingOpen, setIsEditSpecWeightingOpen] = useState(false);
 
   const handleOpenEditSpecWeighting = () => {
@@ -210,9 +230,6 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({
   const handleCloseEditSpecWeighting = () => {
     setIsEditSpecWeightingOpen(false);
   };
-  const { deleteSpec } = useMCQQuestionEditorStore((state) => ({
-    deleteSpec: state.deleteSpec,
-  }));
 
   const handleDeleteSpec = () => {
     deleteSpec(option._id, specializationName);
@@ -266,7 +283,7 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({
         open={isEditSpecWeightingOpen}
         onClose={handleCloseEditSpecWeighting}
         spec={specializationName}
-        weightings={option.weightings}
+        option={option}
       />
     </>
   );
