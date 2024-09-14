@@ -43,22 +43,25 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   spec,
   option,
 }) => {
-  const weightings = option.weightings;
-  const { updateSpecName } = useMCQQuestionEditorStore((state) => ({
-    updateSpecName: state.updateSpecName,
-  }));
+  const { updateSpecName, updateSpecWeight } = useMCQQuestionEditorStore(
+    (state) => ({
+      updateSpecName: state.updateSpecName,
+      updateSpecWeight: state.updateSpecWeight,
+    })
+  );
 
   const handleOnConfirm = () => {
-    if (editedSpec !== spec) {
-      updateSpecName(option._id, spec, editedSpec);
-    }
+    updateSpecName(option._id, spec, editedSpec);
+    updateSpecWeight(option._id, editedSpec, editedWeighting);
     onClose();
   };
 
   const [editedSpec, setEditedSpec] = useState<string>(spec);
-  const [editedWeightings, setEditedWeightings] = useState(weightings);
+  const [editedWeighting, setEditedWeighting] = useState(
+    option.weightings[spec]
+  );
 
-  const existingSpecs = Object.keys(weightings);
+  const existingSpecs = Object.keys(option.weightings);
 
   const availableSpecs = possibleSpecs.filter(
     (spec) => !existingSpecs.includes(spec)
@@ -66,7 +69,7 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   const isInvalidSpec = !possibleSpecs.includes(editedSpec);
 
   const handleWeightChange = (value: number) => {
-    setEditedWeightings((prev) => ({ ...prev, [editedSpec]: value }));
+    setEditedWeighting(value);
   };
 
   return (
@@ -109,11 +112,7 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
           <TextField
             label={`Weighting`}
             type="number"
-            value={
-              isNaN(editedWeightings[editedSpec])
-                ? ""
-                : editedWeightings[editedSpec]
-            }
+            value={isNaN(editedWeighting) ? "" : editedWeighting}
             onChange={(e) => {
               const value = parseInt(e.target.value);
               handleWeightChange(value);

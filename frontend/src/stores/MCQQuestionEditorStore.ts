@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { IMCQQuestion, ISliderQuestion } from "../types/QuestionTypes";
+import { IMCQAnswerOption, IMCQQuestion } from "../types/QuestionTypes";
 
 type MCQQuestionEditorStore = {
   selectedQuestion: IMCQQuestion | null;
@@ -9,6 +9,7 @@ type MCQQuestionEditorStore = {
   addSpec: (optionId: string) => void;
   deleteSpec: (optionId: string, spec: string) => void;
   updateSpecName: (optionId: string, oldSpec: string, newSpec: string) => void;
+  updateSpecWeight: (optionId: string, spec: string, newWeight: number) => void;
 };
 
 export const useMCQQuestionEditorStore = create<MCQQuestionEditorStore>(
@@ -110,6 +111,33 @@ export const useMCQQuestionEditorStore = create<MCQQuestionEditorStore>(
                 updatedWeightings[newSpec] = updatedWeightings[oldSpec];
                 delete updatedWeightings[oldSpec];
               }
+              return {
+                ...option,
+                weightings: updatedWeightings,
+              };
+            }
+            return option;
+          }
+        );
+
+        return {
+          selectedQuestion: {
+            ...state.selectedQuestion,
+            answerOptions: updatedOptions,
+          },
+        };
+      }),
+
+    updateSpecWeight: (optionId, spec, newWeight) =>
+      set((state) => {
+        if (!state.selectedQuestion) return state;
+        const updatedOptions = state.selectedQuestion.answerOptions.map(
+          (option) => {
+            if (option._id === optionId) {
+              const updatedWeightings = {
+                ...option.weightings,
+              };
+              updatedWeightings[spec] = newWeight;
               return {
                 ...option,
                 weightings: updatedWeightings,
