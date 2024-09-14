@@ -1,6 +1,6 @@
 import { IRoleModel } from "../types/RoleModel";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addRoleModelType } from "../components/rolemodel/AddRoleModelModal";
+import { addRoleModelType } from "../components/rolemodel/AddUpdateRoleModelModal";
 import {
   deleteRoleModel,
   getRoleModels,

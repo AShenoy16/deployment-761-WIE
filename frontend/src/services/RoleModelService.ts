@@ -1,6 +1,6 @@
 import axios from "axios";
 import { IRoleModel } from "../types/RoleModel";
-import { addRoleModelType } from "../components/rolemodel/AddRoleModelModal";
+import { addRoleModelType } from "../components/rolemodel/AddUpdateRoleModelModal";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
