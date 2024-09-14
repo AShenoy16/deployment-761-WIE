@@ -37,6 +37,7 @@ export const processQuizSubmission = async (
       rankingResults(quizSubmission.rankingAnswers, specMap),
     ]);
 
+    // round spec calculations to 2dp
     const roundedSpecMap = Object.fromEntries(
       Object.entries(specMap).map(([key, value]) => [
         key,
@@ -196,7 +197,7 @@ const getSliderWeightingValue = (
     case 5:
       return weighting;
     default:
-      throw new Error("Invalid number. Must be between 1 and 5.");
+      return 0;
   }
 };
 
@@ -250,6 +251,14 @@ const sliderResults = async (
   });
 };
 
+/**
+ * Method to get update value for a spec based on the rank of the answer chosen
+ * @param rank of the answer option
+ * @param weighting of the spec
+ * @param rank2Factor 
+ * @param rank3Factor 
+ * @returns 
+ */
 const getRankingUpdateValue = (
   rank: number,
   weighting: number,
@@ -264,7 +273,7 @@ const getRankingUpdateValue = (
     case 3:
       return weighting / rank3Factor;
     default:
-      throw new Error("Invalid number. Must be between 1 and 5.");
+      0
   }
 };
 
