@@ -1,5 +1,5 @@
 import { spec } from "node:test/reporters";
-import { getInitialSpecResults, } from "../constants/quizConstants";
+import { getInitialSpecResults } from "../constants/quizConstants";
 import {
   IMCQAnswerOption,
   IQuiz,
@@ -28,17 +28,23 @@ export const processQuizSubmission = async (
   try {
     // have a hashmap of the spec : score -> returning an array
     const intialSpecRes = getInitialSpecResults();
-    const specMap = intialSpecRes.specResults
-
+    const specMap = intialSpecRes.specResults;
 
     // Run all result calculations in parallel
     await Promise.all([
-      // mcqResults(quizSubmission.mcqAnswers, specMap),
+      mcqResults(quizSubmission.mcqAnswers, specMap),
       sliderResults(quizSubmission.sliderAnswers, specMap),
-      // rankingResults(quizSubmission.rankingAnswers, specMap)
+      rankingResults(quizSubmission.rankingAnswers, specMap),
     ]);
 
-    const entries = Object.entries(specMap);
+    const roundedSpecMap = Object.fromEntries(
+      Object.entries(specMap).map(([key, value]) => [
+        key,
+        parseFloat(value.toFixed(2)),
+      ])
+    );
+
+    const entries = Object.entries(roundedSpecMap);
 
     // Sort entries by value
     entries.sort(([, valueA], [, valueB]) => valueB - valueA);
@@ -171,7 +177,7 @@ const mcqResults = async (
  * @param sliderChoice 1 - 5 representing users slider choice
  * @param weighting weighting of the spec
  * @param sliderFactor slider factor
- * @returns 
+ * @returns
  */
 const getSliderWeightingValue = (
   sliderChoice: number,
@@ -229,7 +235,7 @@ const sliderResults = async (
 
     const weightings = question.sliderWeights.weightings;
     for (const spec in weightings) {
-      // get the weightings 
+      // get the weightings
       const specWeighting = weightings[spec];
       // get the update from the switch statement
       const specUpdate = getSliderWeightingValue(
@@ -241,8 +247,25 @@ const sliderResults = async (
       // update specMap
       specResults[spec] += specUpdate;
     }
-
   });
+};
+
+const getRankingUpdateValue = (
+  rank: number,
+  weighting: number,
+  rank2Factor: number,
+  rank3Factor: number
+) => {
+  switch (rank) {
+    case 1:
+      return weighting;
+    case 2:
+      return weighting / rank2Factor;
+    case 3:
+      return weighting / rank3Factor;
+    default:
+      throw new Error("Invalid number. Must be between 1 and 5.");
+  }
 };
 
 /**
@@ -271,7 +294,11 @@ const rankingResults = async (
   // // get all the rankingQuestions
   const rankingQuestions = await fetchRanking(objectIds);
 
-  // creates a map of question -> {answerId: weights}
+  const allFactors = await getAllMultipliers();
+  const ranking2Factor = allFactors[0].rank2Multiplier;
+  const ranking3Factor = allFactors[0].rank3Multiplier;
+
+  //creates a map of question -> {answerId: weights}
   const questionsMap = new Map();
 
   rankingQuestions.forEach((obj) => {
@@ -300,7 +327,6 @@ const rankingResults = async (
     const question = rankingAnswers[questionNumber];
     const { rankings } = question; // Extract rankings object
 
-    // get answerMap -> answerId : weights
     const answerMap = questionsMap.get(questionNumber);
 
     for (const [answerId, rank] of Object.entries(rankings)) {
@@ -308,15 +334,19 @@ const rankingResults = async (
       const answerData = answerMap.get(answerId);
       const { weightings } = answerData;
 
-      // update specMap
-      weightings.forEach(
-        (specialization: { weights: any; specializationName: string }) => {
-          const { weights, specializationName } = specialization;
-          const amount = weights[rank];
-          specResults[specializationName] += amount;
-        }
-      );
+      // loop through spec weights updating specRes
+      Object.keys(weightings).forEach((key) => {
+        const value = weightings[key];
+        const rankUpdateValue = getRankingUpdateValue(
+          rank,
+          value,
+          ranking2Factor,
+          ranking3Factor
+        );
+        specResults[key] += rankUpdateValue;
+      });
     }
   }
+
   return;
 };
