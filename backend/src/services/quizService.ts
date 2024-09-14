@@ -1,5 +1,5 @@
 import { spec } from "node:test/reporters";
-import { quizResults } from "../constants/quizConstants";
+import { getInitialSpecResults, } from "../constants/quizConstants";
 import {
   IMCQAnswerOption,
   IQuiz,
@@ -27,7 +27,9 @@ export const processQuizSubmission = async (
 ) => {
   try {
     // have a hashmap of the spec : score -> returning an array
-    let specMap = quizResults.specResults;
+    const intialSpecRes = getInitialSpecResults();
+    const specMap = intialSpecRes.specResults
+
 
     // Run all result calculations in parallel
     await Promise.all([
