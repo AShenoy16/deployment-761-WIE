@@ -273,7 +273,7 @@ const getRankingUpdateValue = (
     case 3:
       return weighting / rank3Factor;
     default:
-      0
+      return 0
   }
 };
 
