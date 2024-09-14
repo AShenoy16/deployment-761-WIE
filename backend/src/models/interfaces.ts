@@ -24,6 +24,7 @@ export interface IRankingAnswerOption {
 }
 
 export interface IRankingQuestion {
+  _id: string;
   questionType: "ranking";
   questionText: string;
   answerOptions: IRankingAnswerOption[];
@@ -49,6 +50,7 @@ export interface ISliderQuestion extends Document {
 
 // Define the interface for the multiplier data
 export interface IMultiplierData extends Document {
+  _id: string;
   rank2Multiplier: number;
   rank3Multiplier: number;
   sliderFactor: number;

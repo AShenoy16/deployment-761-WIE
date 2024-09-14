@@ -14,6 +14,8 @@ import SliderQuestion from "../models/SliderModel";
 import MCQQuestion from "../models/MCQModel";
 import mongoose from "mongoose";
 import { Console } from "console";
+import MultiplierData from "../models/multiplerModel";
+import { getAllMultipliers } from "./multiplierService";
 
 /**
  * Servixe code that will actually calculate the results
@@ -27,9 +29,12 @@ export const processQuizSubmission = async (
     // have a hashmap of the spec : score -> returning an array
     let specMap = quizResults.specResults;
 
-    await mcqResults(quizSubmission.mcqAnswers, specMap);
-    await sliderResults(quizSubmission.sliderAnswers, specMap);
-    await rankingResults(quizSubmission.rankingAnswers, specMap);
+    // Run all result calculations in parallel
+    await Promise.all([
+      // mcqResults(quizSubmission.mcqAnswers, specMap),
+      sliderResults(quizSubmission.sliderAnswers, specMap),
+      // rankingResults(quizSubmission.rankingAnswers, specMap)
+    ]);
 
     const entries = Object.entries(specMap);
 
@@ -59,7 +64,7 @@ export const getSpecQuiz = async () => {
   const ranking = await fetchRanking(quizIds);
 
   // Combine all questions into a single array
-  const allQuestions = [...mcq, ...slider, ...ranking];
+  const allQuestions = [...slider, ...ranking, ...mcq];
   return allQuestions;
 };
 
@@ -160,6 +165,34 @@ const mcqResults = async (
 };
 
 /**
+ * Returns slider update amount based on slider factor, weighting and choice
+ * @param sliderChoice 1 - 5 representing users slider choice
+ * @param weighting weighting of the spec
+ * @param sliderFactor slider factor
+ * @returns 
+ */
+const getSliderWeightingValue = (
+  sliderChoice: number,
+  weighting: number,
+  sliderFactor: number
+) => {
+  switch (sliderChoice) {
+    case 1:
+      return -1 * weighting;
+    case 2:
+      return -1 * (weighting / sliderFactor);
+    case 3:
+      return 0;
+    case 4:
+      return weighting / sliderFactor;
+    case 5:
+      return weighting;
+    default:
+      throw new Error("Invalid number. Must be between 1 and 5.");
+  }
+};
+
+/**
  * method to update specMap of slider results
  * @param sliderAnswers object that has questionId to number of the slider
  * -> this will be the index inside the database
@@ -182,20 +215,31 @@ const sliderResults = async (
 
   // get all the slider questions
   const sliderQuestions = await fetchSlider(objectIds);
+  const allFactors = await getAllMultipliers();
+  const sliderFactor = allFactors[0].sliderFactor;
 
   // loop through all the slider questions -> updating the correct value
 
   sliderQuestions.forEach((question) => {
-    const sliderIndex = sliderAnswers[question._id.toString()] - 1;
+    const sliderIndex = sliderAnswers[question._id.toString()];
 
     // index of weightings array to use to update data
 
-    const weightings = question.sliderRange.weightings;
-    // update spec map
+    const weightings = question.sliderWeights.weightings;
     for (const spec in weightings) {
+      // get the weightings 
       const specWeighting = weightings[spec];
-      specResults[spec] += specWeighting[sliderIndex];
+      // get the update from the switch statement
+      const specUpdate = getSliderWeightingValue(
+        sliderIndex,
+        specWeighting,
+        sliderFactor
+      );
+
+      // update specMap
+      specResults[spec] += specUpdate;
     }
+
   });
 };
 
