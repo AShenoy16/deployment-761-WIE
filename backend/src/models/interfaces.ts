@@ -47,6 +47,13 @@ export interface ISliderQuestion extends Document {
   updatedAt: Date;
 }
 
+// Define the interface for the multiplier data
+export interface IMultiplierData extends Document {
+  rank2Multiplier: number;
+  rank3Multiplier: number;
+  sliderFactor: number;
+}
+
 // General quiz interface
 export type IQuestion = IMCQQuestion | IRankingQuestion | ISliderQuestion;
 
