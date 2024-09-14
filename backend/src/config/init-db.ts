@@ -11,72 +11,8 @@ import SliderQuestion from "../models/SliderModel";
 import RankingQuestion from "../models/RankingModel";
 import MCQQuestion from "../models/MCQModel";
 import { IRankingQuestion } from "../models/interfaces";
-
-// Dummy data for Quiz
-const quizData = {
-  quizName: "Engineering Specialization Quiz",
-  quizQuestions: [
-    {
-      questionType: "MCQ",
-      questionText: "What is your preferred engineering field?",
-      answerOptions: [
-        {
-          optionId: "1",
-          text: "Mechanical",
-          weightings: {
-            "Mechanical Engineering": 10,
-            "Electrical Engineering": 5,
-          },
-        },
-        {
-          optionId: "2",
-          text: "Electrical",
-          weightings: {
-            "Mechanical Engineering": 5,
-            "Electrical Engineering": 10,
-          },
-        },
-      ],
-    },
-    {
-      questionType: "Ranking",
-      questionText: "Rank the following specializations",
-      answerOptions: [
-        {
-          optionId: "1",
-          text: "Mechanical",
-          weightings: {
-            "Mechanical Engineering": { 1: 10, 2: 5 },
-            "Electrical Engineering": { 1: 5, 2: 10 },
-          },
-        },
-        {
-          optionId: "2",
-          text: "Electrical",
-          weightings: {
-            "Mechanical Engineering": { 1: 5, 2: 10 },
-            "Electrical Engineering": { 1: 10, 2: 5 },
-          },
-        },
-      ],
-    },
-    {
-      questionType: "Slider",
-      questionText: "Rate your interest in each specialization from 1 to 10",
-      sliderRange: {
-        sliderId: "1",
-        min: 1,
-        max: 10,
-        weightings: {
-          "Mechanical Engineering": [1, 5, 10],
-          "Electrical Engineering": [1, 5, 10],
-        },
-      },
-    },
-  ],
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+import MultiplierData from "../models/multiplerModel";
+import { cp } from "fs";
 
 // Hardcoded Users list for testing
 const dummyUsers = [
@@ -406,7 +342,6 @@ const dummySpecializations = [
   },
 ];
 
-
 const dummyRoleModels = [
   {
     name: "Alyssa Morris",
@@ -465,7 +400,7 @@ async function run() {
   await clearDatabase();
   console.log();
 
-  // add users
+  // // add users
   console.log("Adding Users...");
   await addUsers();
   console.log();
@@ -474,6 +409,11 @@ async function run() {
   console.log("Adding Quiz Info...");
   await populateNewQuiz();
   console.log();
+
+  // add multiplier Data
+  console.log("Adding Multipler Data")
+  await createMultiplierData()
+  console.log()
 
   // add spec info
   console.log("Adding Spec Info...");
@@ -497,6 +437,7 @@ async function clearDatabase() {
   await SliderQuestion.deleteMany({});
   await MCQQuestion.deleteMany({});
   await RoleModel.deleteMany({});
+  await MultiplierData.deleteMany({})
 
   console.log(`Cleared database`);
 }
@@ -508,12 +449,6 @@ async function addUsers() {
     await dbUser.save();
     console.log(`User Saveded _id${dbUser._id}, email = ${dbUser.email}`);
   }
-}
-
-async function addQuizInfo() {
-  const quiz = new Quiz(quizData);
-  await quiz.save();
-  console.log(`Quiz Saved _id: ${quiz._id}, quizName = ${quiz.quizName}`);
 }
 
 async function addSpecInfo() {
@@ -560,101 +495,69 @@ async function populateNewQuiz() {
 
     // Create multiple sample Ranking questions
     const rankingQuestion1 = new RankingQuestion({
-      questionText: "Rank the following specializations",
+      questionText: "Rank the following Tasks based on their enjoyment",
       answerOptions: [
         {
           text: "Sky Diving",
-          weightings: [
-            {
-              specializationName: "Mechanical",
-              weights: { "1": 10, "2": 8, "3": 5, "4": 0 },
-            },
-            {
-              specializationName: "Electrical",
-              weights: { "1": 10, "2": 8, "3": 5, "4": 0 },
-            },
-            {
-              specializationName: "Software",
-              weights: { "1": 15, "2": 8, "3": 5, "4": 0 },
-            },
-            {
-              specializationName: "Compsys",
-              weights: { "1": 20, "2": 8, "3": 5, "4": 0 },
-            },
-          ],
+          weightings: {
+            Mechanical: 10,
+            Electrical: 8,
+            Software: 5,
+            Compsys: 3,
+          },
         },
         {
           text: "Soldering",
-          weightings: [
-            {
-              specializationName: "Mechanical",
-              weights: { "1": 10, "2": 8, "3": 5, "4": 0 },
-            },
-            {
-              specializationName: "Electrical",
-              weights: { "1": 10, "2": 8, "3": 5, "4": 0 },
-            },
-            {
-              specializationName: "Software",
-              weights: { "1": 15, "2": 8, "3": 5, "4": 0 },
-            },
-            {
-              specializationName: "Compsys",
-              weights: { "1": 20, "2": 8, "3": 5, "4": 0 },
-            },
-          ],
+          weightings: {
+            Mechanical: 8,
+            Electrical: 7,
+            Software: 6,
+            Compsys: 4,
+          },
         },
       ],
     });
 
-    // const rankingQuestion2 = new RankingQuestion({
-    //   questionText: "Rank the following jobs",
-    //   answerOptions: [
-    //     {
-    //       text: "Civil Engineer",
-    //       weightings: {
-    //         "1": 8,
-    //         "2": 6,
-    //         "3": 5,
-    //         "4": 3,
-    //       },
-    //     },
-    //     {
-    //       text: "Robot Building",
-    //       weightings: {
-    //         "1": 15,
-    //         "2": 6,
-    //         "3": 5,
-    //         "4": 3,
-    //       },
-    //     },
-    //   ],
-    // });
+    const rankingQuestion2 = new RankingQuestion({
+      questionText: "Rank the following jobs",
+      answerOptions: [
+        {
+          text: "Car Building",
+          weightings: {
+            Mechanical: 8,
+            Electrical: 6,
+            Software: 5,
+            Compsys: 3,
+          },
+        },
+        {
+          text: "Robot Building",
+          weightings: {
+            Mechanical: 15,
+            Electrical: 6,
+            Software: 5,
+            Compsys: 3,
+          },
+        },
+      ],
+    });
 
     await rankingQuestion1.save();
-    // await rankingQuestion2.save();
+    await rankingQuestion2.save();
 
+    // Create multiple sample Slider questions
     // Create multiple sample Slider questions
     const sliderQuestion1 = new SliderQuestion({
       questionText: "Rate your interest in Mechanical Engineering from 1 to 10",
-      sliderRange: {
-        min: 1,
-        max: 10,
-        weightings: { Mechanical: [1, 5, 10], Mechatronics: [1, 3, 5, 10] },
+      sliderWeights: {
+        weightings: { Mechanical: 5, Mechatronics: 3, Software: 7, Compsys: 4 },
       },
     });
 
     const sliderQuestion2 = new SliderQuestion({
       questionText: "Rate your comfort with coding from 1 to 10",
-      sliderRange: {
-        min: 1,
-        max: 10,
-        weightings: {
-          Software: [1, 3, 8, 10],
-          Mechatronics: [1, 3, 5, 7],
-          Compsys: [1, 3, 5, 6],
-          Electrical: [1, 3, 5, 6],
-        },
+      sliderWeights: {
+        weightings: { Software: 8, Mechatronics: 5, Compsys: 6, Electrical: 6 },
       },
     });
 
@@ -668,7 +571,7 @@ async function populateNewQuiz() {
         mcqQuestion1._id,
         mcqQuestion2._id,
         rankingQuestion1._id,
-        // rankingQuestion2._id,
+        rankingQuestion2._id,
         sliderQuestion1._id,
         sliderQuestion2._id,
       ],
@@ -679,5 +582,20 @@ async function populateNewQuiz() {
     console.error("Error populating data:", error);
   }
 }
+
+const createMultiplierData = async () => {
+  try {
+    const multiplierData = new MultiplierData({
+      rank2Multiplier: 1.5, 
+      rank3Multiplier: 2.0,    
+      sliderFactor: 1.2
+    });
+
+    // Save the document to the database
+    await multiplierData.save();
+  } catch (err) {
+    console.error("Error saving multiplier data:", err);
+  }
+};
 
 run();
