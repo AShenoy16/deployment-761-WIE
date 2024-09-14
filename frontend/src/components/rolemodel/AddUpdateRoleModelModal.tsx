@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Modal,
@@ -33,7 +33,7 @@ const buttonStyle = {
   borderRadius: "12px",
 };
 
-export type addRoleModelType = Omit<IRoleModel, "_id">;
+export type addUpdateRoleModelType = Omit<IRoleModel, "_id">;
 
 interface RoleModelModalProps {
   open: boolean;
@@ -56,6 +56,18 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
   const [linkedin, setLinkedin] = useState<string>("");
   const [error, setError] = useState<string | undefined>(undefined);
 
+  useEffect(() => {
+    // Pre-fill form if editing
+    if (roleModelToEdit) {
+      setPhoto(roleModelToEdit.photoUrl);
+      setName(roleModelToEdit.name);
+      setTitle(roleModelToEdit.title);
+      setDescription(roleModelToEdit.description);
+      setBio(roleModelToEdit.bio);
+      setLinkedin(roleModelToEdit.socialMediaLinks?.linkedin || "");
+    }
+  }, [roleModelToEdit]);
+
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -77,7 +89,7 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
     }
 
     // Construct the role model object
-    const newRoleModel: addRoleModelType = {
+    const newRoleModel: addUpdateRoleModelType = {
       name,
       title,
       description,
@@ -111,7 +123,9 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
           <IconButton onClick={onClose}>
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant="h6">Add Role Model</Typography>
+          <Typography variant="h6">
+            {roleModelToEdit ? "Edit Role Model" : "Add Role Model"}
+          </Typography>
         </Box>
 
         {/* Error message */}
@@ -166,6 +180,7 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
             <TextField
               label="Name"
               variant="outlined"
+              value={name}
               fullWidth
               required
               sx={{ mt: 2 }}
@@ -174,6 +189,7 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
             <TextField
               label="Title"
               variant="outlined"
+              value={title}
               fullWidth
               required
               sx={{ mt: 2 }}
@@ -182,6 +198,7 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
             <TextField
               label="Bio"
               variant="outlined"
+              value={bio}
               fullWidth
               required
               sx={{ mt: 2 }}
@@ -190,6 +207,7 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
             <TextField
               label="Description"
               variant="outlined"
+              value={description}
               multiline
               rows={4}
               fullWidth
@@ -200,6 +218,7 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
             <TextField
               label="LinkedIn URL"
               variant="outlined"
+              value={linkedin}
               fullWidth
               sx={{ mt: 2 }}
               onChange={(e) => setLinkedin(e.target.value)}
@@ -224,7 +243,7 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
             sx={buttonStyle}
             onClick={handleSubmit}
           >
-            Add
+            {roleModelToEdit ? "Save Changes" : "Add"}
           </Button>
         </Box>
       </Box>
