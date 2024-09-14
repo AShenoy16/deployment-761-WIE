@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { IRoleModel } from "../../types/RoleModel";
-import { useAddRoleModel } from "../../hooks/useRoleModel";
+import { useAddRoleModel, usePutRoleModel } from "../../hooks/useRoleModel";
 
 const modalStyle = {
   position: "absolute" as const,
@@ -33,7 +33,7 @@ const buttonStyle = {
   borderRadius: "12px",
 };
 
-export type addUpdateRoleModelType = Omit<IRoleModel, "_id">;
+export type addRoleModelType = Omit<IRoleModel, "_id">;
 
 interface RoleModelModalProps {
   open: boolean;
@@ -47,6 +47,7 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
   roleModelToEdit = null, // Default to null for adding
 }) => {
   const addRoleModelMutation = useAddRoleModel();
+  const putRoleModelMutation = usePutRoleModel();
 
   const [photo, setPhoto] = useState<string | ArrayBuffer | null>(null);
   const [name, setName] = useState<string>("");
@@ -89,7 +90,7 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
     }
 
     // Construct the role model object
-    const newRoleModel: addUpdateRoleModelType = {
+    const newRoleModel: addRoleModelType = {
       name,
       title,
       description,
@@ -102,7 +103,12 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
 
     try {
       setError(undefined);
-      addRoleModelMutation.mutate(newRoleModel);
+      roleModelToEdit
+        ? putRoleModelMutation.mutate({
+            ...newRoleModel,
+            _id: roleModelToEdit._id,
+          })
+        : addRoleModelMutation.mutate(newRoleModel);
       onClose();
     } catch (error) {
       console.error("Error adding role model:", error);

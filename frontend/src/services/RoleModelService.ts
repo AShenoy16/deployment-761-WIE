@@ -52,3 +52,24 @@ export const deleteRoleModel = async (roleModelId: string): Promise<void> => {
     throw error; // Throw the error so the query can handle it
   }
 };
+
+/**
+ * Service to update role model object in the database by ID
+ * @param roleModel role model object from user input
+ * @returns updated role model object in the database
+ */
+export const putRoleModel = async (
+  roleModel: IRoleModel
+): Promise<IRoleModel> => {
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/role-models/${roleModel._id}`,
+      roleModel
+    );
+    const roleModelData: IRoleModel = response.data;
+    return roleModelData;
+  } catch (error) {
+    console.error("Error updating role model:", error);
+    throw error; // Throw the error so the query can handle it
+  }
+};

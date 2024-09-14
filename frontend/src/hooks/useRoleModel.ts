@@ -5,6 +5,7 @@ import {
   deleteRoleModel,
   getRoleModels,
   postRoleModel,
+  putRoleModel,
 } from "../services/RoleModelService";
 import useSnackBar from "./useSnackBar";
 
@@ -72,4 +73,34 @@ export const useDeleteRoleModel = () => {
   });
 
   return { mutation };
+};
+
+export const usePutRoleModel = () => {
+  const queryClient = useQueryClient();
+  const showSnackbar = useSnackBar();
+
+  const mutation = useMutation<IRoleModel, Error, IRoleModel>({
+    mutationFn: async (roleModel: IRoleModel) => {
+      const data = await putRoleModel(roleModel);
+      return data;
+    },
+    onSuccess: (updatedRoleModel) => {
+      queryClient.setQueryData(
+        ["RoleModels"],
+        (oldData: IRoleModel[] | undefined) => {
+          const previousData = oldData ?? [];
+          return previousData.map((role) =>
+            role._id === updatedRoleModel._id ? updatedRoleModel : role
+          ); // Update the role model in the query cache
+        }
+      );
+      showSnackbar("Successfully updated role model");
+    },
+    onError: (error) => {
+      showSnackbar("Error updating role model, please try again");
+      console.error("Error updating role model:", error);
+    },
+  });
+
+  return mutation;
 };
