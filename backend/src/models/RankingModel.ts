@@ -2,21 +2,9 @@ import mongoose, { Schema, Document } from 'mongoose';
 import { IRankingQuestion, IRankingAnswerOption } from './interfaces';
 
 
-const weightingsSchema: Schema = new Schema({
-  specializationName: { type: String, required: true },
-  weights: {
-    type: Map,
-    of: Number,
-    required: true
-  }
-});
-
 const rankingAnswerOptionSchema: Schema = new Schema({
   text: { type: String, required: true },
-  weightings: {
-    type: [weightingsSchema],
-    required: true
-  }
+  weightings: { required: true, type: Map, of: Number },
 });
 
 const rankingQuestionSchema: Schema = new Schema({
