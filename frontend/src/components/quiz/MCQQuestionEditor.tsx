@@ -51,15 +51,20 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   );
 
   const handleOnConfirm = () => {
-    updateSpecName(option._id, spec, editedSpec);
-    updateSpecWeight(option._id, editedSpec, editedWeighting);
-    onClose();
+    if (!isInvalidSpec && !weightError) {
+      updateSpecName(option._id, spec, editedSpec);
+      updateSpecWeight(option._id, editedSpec, editedWeighting);
+      console.log(option);
+      onClose();
+    }
   };
 
   const [editedSpec, setEditedSpec] = useState<string>(spec);
   const [editedWeighting, setEditedWeighting] = useState(
     option.weightings[spec]
   );
+
+  const [weightError, setWeightError] = useState<string>("");
 
   const existingSpecs = Object.keys(option.weightings);
 
@@ -69,6 +74,13 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   const isInvalidSpec = !possibleSpecs.includes(editedSpec);
 
   const handleWeightChange = (value: number) => {
+    if (value < 1 || value > 10) {
+      setWeightError("Value must be between 1 and 10");
+    } else if (isNaN(value)) {
+      setWeightError("Please enter a number");
+    } else {
+      setWeightError("");
+    }
     setEditedWeighting(value);
   };
 
@@ -117,6 +129,8 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
               const value = parseInt(e.target.value);
               handleWeightChange(value);
             }}
+            error={!!weightError}
+            helperText={weightError}
             fullWidth
           />
           <Stack direction="row" justifyContent="flex-end" spacing={2}>
