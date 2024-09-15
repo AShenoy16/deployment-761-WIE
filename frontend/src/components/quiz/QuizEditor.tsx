@@ -42,22 +42,24 @@ import { useQuestions } from "../../hooks/useQuestions";
 const UpdateQuestionResultAlert = ({
   isSuccess,
   isError,
+  errorMessage,
   onClose,
 }: {
   isSuccess: boolean;
   isError: boolean;
+  errorMessage: string;
   onClose: () => void;
 }) => {
   return (
     <>
       <Snackbar open={isSuccess} autoHideDuration={5000} onClose={onClose}>
         <Alert onClose={onClose} severity="success" sx={{ width: "100%" }}>
-          Question successfully updated!
+          Question updated successfully!
         </Alert>
       </Snackbar>
       <Snackbar open={isError} autoHideDuration={5000} onClose={onClose}>
         <Alert onClose={onClose} severity="error" sx={{ width: "100%" }}>
-          Failed to update question. Please try again.
+          {errorMessage || "Failed to update question. Please try again."}
         </Alert>
       </Snackbar>
     </>
@@ -443,6 +445,8 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
 
   const { deleteMutation, addMutation, updateMutation } = useQuestions();
 
+  const [updateError, setUpdateError] = useState("");
+
   const handleCancelEdit = () => {
     setSelectedQuestionToEdit(null);
   };
@@ -468,7 +472,9 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
             break;
         }
         setSelectedQuestionToEdit(null);
+        setUpdateError("");
       } catch (error) {
+        setUpdateError((error as any).response.data.message || "");
         console.error("Error updating the question: ", error);
       }
     }
@@ -543,6 +549,7 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
       <UpdateQuestionResultAlert
         isSuccess={updateMutation.isSuccess}
         isError={updateMutation.isError}
+        errorMessage={updateError}
         onClose={() => updateMutation.reset()}
       />
     </>

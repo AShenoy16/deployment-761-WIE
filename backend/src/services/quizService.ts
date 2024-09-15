@@ -504,3 +504,43 @@ export const updateQuestionById = async (id: string, updatedData: any) => {
 
   return updatedQuestion;
 };
+
+/**
+ * Validates the updatedData to make sure there are no default spec weightings
+ * @param updatedData
+ */
+export const validateUpdatedQuestionData = (updatedData: IQuestion) => {
+  if (updatedData.questionType === "MCQ") {
+    updatedData.answerOptions.forEach((option) => {
+      Object.keys(option.weightings).forEach((specializationName) => {
+        if (specializationName.includes("New Spec")) {
+          throw new Error(
+            `Invalid specialization name "${specializationName}" in MCQ options.`
+          );
+        }
+      });
+    });
+  } else if (updatedData.questionType === "Ranking") {
+    updatedData.answerOptions.forEach((option) => {
+      Object.keys(option.weightings).forEach((specializationName) => {
+        if (specializationName.includes("New Spec")) {
+          throw new Error(
+            `Invalid specialization name "${specializationName}" in Ranking options.`
+          );
+        }
+      });
+    });
+  } else if (updatedData.questionType === "Slider") {
+    Object.keys(updatedData.sliderRange.weightings).forEach(
+      (specializationName) => {
+        if (specializationName.includes("New Spec")) {
+          throw new Error(
+            `Invalid specialization name "${specializationName}" in Slider weights.`
+          );
+        }
+      }
+    );
+  } else {
+    throw new Error("Invalid question type.");
+  }
+};
