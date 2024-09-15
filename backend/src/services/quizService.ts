@@ -369,3 +369,14 @@ const rankingResults = async (
 export const deleteQuestion = async (id: string, questionType: string) => {
   throw new Error("this is an error");
 };
+
+/**
+ * Check if question type is one of the valid question types
+ * @param qType string containing question type
+ * @returns 
+ */
+export const isValidQuestionType = (qType: string) => {
+  return (
+    qType == "MCQ" || qType == "Ranking" || qType == "Slider"
+  )
+}

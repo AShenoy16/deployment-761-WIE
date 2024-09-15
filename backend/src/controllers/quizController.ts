@@ -3,6 +3,7 @@ import { QuizSubmissionRequest } from "../types/quizTypes";
 import {
   deleteQuestion,
   getSpecQuiz,
+  isValidQuestionType,
   processQuizSubmission,
 } from "../services/quizService";
 import { isQuizSubmissionRequest } from "../validation/quizValidation";
@@ -32,7 +33,7 @@ export const deleteQuizQuestion = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { qType } = req.body;
 
-    if (!id || !qType) {
+    if (!id || !qType || !isValidQuestionType(qType)) {
       return res.status(422).json({ message: "Incorrect Information" });
     }
 
