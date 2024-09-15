@@ -31,13 +31,13 @@ export const getQuiz = async (req: Request, res: Response) => {
 export const deleteQuizQuestion = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { qType } = req.body;
+    const { questionType } = req.body;
 
-    if (!id || !qType || !isValidQuestionType(qType)) {
+    if (!id || !questionType || !isValidQuestionType(questionType)) {
       return res.status(422).json({ message: "Incorrect Information" });
     }
 
-    const result = await deleteQuestion(id, qType);
+    const result = await deleteQuestion(id, questionType);
 
     if (!result) {
       return res.status(404).json({ message: "Transaction Aborted Incorrect ID" });
