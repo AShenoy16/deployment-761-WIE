@@ -363,23 +363,20 @@ const rankingResults = async (
 
 /**
  * Service that deletes quiz question by id from db
- * @param id
- * @param questionType
+ * @param id - string representing question Id
+ * @param questionType - string representing question type
  */
 export const deleteQuestion = async (id: string, questionType: string) => {
   // create transaction to delete question from both, otherwise rollback
-
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    console.log(id);
     // Step 1: Remove the question ID from the quizQuestions array in the Quiz collection
     const quizResult = await Quiz.updateOne(
       { quizQuestions: id }, // Match the quiz containing the question ID
       { $pull: { quizQuestions: id } }, // Remove the question ID from the array
       { session }
     );
-    console.log(quizResult);
 
     if (quizResult.modifiedCount === 0) {
       // If the question ID is not found in the Quiz collection
@@ -416,7 +413,6 @@ export const deleteQuestion = async (id: string, questionType: string) => {
         return null;
     }
 
-    console.log(quizResult);
     // If the question is not found in the specific question collection
     if (!questionResult) {
       await session.abortTransaction();
@@ -427,7 +423,6 @@ export const deleteQuestion = async (id: string, questionType: string) => {
     await session.commitTransaction();
     return 1;
   } catch (error) {
-    console.log(`Are we getting an error? ${error}`);
     // If any error happens, abort the transaction
     await session.abortTransaction();
     throw new Error("Network error");
