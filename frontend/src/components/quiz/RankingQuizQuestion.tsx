@@ -7,10 +7,7 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import {
-  IRankingAnswerOption,
-  IRankingQuestion,
-} from "../../types/QuestionTypes";
+import { IRankingAnswerOption, IRankingQuestion } from "../../types/Question";
 import { useRankingQuestionStore } from "../../stores/RankingQuizQuestionStore";
 
 type RankingOptionHeaderProps = {

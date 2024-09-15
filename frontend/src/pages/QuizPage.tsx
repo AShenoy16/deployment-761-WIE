@@ -14,7 +14,7 @@ import { RankingQuizQuestion } from "../components/quiz/RankingQuizQuestion";
 import { SliderQuizQuestion } from "../components/quiz/SliderQuizQuestion";
 import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
 import { useQuizStore } from "../stores/QuizStore";
-import { IQuestion } from "../types/QuestionTypes";
+import { IQuestion } from "../types/Question";
 import { useNavigate } from "react-router-dom";
 import { MCQQuizQuestion } from "../components/quiz/MCQQuizQuestion";
 import { useMCQQuestionStore } from "../stores/MCQQuestionStore";

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   alpha,
   Autocomplete,
@@ -16,10 +16,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useRankingQuestionEditorStore } from "../../stores/RankingQuestionEditorStore";
-import {
-  IRankingAnswerOption,
-  IRankingWeight,
-} from "../../types/QuestionTypes";
+import { IRankingAnswerOption } from "../../types/Question";
 
 const possibleSpecs = [
   "Biomedical",
@@ -34,83 +31,53 @@ const possibleSpecs = [
   "Structural",
 ];
 
-type EditWeightingFormProps = {
+type EditSpecWeightingProps = {
   open: boolean;
   onClose: () => void;
-  onConfirm: (
-    specializationName: string,
-    newWeights: { [rank: string]: number }
-  ) => void;
-  title: string;
-  weightings: IRankingAnswerOption["weightings"];
+  spec: string;
+  option: IRankingAnswerOption;
 };
 
-const EditWeightingForm: React.FC<EditWeightingFormProps> = ({
+const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   open,
   onClose,
-  onConfirm,
-  title,
-  weightings,
+  spec,
+  option,
 }) => {
-  const {
-    selectedQuestion,
-    selectedOptionId,
-    selectedWeightingId,
-    errors,
-    setErrors,
-  } = useRankingQuestionEditorStore((state) => ({
-    selectedQuestion: state.selectedQuestion,
-    selectedOptionId: state.selectedOptionId,
-    selectedWeightingId: state.selectedWeightingId,
-    errors: state.errors,
-    setErrors: state.setErrors,
-  }));
+  const { updateSpecWeightingName, updateSpecWeightingValue } =
+    useRankingQuestionEditorStore((state) => ({
+      updateSpecWeightingName: state.updateSpecWeightingName,
+      updateSpecWeightingValue: state.updateSpecWeightingValue,
+    }));
 
-  const optionToEdit = selectedQuestion?.answerOptions.find(
-    (o) => o._id === selectedOptionId
-  );
-  const weightingToEdit = optionToEdit?.weightings.find(
-    (w) => w._id === selectedWeightingId
-  );
-
-  const [localSpecializationName, setLocalSpecializationName] = useState(
-    weightingToEdit?.specializationName || ""
-  );
-  const [localWeights, setLocalWeights] = useState(
-    weightingToEdit?.weights || { "1": 0, "2": 0, "3": 0 }
-  );
-
-  useEffect(() => {
-    if (weightingToEdit) {
-      setLocalSpecializationName(weightingToEdit.specializationName);
-      setLocalWeights(weightingToEdit.weights);
+  const handleOnConfirm = () => {
+    if (!isInvalidSpec && !weightError) {
+      updateSpecWeightingName(option._id, spec, localSpec);
+      updateSpecWeightingValue(option._id, localSpec, localWeight);
+      onClose();
     }
-  }, [weightingToEdit]);
-
-  const existingSpecs = weightings.map((w) => w.specializationName);
-  const availableSpecs = possibleSpecs.filter(
-    (s) => !existingSpecs.includes(s)
-  );
-
-  const isInvalidSpec = !possibleSpecs.includes(localSpecializationName);
-
-  const handleWeightChange = (rank: string, value: number) => {
-    const newErrors = { ...errors };
-    if (value < 1 || value > 10) {
-      newErrors[rank] = "Value must be between 1 and 10";
-      setErrors(newErrors);
-    } else if (isNaN(value)) {
-      newErrors[rank] = "Please enter a number";
-      setErrors(newErrors);
-    } else {
-      const { [rank]: _, ...rest } = errors;
-      setErrors(rest);
-    }
-    setLocalWeights((prev) => ({ ...prev, [rank]: value }));
   };
 
-  const onConfirmClick = () => {
-    onConfirm(localSpecializationName!, localWeights!);
+  const [localSpec, setLocalSpec] = useState(spec);
+  const [localWeight, setLocalWeight] = useState(option.weightings[spec]);
+
+  const [weightError, setWeightError] = useState<string>("");
+
+  const existingSpecs = Object.keys(option.weightings);
+  const availableSpecs = possibleSpecs.filter(
+    (spec) => !existingSpecs.includes(spec)
+  );
+  const isInvalidSpec = !possibleSpecs.includes(localSpec);
+
+  const handleWeightChange = (value: number) => {
+    if (value < 1 || value > 10) {
+      setWeightError("Value must be between 1 and 10");
+    } else if (isNaN(value)) {
+      setWeightError("Please enter a number");
+    } else {
+      setWeightError("");
+    }
+    setLocalWeight(value);
   };
 
   return (
@@ -129,13 +96,13 @@ const EditWeightingForm: React.FC<EditWeightingFormProps> = ({
         }}
       >
         <Typography variant="h6" component="h2" marginBottom={2}>
-          {title}
+          {spec}
         </Typography>
         <Stack spacing={2}>
           <Autocomplete
             options={availableSpecs}
-            value={localSpecializationName}
-            onChange={(_, newValue) => setLocalSpecializationName(newValue)}
+            value={localSpec}
+            onChange={(_, newSpec) => setLocalSpec(newSpec)}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -150,21 +117,18 @@ const EditWeightingForm: React.FC<EditWeightingFormProps> = ({
             fullWidth
             disableClearable
           />
-          {Object.entries(localWeights).map(([rank, weight]) => (
-            <TextField
-              key={rank}
-              label={`Rank ${rank}`}
-              type="number"
-              value={isNaN(weight) ? "" : weight}
-              onChange={(e) => {
-                const value = parseInt(e.target.value);
-                handleWeightChange(rank, value);
-              }}
-              error={!!errors[rank]}
-              helperText={errors[rank]}
-              fullWidth
-            />
-          ))}
+          <TextField
+            label={`Weighting`}
+            type="number"
+            value={isNaN(localWeight) ? "" : localWeight}
+            onChange={(e) => {
+              const value = parseInt(e.target.value);
+              handleWeightChange(value);
+            }}
+            error={!!weightError}
+            helperText={weightError}
+            fullWidth
+          />
           <Stack direction="row" justifyContent="flex-end" spacing={2}>
             <Button variant="outlined" onClick={onClose}>
               Cancel
@@ -172,7 +136,7 @@ const EditWeightingForm: React.FC<EditWeightingFormProps> = ({
             <Button
               variant="contained"
               color="primary"
-              onClick={onConfirmClick}
+              onClick={handleOnConfirm}
             >
               Confirm
             </Button>
@@ -185,68 +149,31 @@ const EditWeightingForm: React.FC<EditWeightingFormProps> = ({
 
 type SpecWeightingProps = {
   option: IRankingAnswerOption;
-  weighting: IRankingWeight;
+  specializationName: string;
+  weight: number;
 };
 
-const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
-  const { specializationName, weights } = weighting;
-  const {
-    selectedOptionId,
-    setSelectedOptionId,
-    selectedWeightingId,
-    setSelectedWeightingId,
-    isWeightingFormOpen,
-    setIsWeightingFormOpen,
-    errors,
-    setErrors,
-    updateWeightingSpecialization,
-    updateWeightingRanks,
-    deleteWeighting,
-  } = useRankingQuestionEditorStore((state) => ({
-    selectedOptionId: state.selectedOptionId,
-    setSelectedOptionId: state.setSelectedOptionId,
-    selectedWeightingId: state.selectedWeightingId,
-    setSelectedWeightingId: state.setSelectedWeightingId,
-    isWeightingFormOpen: state.isWeightingFormOpen,
-    setIsWeightingFormOpen: state.setIsWeightingFormOpen,
-    errors: state.errors,
-    setErrors: state.setErrors,
-    updateWeightingSpecialization: state.updateWeightingSpecialization,
-    updateWeightingRanks: state.updateWeightingRanks,
-    deleteWeighting: state.deleteWeighting,
+const SpecWeighting: React.FC<SpecWeightingProps> = ({
+  option,
+  specializationName,
+  weight,
+}) => {
+  const { deleteSpecWeighting } = useRankingQuestionEditorStore((state) => ({
+    deleteSpecWeighting: state.deleteSpecWeighting,
   }));
 
-  const handleOpenWeightingForm = () => {
-    setSelectedOptionId(option._id);
-    setSelectedWeightingId(weighting._id);
-    setIsWeightingFormOpen(true);
+  const [isEditSpecWeightingOpen, setIsEditSpecWeightingOpen] = useState(false);
+
+  const handleOpenEditSpecWeighting = () => {
+    setIsEditSpecWeightingOpen(true);
   };
 
-  const handleCloseWeightingForm = () => {
-    setSelectedOptionId("");
-    setSelectedWeightingId("");
-    setErrors({});
-    setIsWeightingFormOpen(false);
+  const handleCloseEditSpecWeighting = () => {
+    setIsEditSpecWeightingOpen(false);
   };
 
-  const handleConfirmSpecWeightChanges = (
-    specializationName: string,
-    newWeights: { [rank: string]: number }
-  ) => {
-    const hasErrors = Object.keys(errors).length > 0;
-    if (!hasErrors) {
-      updateWeightingSpecialization(
-        selectedOptionId,
-        selectedWeightingId,
-        specializationName
-      );
-      updateWeightingRanks(selectedOptionId, selectedWeightingId, newWeights);
-      handleCloseWeightingForm();
-    }
-  };
-
-  const handleDeleteWeighting = () => {
-    deleteWeighting(option._id, weighting._id);
+  const handleDeleteSpec = () => {
+    deleteSpecWeighting(option._id, specializationName);
   };
 
   return (
@@ -265,47 +192,39 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({ option, weighting }) => {
             <IconButton
               color="error"
               sx={{ padding: "0.25rem" }}
-              onClick={handleDeleteWeighting}
+              onClick={handleDeleteSpec}
             >
               <DeleteIcon />
             </IconButton>
             <IconButton
               color="primary"
               sx={{ padding: "0.25rem" }}
-              onClick={handleOpenWeightingForm}
+              onClick={handleOpenEditSpecWeighting}
             >
               <EditIcon />
             </IconButton>
           </Stack>
           <Typography>{specializationName}</Typography>
         </Stack>
-        <Stack direction="row" spacing={1}>
-          {Object.entries(weights).map(([rank, value]) => (
-            <Box
-              key={rank}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              width="2rem"
-              height="2rem"
-              bgcolor="#f5e1a4"
-              borderRadius="50%"
-            >
-              <Typography>{value}</Typography>
-            </Box>
-          ))}
-        </Stack>
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          width="5rem"
+          height="2rem"
+          borderRadius="0.5rem"
+          borderColor="#f5f5f5"
+          border={1}
+        >
+          <Typography fontWeight="bold">{weight}</Typography>
+        </Box>
       </Stack>
-      {selectedOptionId === option._id &&
-        selectedWeightingId === weighting._id && (
-          <EditWeightingForm
-            open={isWeightingFormOpen}
-            onClose={handleCloseWeightingForm}
-            onConfirm={handleConfirmSpecWeightChanges}
-            title={"Edit Spec Weighting"}
-            weightings={option.weightings}
-          />
-        )}
+      <EditSpecWeighting
+        open={isEditSpecWeightingOpen}
+        onClose={handleCloseEditSpecWeighting}
+        spec={specializationName}
+        option={option}
+      />
     </>
   );
 };
@@ -315,10 +234,10 @@ type EditableRankingOption = {
 };
 
 const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
-  const { updateOptionTitle, addWeighting } = useRankingQuestionEditorStore(
+  const { updateOptionTitle, addSpecWeighting } = useRankingQuestionEditorStore(
     (state) => ({
       updateOptionTitle: state.updateOptionTitle,
-      addWeighting: state.addWeighting,
+      addSpecWeighting: state.addSpecWeighting,
     })
   );
 
@@ -327,7 +246,7 @@ const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
   };
 
   const handleAddSpec = () => {
-    addWeighting(option._id);
+    addSpecWeighting(option._id);
   };
 
   return (
@@ -364,9 +283,16 @@ const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
           />
         </Stack>
         <Stack width="100%" spacing={1}>
-          {option.weightings.map((weighting, index) => (
-            <SpecWeighting key={index} option={option} weighting={weighting} />
-          ))}
+          {Object.entries(option.weightings)
+            .sort(([, weightA], [, weightB]) => weightB - weightA)
+            .map(([specializationName, weight], index) => (
+              <SpecWeighting
+                key={specializationName || index}
+                option={option}
+                specializationName={specializationName}
+                weight={weight}
+              />
+            ))}
         </Stack>
       </Stack>
     </Paper>
@@ -417,21 +343,7 @@ const RankingQuestionEditor: React.FC = () => {
         spacing={2}
         paddingX={2}
       >
-        <Typography>Ranks:</Typography>
-        <Stack direction="row" spacing={1}>
-          {Array.from({ length: 3 }).map((_, index) => (
-            <Box
-              key={index}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              width="2rem"
-              height="2rem"
-            >
-              <Typography>{index + 1}</Typography>
-            </Box>
-          ))}
-        </Stack>
+        <Typography>Weighting</Typography>
       </Stack>
       <Stack spacing={2}>
         {selectedQuestion?.answerOptions.map((option, index) => (

@@ -1,5 +1,6 @@
-import { IQuestion } from "../types/QuestionTypes";
+import { IQuestion } from "../types/Question";
 
+// Updated mock data
 export const mockQuestions: IQuestion[] = [
   // MCQ Questions
   {
@@ -70,35 +71,17 @@ export const mockQuestions: IQuestion[] = [
       {
         _id: "opt9",
         text: "Software Engineering",
-        weightings: [
-          {
-            _id: "rank1_weight",
-            specializationName: "Software",
-            weights: { "1": 10, "2": 5, "3": 3 },
-          },
-        ],
+        weightings: { Software: 10, Compsys: 7, Electrical: 5 },
       },
       {
         _id: "opt10",
         text: "Mechanical Engineering",
-        weightings: [
-          {
-            _id: "rank2_weight",
-            specializationName: "Mechanical",
-            weights: { "1": 8, "2": 6, "3": 4 },
-          },
-        ],
+        weightings: { Mechanical: 9, Civil: 6, Structural: 8 },
       },
       {
         _id: "opt11",
         text: "Civil Engineering",
-        weightings: [
-          {
-            _id: "rank3_weight",
-            specializationName: "Civil",
-            weights: { "1": 9, "2": 7, "3": 5 },
-          },
-        ],
+        weightings: { Civil: 8, Structural: 9, Mechanical: 4 },
       },
     ],
     createdAt: new Date(),
@@ -112,35 +95,17 @@ export const mockQuestions: IQuestion[] = [
       {
         _id: "opt12",
         text: "Electrical Systems",
-        weightings: [
-          {
-            _id: "rank4_weight",
-            specializationName: "Electrical",
-            weights: { "1": 10, "2": 6, "3": 4 },
-          },
-        ],
+        weightings: { Electrical: 10, Biomedical: 6, Software: 4 },
       },
       {
         _id: "opt13",
         text: "Biomedical Engineering",
-        weightings: [
-          {
-            _id: "rank5_weight",
-            specializationName: "Biomedical",
-            weights: { "1": 8, "2": 5, "3": 3 },
-          },
-        ],
+        weightings: { Biomedical: 8, Electrical: 5, Mechatronics: 7 },
       },
       {
         _id: "opt14",
         text: "Structural Engineering",
-        weightings: [
-          {
-            _id: "rank6_weight",
-            specializationName: "Structural",
-            weights: { "1": 9, "2": 7, "3": 5 },
-          },
-        ],
+        weightings: { Structural: 9, Civil: 7, Mechanical: 5 },
       },
     ],
     createdAt: new Date(),
@@ -153,11 +118,10 @@ export const mockQuestions: IQuestion[] = [
     questionType: "Slider",
     questionText: "Rate your confidence in problem-solving (1-5).",
     sliderRange: {
-      min: 1,
-      max: 5,
+      _id: "slider1_weight",
       weightings: {
-        Engsci: [1, 2, 3, 4, 5],
-        Biomedical: [1, 2, 3, 4, 5],
+        Engsci: 5,
+        Biomedical: 4,
       },
     },
     createdAt: new Date(),
@@ -168,11 +132,10 @@ export const mockQuestions: IQuestion[] = [
     questionType: "Slider",
     questionText: "How excited are you about automation (1-5)?",
     sliderRange: {
-      min: 1,
-      max: 5,
+      _id: "slider2_weight",
       weightings: {
-        Mechatronics: [1, 2, 3, 4, 5],
-        Mechanical: [1, 2, 3, 4, 5],
+        Mechatronics: 5,
+        Mechanical: 4,
       },
     },
     createdAt: new Date(),

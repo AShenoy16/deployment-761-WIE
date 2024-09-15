@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { IMCQAnswerOption, IMCQQuestion } from "../types/QuestionTypes";
+import { IMCQQuestion } from "../types/Question";
 
 type MCQQuestionEditorStore = {
   selectedQuestion: IMCQQuestion | null;
@@ -104,13 +104,14 @@ export const useMCQQuestionEditorStore = create<MCQQuestionEditorStore>(
         const updatedOptions = state.selectedQuestion.answerOptions.map(
           (option) => {
             if (option._id === optionId) {
+              const { [oldSpec]: oldWeight, ...remainingWeightings } =
+                option.weightings;
+
               const updatedWeightings = {
-                ...option.weightings,
+                ...remainingWeightings,
+                [newSpec]: oldWeight,
               };
-              if (updatedWeightings[oldSpec]) {
-                updatedWeightings[newSpec] = updatedWeightings[oldSpec];
-                delete updatedWeightings[oldSpec];
-              }
+
               return {
                 ...option,
                 weightings: updatedWeightings,
