@@ -2,6 +2,7 @@ import { spec } from "node:test/reporters";
 import { getInitialSpecResults } from "../constants/quizConstants";
 import {
   IMCQAnswerOption,
+  IQuestion,
   IQuiz,
   IRankingAnswerOption,
   IRankingQuestion,
@@ -441,6 +442,11 @@ export const isValidQuestionType = (qType: string) => {
   return qType == "MCQ" || qType == "Ranking" || qType == "Slider";
 };
 
+/**
+ * Service to add a new default quiz question and add to the existing quiz collection
+ * @param questionType
+ * @returns
+ */
 export const addDefaultQuizQuestion = async (questionType: string) => {
   let question;
   switch (questionType) {
@@ -466,4 +472,35 @@ export const addDefaultQuizQuestion = async (questionType: string) => {
   ).populate("quizQuestions");
 
   return updatedQuiz;
+};
+
+/**
+ * Service to update an existing quiz question
+ * @param id The question ID to update
+ * @param questionData The new data for the quiz question
+ * @returns The updated question or null if not found
+ */
+export const updateQuestionById = async (id: string, updatedData: any) => {
+  let updatedQuestion: IQuestion | null = null;
+
+  if (updatedData.questionType === "MCQ") {
+    updatedQuestion = await MCQQuestion.findByIdAndUpdate(id, updatedData, {
+      new: true,
+      runValidators: true,
+    });
+  } else if (updatedData.questionType === "Slider") {
+    updatedQuestion = await SliderQuestion.findByIdAndUpdate(id, updatedData, {
+      new: true,
+      runValidators: true,
+    });
+  } else if (updatedData.questionType === "Ranking") {
+    updatedQuestion = await RankingQuestion.findByIdAndUpdate(id, updatedData, {
+      new: true,
+      runValidators: true,
+    });
+  } else {
+    throw new Error("Invalid question type");
+  }
+
+  return updatedQuestion;
 };
