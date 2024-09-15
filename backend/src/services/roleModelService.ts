@@ -22,7 +22,7 @@ export const getAllRoleModels = async () => {
  * @param roleModelData Object containing the role model details
  * @returns The created role model or null in case of error
  */
-export const addRoleModel = async (roleModelData: any) => {
+export const addRoleModel = async (roleModelData: IRoleModel) => {
   try {
     const newRoleModel = new RoleModel(roleModelData);
     await newRoleModel.save();

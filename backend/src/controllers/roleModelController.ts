@@ -32,7 +32,7 @@ export const addRoleModels = async (req: Request, res: Response) => {
   try {
     const newRoleModel = await addRoleModel(roleModelData);
     if (!newRoleModel) {
-      return res.status(500).json({ message: "Failed to add role model" });
+      return res.status(404).json({ message: "Failed to find role model" });
     }
     return res.status(201).json(newRoleModel);
   } catch (error) {
@@ -64,7 +64,7 @@ export const deleteRoleModel = async (req: Request, res: Response) => {
  */
 export const putRoleModels = async (req: Request, res: Response) => {
   const roleModelData: IRoleModel = req.body;
-  const { id } = req.params; 
+  const { id } = req.params;
 
   try {
     const updatedRoleModel = await updateRoleModel(id, roleModelData);
