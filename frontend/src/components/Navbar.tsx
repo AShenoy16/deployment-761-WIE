@@ -81,7 +81,7 @@ const Navbar: React.FC = () => {
             color="inherit"
             underline="none"
           >
-            Role Models
+            Inspiring Leaders
           </MuiLink>
           <MuiLink
             component={Link}
@@ -89,7 +89,7 @@ const Navbar: React.FC = () => {
             color="inherit"
             underline="none"
           >
-            Spec Info
+            Engineering Specialisations
           </MuiLink>
         </Box>
         <Box display={{ xs: "flex", md: "none" }}>
