@@ -452,18 +452,22 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
       try {
         switch (selectedQuestionToEdit.questionType) {
           case "MCQ":
-            return await updateMutation.mutateAsync(
+            await updateMutation.mutateAsync(
               selectedMCQQuestionToEdit as IMCQQuestion
             );
+            break;
           case "Ranking":
-            return await updateMutation.mutateAsync(
+            await updateMutation.mutateAsync(
               selectedRankingQuestionToEdit as IRankingQuestion
             );
+            break;
           case "Slider":
-            return await updateMutation.mutateAsync(
+            await updateMutation.mutateAsync(
               selectedSliderQuestionToEdit as ISliderQuestion
             );
+            break;
         }
+        setSelectedQuestionToEdit(null);
       } catch (error) {
         console.error("Error updating the question: ", error);
       }
