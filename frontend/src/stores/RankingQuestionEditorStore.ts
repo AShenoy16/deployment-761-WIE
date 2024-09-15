@@ -18,8 +18,6 @@ type RankingQuestionEditorStore = {
     spec: string,
     newWeight: number
   ) => void;
-  errors: { [rank: string]: string };
-  setErrors: (errors: { [rank: string]: string }) => void;
 };
 
 export const useRankingQuestionEditorStore = create<RankingQuestionEditorStore>(
@@ -170,8 +168,5 @@ export const useRankingQuestionEditorStore = create<RankingQuestionEditorStore>(
           },
         };
       }),
-
-    errors: {},
-    setErrors: (errors: { [rank: string]: string }) => set({ errors }),
   })
 );

@@ -64,7 +64,6 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   const [weightError, setWeightError] = useState<string>("");
 
   const existingSpecs = Object.keys(option.weightings);
-
   const availableSpecs = possibleSpecs.filter(
     (spec) => !existingSpecs.includes(spec)
   );
