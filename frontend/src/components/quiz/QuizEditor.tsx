@@ -303,16 +303,19 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
 
   useEffect(() => {
     if (isNewQuestionAdded && questionListRef.current) {
-      const lastQuestion = questionListRef.current.lastElementChild;
-      if (lastQuestion) {
-        lastQuestion.scrollIntoView({ behavior: "smooth", block: "start" });
-        setIsNewQuestionAdded(false);
-        const lastQuestionId = questions[questions.length - 1]._id;
-        setHighlightedQuestionId(lastQuestionId);
-        setTimeout(() => setHighlightedQuestionId(""), 3000);
-      }
+      setTimeout(() => {
+        const lastQuestion = questionListRef.current?.lastElementChild;
+        if (lastQuestion) {
+          lastQuestion.scrollIntoView({ behavior: "smooth", block: "start" });
+          setIsNewQuestionAdded(false);
+
+          const lastQuestionId = questions[questions.length - 1]._id;
+          setHighlightedQuestionId(lastQuestionId);
+          setTimeout(() => setHighlightedQuestionId(""), 3000);
+        }
+      }, 200);
     }
-  }, [isNewQuestionAdded]);
+  }, [isNewQuestionAdded, questions]);
 
   return (
     <Stack
