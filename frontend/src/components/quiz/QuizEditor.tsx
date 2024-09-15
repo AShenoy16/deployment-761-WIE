@@ -25,7 +25,13 @@ import { useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { IMultiplierData, IQuestion } from "../../types/Question";
+import {
+  IQuestion,
+  IMCQQuestion,
+  IRankingQuestion,
+  ISliderQuestion,
+  IMultiplierData,
+} from "../../types/Question";
 import { useQuizEditorStore } from "../../stores/QuizEditorStore";
 import RankingQuestionEditor from "./RankingQuestionEditor";
 import QuestionEditorLayout from "../../layouts/QuestionEditorLayout";
@@ -36,6 +42,33 @@ import MCQQuestionEditor from "./MCQQuestionEditor";
 import { useMCQQuestionEditorStore } from "../../stores/MCQQuestionEditorStore";
 import { useQuestions } from "../../hooks/useQuestions";
 import { useMultiplier } from "../../hooks/useMultiplier";
+
+const UpdateQuestionResultAlert = ({
+  isSuccess,
+  isError,
+  errorMessage,
+  onClose,
+}: {
+  isSuccess: boolean;
+  isError: boolean;
+  errorMessage: string;
+  onClose: () => void;
+}) => {
+  return (
+    <>
+      <Snackbar open={isSuccess} autoHideDuration={5000} onClose={onClose}>
+        <Alert onClose={onClose} severity="success" sx={{ width: "100%" }}>
+          Question updated successfully!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={isError} autoHideDuration={5000} onClose={onClose}>
+        <Alert onClose={onClose} severity="error" sx={{ width: "100%" }}>
+          {errorMessage || "Failed to update question. Please try again."}
+        </Alert>
+      </Snackbar>
+    </>
+  );
+};
 
 const AddQuestionResultAlert = ({
   isSuccess,
@@ -493,7 +526,7 @@ const EditQuestionList = ({
       case "Ranking":
         setSelectedRankingQuestion({ ...question });
         break;
-      case "Slider": // Implement
+      case "Slider":
         setSelectedSliderQuestion({ ...question });
         break;
       default:
@@ -614,14 +647,55 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions, multipliers }) => {
     setIsNewQuestionAdded: state.setIsNewQuestionAdded,
   }));
 
-  const { deleteMutation, addMutation } = useQuestions();
+  const { selectedMCQQuestionToEdit } = useMCQQuestionEditorStore((state) => ({
+    selectedMCQQuestionToEdit: state.selectedQuestion,
+  }));
+  const { selectedRankingQuestionToEdit } = useRankingQuestionEditorStore(
+    (state) => ({
+      selectedRankingQuestionToEdit: state.selectedQuestion,
+    })
+  );
+  const { selectedSliderQuestionToEdit } = useSliderQuestionEditorStore(
+    (state) => ({
+      selectedSliderQuestionToEdit: state.selectedQuestion,
+    })
+  );
+
+  const { deleteMutation, addMutation, updateMutation } = useQuestions();
+
+  const [updateError, setUpdateError] = useState("");
 
   const handleCancelEdit = () => {
     setSelectedQuestionToEdit(null);
   };
 
-  const handleSaveEdit = () => {
-    console.log(selectedQuestionToEdit);
+  const handleSaveEdit = async () => {
+    if (selectedQuestionToEdit) {
+      try {
+        switch (selectedQuestionToEdit.questionType) {
+          case "MCQ":
+            await updateMutation.mutateAsync(
+              selectedMCQQuestionToEdit as IMCQQuestion
+            );
+            break;
+          case "Ranking":
+            await updateMutation.mutateAsync(
+              selectedRankingQuestionToEdit as IRankingQuestion
+            );
+            break;
+          case "Slider":
+            await updateMutation.mutateAsync(
+              selectedSliderQuestionToEdit as ISliderQuestion
+            );
+            break;
+        }
+        setSelectedQuestionToEdit(null);
+        setUpdateError("");
+      } catch (error) {
+        setUpdateError((error as any)?.response?.data?.message || "");
+        console.error("Error updating the question: ", error);
+      }
+    }
   };
 
   const handleConfirmDelete = async () => {
@@ -651,6 +725,7 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions, multipliers }) => {
         <QuestionEditorLayout
           onCancel={handleCancelEdit}
           onSave={handleSaveEdit}
+          isLoading={updateMutation.isPending}
         >
           {selectedQuestionToEdit.questionType === "MCQ" && (
             <MCQQuestionEditor />
@@ -688,6 +763,12 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions, multipliers }) => {
         isSuccess={deleteMutation.isSuccess}
         isError={deleteMutation.isError}
         onClose={() => deleteMutation.reset()}
+      />
+      <UpdateQuestionResultAlert
+        isSuccess={updateMutation.isSuccess}
+        isError={updateMutation.isError}
+        errorMessage={updateError}
+        onClose={() => updateMutation.reset()}
       />
     </>
   );

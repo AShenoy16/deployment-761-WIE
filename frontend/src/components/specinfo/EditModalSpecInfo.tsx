@@ -12,6 +12,8 @@ import { useState, useEffect, useRef } from "react";
 import GradientBox from "../GradientBox";
 import axios from "axios";
 import { Specialization } from "../../types/Specialization";
+import useSnackBar from "../../hooks/useSnackBar";
+import { useNavigate } from "react-router-dom";
 
 const modalStyle = {
   position: "absolute" as const,
@@ -38,6 +40,7 @@ interface EditModalSpecInfoProps {
   open: boolean;
   onClose: () => void;
   specInfoResult: {
+    name: string;
     careerPathways: string[];
     header: string;
     leftDetail: string;
@@ -57,6 +60,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
   onSave,
 }) => {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const [title, setTitle] = useState<string>(""); // New state for the title
   const [careerPathways, setCareerPathways] = useState<string[]>([]);
   const [header, setHeader] = useState<string>("");
   const [leftDetail, setLeftDetail] = useState<string>("");
@@ -66,15 +70,30 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
 
   const leftImageInputRef = useRef<HTMLInputElement | null>(null);
   const rightImageInputRef = useRef<HTMLInputElement | null>(null);
+  const showSnackbar = useSnackBar();
 
   useEffect(() => {
     if (specInfoResult) {
+      setTitle(specInfoResult.name); // Set the initial title
       setCareerPathways(specInfoResult.careerPathways);
       setHeader(specInfoResult.header);
       setLeftDetail(specInfoResult.leftDetail);
       setRightDetail(specInfoResult.rightDetail);
     }
   }, [specInfoResult]);
+
+  // Reset the form state
+  const resetForm = () => {
+    if (specInfoResult) {
+      setTitle(specInfoResult.name);
+      setCareerPathways(specInfoResult.careerPathways);
+      setHeader(specInfoResult.header);
+      setLeftDetail(specInfoResult.leftDetail);
+      setRightDetail(specInfoResult.rightDetail);
+      setLeftImage(null);
+      setRightImage(null);
+    }
+  };
 
   const handleCareerPathwayChange = (index: number, value: string) => {
     const newCareerPathways = [...careerPathways];
@@ -99,7 +118,21 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
     setImage(file);
   };
 
+  // Inside the EditModalSpecInfo component
+  const navigate = useNavigate();
+
   const handleSaveChanges = async () => {
+    if (
+      !title.trim() ||
+      !header.trim() ||
+      !leftDetail.trim() ||
+      !rightDetail.trim()
+    ) {
+      showSnackbar("Please fill out all required fields.");
+      return;
+    }
+
+    const sanitizedTitle = title.trim().replace(/\s+/g, " ");
     const sanitizedHeader = header.trim().replace(/\s+/g, " ");
     const sanitizedLeftDetail = leftDetail.trim().replace(/\s+/g, " ");
     const sanitizedRightDetail = rightDetail.trim().replace(/\s+/g, " ");
@@ -109,6 +142,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
 
     const formData = new FormData();
 
+    formData.append("name", sanitizedTitle); // Add the title to formData
     formData.append("header", sanitizedHeader);
     formData.append("careerPathways", JSON.stringify(sanitizedCareerPathways));
     formData.append("leftDetail", sanitizedLeftDetail);
@@ -132,16 +166,32 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
           },
         }
       );
+      showSnackbar("Successfully saved changes.");
 
-      onSave(response.data); // Update the parent component with the new data
+      // Navigate to the new URL if the name has changed
+      if (response.data.name !== name) {
+        navigate(
+          `/specialisation/${encodeURIComponent(response.data.name.replace(/\s+/g, "-").toLowerCase())}`
+        );
+      }
+
+      onSave(response.data);
+      resetForm(); // Reset the form on successful save
       onClose();
     } catch (error) {
+      showSnackbar("Error updating specialization, please try again.");
       console.error("Error updating specialization:", error);
     }
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal
+      open={open}
+      onClose={() => {
+        resetForm(); // Reset form on close
+        onClose();
+      }}
+    >
       <GradientBox sx={modalStyle}>
         <Box
           sx={{
@@ -151,7 +201,14 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
             mb: 2,
           }}
         >
-          <IconButton edge="start" color="inherit" onClick={onClose}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={() => {
+              resetForm(); // Reset form on close icon click
+              onClose();
+            }}
+          >
             <ArrowBackIcon sx={{ color: "white" }} />
           </IconButton>
           <Typography
@@ -171,6 +228,22 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
             flexGrow: 1,
           }}
         >
+          {/* Edit Title */}
+          <Typography variant="h6" gutterBottom>
+            Title <span style={{ color: "red" }}>*</span>
+          </Typography>
+          <TextField
+            fullWidth
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            sx={{
+              mb: 3,
+              backgroundColor: "white",
+              borderRadius: "8px",
+            }}
+            required
+          />
+
           {/* Edit Career Pathways */}
           <Typography variant="h6" gutterBottom paddingBottom={"30px"}>
             Career Pathways
@@ -214,7 +287,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
 
           {/* Edit Header */}
           <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
-            Header
+            Header <span style={{ color: "red" }}>*</span>
           </Typography>
           <TextareaAutosize
             value={header}
@@ -229,11 +302,12 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
               whiteSpace: "pre-wrap",
               resize: "none",
             }}
+            required
           />
 
           {/* Edit Left Detail */}
           <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
-            Left Detail
+            Left Detail <span style={{ color: "red" }}>*</span>
           </Typography>
           <TextareaAutosize
             minRows={4}
@@ -248,6 +322,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
               whiteSpace: "pre-wrap",
               resize: "none",
             }}
+            required
           />
 
           {/* Upload Right Image */}
@@ -271,7 +346,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
 
           {/* Edit Right Detail */}
           <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
-            Right Detail
+            Right Detail <span style={{ color: "red" }}>*</span>
           </Typography>
           <TextareaAutosize
             minRows={4}
@@ -286,6 +361,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
               whiteSpace: "pre-wrap",
               resize: "none",
             }}
+            required
           />
 
           {/* Upload Left Image */}
