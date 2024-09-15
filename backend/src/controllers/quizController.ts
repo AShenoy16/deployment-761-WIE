@@ -50,8 +50,14 @@ export const postQuizContent = async (req: Request, res: Response) => {
 
     return res.status(200).json(updatedQuiz);
   } catch (error) {
-    console.error("Error adding quiz question:", error);
-    return res.status(500).json({ message: "Server error", error });
+    if (error instanceof mongoose.Error.ValidationError) {
+      // Handle Mongoose validation errors specifically
+      console.error("Validation Error:", error.errors);
+      throw new Error("Validation error: " + error.message);
+    } else {
+      console.error("Error adding quiz question:", error);
+      return res.status(500).json({ message: "Server error", error });
+    }
   }
 };
 

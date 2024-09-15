@@ -468,7 +468,7 @@ export const addDefaultQuizQuestion = async (questionType: string) => {
   const updatedQuiz = await Quiz.findByIdAndUpdate(
     "66e52088067cb204ed8509cb", // Currently hardcoded as there is only one document in quiz collection
     { $push: { quizQuestions: savedQuestion._id } },
-    { new: true, useFindAndModify: false }
+    { new: true, useFindAndModify: false, runValidators: true }
   ).populate("quizQuestions");
 
   return updatedQuiz;
