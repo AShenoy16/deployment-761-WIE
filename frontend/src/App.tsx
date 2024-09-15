@@ -31,7 +31,7 @@ function App() {
               }
             />
             <Route path="/spec-info" element={<SpecPage />} />
-            <Route path="/specialisation/:id" element={<SpecDetailPage />} />
+            <Route path="/specialisation/:name" element={<SpecDetailPage />} />
             <Route path="/role-models" element={<RoleModelsPage />} />
             <Route path="/login" element={<LoginPage />} />
           </Routes>

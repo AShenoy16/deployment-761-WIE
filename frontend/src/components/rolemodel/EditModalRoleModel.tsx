@@ -1,9 +1,11 @@
 import EditModalRoleModels from "./EditModalRoleModelCard";
-import AddRoleModelModal from "./AddRoleModelModal";
+import AddRoleModelModal from "./AddUpdateRoleModelModal";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button, Modal, Box, Typography, IconButton } from "@mui/material";
-import { Theme } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import { IRoleModel } from "../../types/RoleModel";
+import GradientBox from "../GradientBox";
+import { useState } from "react";
 
 // Define modal styles
 const modalStyle = {
@@ -14,7 +16,6 @@ const modalStyle = {
   width: "85%",
   maxWidth: "800px",
   maxHeight: "90vh",
-  background: (theme: Theme) => theme.palette.roleModelBg.main,
   boxShadow: 24,
   p: 4,
   display: "flex",
@@ -39,9 +40,17 @@ const EditModalRoleModel: React.FC<EditModalRoleModelProps> = ({
   onClose,
   roleModelsResult,
 }) => {
+  const [addEditFormOpen, setAddEditFormOpen] = useState<boolean>(false);
+
+  const openAddEditModal = () => setAddEditFormOpen(true);
+
+  const handleCloseAddEditModal = () => {
+    setAddEditFormOpen(false);
+  };
+
   return (
     <Modal open={open} onClose={onClose}>
-      <Box sx={modalStyle}>
+      <GradientBox sx={modalStyle}>
         {/* Header Section */}
         <Box
           sx={{
@@ -61,7 +70,26 @@ const EditModalRoleModel: React.FC<EditModalRoleModelProps> = ({
           >
             Edit Role Models
           </Typography>
-          <AddRoleModelModal />
+          <Box display="flex" justifyContent="center" alignItems="center">
+            {/* Button to open the form modal */}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={openAddEditModal}
+              startIcon={<AddIcon />}
+              sx={{
+                textTransform: "none",
+                textDecorationLine: "underline",
+                borderRadius: "12px",
+              }}
+            >
+              Add New Role Model
+            </Button>
+            <AddRoleModelModal
+              open={addEditFormOpen}
+              onClose={handleCloseAddEditModal}
+            />
+          </Box>
         </Box>
         {/* Role models data display */}
         <Box
@@ -84,10 +112,10 @@ const EditModalRoleModel: React.FC<EditModalRoleModelProps> = ({
             onClick={onClose}
             sx={buttonStyle}
           >
-            Save Changes
+            Finish
           </Button>
         </Box>
-      </Box>
+      </GradientBox>
     </Modal>
   );
 };

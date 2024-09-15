@@ -19,6 +19,8 @@ import QuestionEditorLayout from "../../layouts/QuestionEditorLayout";
 import { useRankingQuestionEditorStore } from "../../stores/RankingQuestionEditorStore";
 import { useSliderQuestionEditorStore } from "../../stores/SliderQuestionEditorStore";
 import SliderQuestionEditor from "./SliderQuestionEditor";
+import MCQQuestionEditor from "./MCQQuestionEditor";
+import { useMCQQuestionEditorStore } from "../../stores/MCQQuestionEditorStore";
 
 const EditableQuestion = ({
   question,
@@ -76,6 +78,9 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
     (state) => state.setSelectedQuestion
   );
 
+  const setSelectedMCQQuestion = useMCQQuestionEditorStore(
+    (state) => state.setSelectedQuestion
+  );
   const onClickAddQuestion = (question: IQuestion) => {
     console.log(question._id);
   };
@@ -83,7 +88,8 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
   const onClickEditQuestion = (question: IQuestion) => {
     setSelectedQuestion(question);
     switch (question.questionType) {
-      case "MCQ": // Implement
+      case "MCQ":
+        setSelectedMCQQuestion({ ...question });
         break;
       case "Ranking":
         setSelectedRankingQuestion({ ...question });
@@ -173,7 +179,11 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
   if (selectedQuestion) {
     switch (selectedQuestion.questionType) {
       case "MCQ": // Implement
-        break;
+        return (
+          <QuestionEditorLayout onCancel={handleOnCancel} onSave={handleOnSave}>
+            <MCQQuestionEditor />
+          </QuestionEditorLayout>
+        );
       case "Ranking":
         return (
           <QuestionEditorLayout onCancel={handleOnCancel} onSave={handleOnSave}>
