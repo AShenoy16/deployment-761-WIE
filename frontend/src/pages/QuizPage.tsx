@@ -7,7 +7,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useGetQuestions } from "../hooks/useGetQuestions";
+import { useQuestions } from "../hooks/useQuestions";
 import { useQuizNavigation } from "../hooks/useQuizNavigation";
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 import { RankingQuizQuestion } from "../components/quiz/RankingQuizQuestion";
@@ -92,7 +92,7 @@ const StartingScreen: React.FC = () => {
 };
 
 const QuizPage: React.FC = () => {
-  const { questions, isLoading, isError } = useGetQuestions();
+  const { questions, isLoading, isError } = useQuestions();
   const { currentQuestionIndex, nextQuestion, prevQuestion } =
     useQuizNavigation(questions);
   const currentQuestion = questions[currentQuestionIndex];

@@ -2,11 +2,17 @@ import { create } from "zustand";
 import { IQuestion } from "../types/Question";
 
 type QuizEditorStore = {
-  selectedQuestion: IQuestion | null;
-  setSelectedQuestion: (question: IQuestion | null) => void;
+  selectedQuestionToEdit: IQuestion | null;
+  setSelectedQuestionToEdit: (question: IQuestion | null) => void;
+  selectedQuestionToDelete: IQuestion | null;
+  setSelectedQuestionToDelete: (question: IQuestion | null) => void;
 };
 
 export const useQuizEditorStore = create<QuizEditorStore>((set) => ({
-  selectedQuestion: null,
-  setSelectedQuestion: (question) => set({ selectedQuestion: question }),
+  selectedQuestionToEdit: null,
+  setSelectedQuestionToEdit: (question) =>
+    set({ selectedQuestionToEdit: question }),
+  selectedQuestionToDelete: null,
+  setSelectedQuestionToDelete: (question) =>
+    set({ selectedQuestionToDelete: question }),
 }));
