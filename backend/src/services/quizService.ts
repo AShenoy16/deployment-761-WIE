@@ -16,6 +16,7 @@ import mongoose from "mongoose";
 import { Console } from "console";
 import MultiplierData from "../models/multiplerModel";
 import { getAllMultipliers } from "./multiplierService";
+import { ParamsDictionary } from "express-serve-static-core";
 
 /**
  * Servixe code that will actually calculate the results
@@ -255,9 +256,9 @@ const sliderResults = async (
  * Method to get update value for a spec based on the rank of the answer chosen
  * @param rank of the answer option
  * @param weighting of the spec
- * @param rank2Factor 
- * @param rank3Factor 
- * @returns 
+ * @param rank2Factor
+ * @param rank3Factor
+ * @returns
  */
 const getRankingUpdateValue = (
   rank: number,
@@ -273,7 +274,7 @@ const getRankingUpdateValue = (
     case 3:
       return weighting / rank3Factor;
     default:
-      return 0
+      return 0;
   }
 };
 
@@ -358,4 +359,13 @@ const rankingResults = async (
   }
 
   return;
+};
+
+/**
+ * Service that deletes quiz question by id from db
+ * @param id 
+ * @param questionType 
+ */
+export const deleteQuestion = async (id: string, questionType: string) => {
+  throw new Error("this is an error");
 };
