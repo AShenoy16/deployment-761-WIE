@@ -6,13 +6,15 @@ import {
   Card,
   CardContent,
   Button,
+  Snackbar,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
-import uoaEngBuilding from "/engineering-building.jpg";
+import uoaEngBuilding from "/engineering-building.jpg"; // Fallback image if needed
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 import axios from "axios";
 import { useAuthStore } from "../stores/AuthenticationStore";
 import EditModalSpecInfo from "../components/specinfo/EditModalSpecInfo";
+import { useSnackbarStore } from "../stores/SnackBarStore";
 
 // Button styles
 const buttonStyle = {
@@ -45,11 +47,14 @@ const SpecDetailPage: React.FC = () => {
   const { name } = useParams<{ name: string }>(); // Get specialization name from route params
   const formattedName = name?.replace(/-/g, " ") || ""; // Format name by replacing hyphens with spaces
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Get the API base URL from environment variables
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
   const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn); // Check if admin is logged in
   const [openEditModal, setEditModal] = useState<boolean>(false); // State for edit modal
   const handleEditModalOpen = (): void => setEditModal(true); // Open edit modal
   const handleEditModalClose = (): void => setEditModal(false); // Close edit modal
+  const message = useSnackbarStore((state) => state.message);
+  const isOpen = useSnackbarStore((state) => state.isOpen);
+  const setIsOpen = useSnackbarStore((state) => state.setIsOpen);
+  const handleSnackBarClose = (): void => setIsOpen(false);
 
   const [specialization, setSpecialization] = useState<Specialization | null>(
     null
@@ -91,10 +96,13 @@ const SpecDetailPage: React.FC = () => {
   if (error) return <Typography>{error}</Typography>;
   if (!specialization) return <Typography>Specialization not found</Typography>;
 
-  // Get the image URLs from the API or fall back to uoaengbuilding
-   const leftImageUrl = `${BASE_URL}${specialization.leftImage}`
-  const rightImageUrl = `${BASE_URL}${specialization.rightImage}`;
-
+  // Get the image URLs from the API or use a fallback
+  const leftImageUrl = specialization.leftImage
+    ? `${API_BASE_URL}${specialization.leftImage}`
+    : uoaEngBuilding;
+  const rightImageUrl = specialization.rightImage
+    ? `${API_BASE_URL}${specialization.rightImage}`
+    : uoaEngBuilding;
 
   return (
     <Box sx={{ overflowX: "hidden" }}>
@@ -255,7 +263,7 @@ const SpecDetailPage: React.FC = () => {
             <Box
               sx={{
                 height: "100%",
-                backgroundImage: `url(${rightImageUrl})`,
+                backgroundImage: `url(${leftImageUrl})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 display: "flex",
@@ -283,7 +291,7 @@ const SpecDetailPage: React.FC = () => {
             <Box
               sx={{
                 height: "100%",
-                backgroundImage: `url(${leftImageUrl})`,
+                backgroundImage: `url(${rightImageUrl})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 display: "flex",
@@ -393,6 +401,13 @@ const SpecDetailPage: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
+      {/* Snack Bar */}
+      <Snackbar
+        open={isOpen}
+        autoHideDuration={5000}
+        onClose={handleSnackBarClose}
+        message={message}
+      />
     </Box>
   );
 };
