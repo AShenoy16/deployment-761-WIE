@@ -10,7 +10,6 @@ import {
   Modal,
   Autocomplete,
 } from "@mui/material";
-import { sliderLabels } from "./SliderQuizQuestion";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -35,46 +34,25 @@ type EditSpecWeightingProps = {
   open: boolean;
   onClose: () => void;
   spec: string;
-  weightings: number[];
+  weighting: number;
 };
-
-const labels = [
-  "Strongly Disagree",
-  "Disagree",
-  "Neutral",
-  "Agree",
-  "Strongly Agree",
-];
 
 const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   open,
   onClose,
   spec,
-  weightings,
+  weighting,
 }) => {
   const [editedSpec, setEditedSpec] = useState(spec);
-  const [editedWeightings, setEditedWeightings] = useState(weightings);
-  const [isValid, setIsValid] = useState(true);
+  const [editedWeighting, setEditedWeighting] = useState(weighting);
+  const [weightError, setWeightError] = useState<string>("");
 
-  const {
-    selectedQuestion,
-    updateSpecName,
-    updateSpecWeightings,
-    specError,
-    weightingErrors,
-    validateSpecName,
-    validateWeightings,
-    setSpecError,
-  } = useSliderQuestionEditorStore((state) => ({
-    selectedQuestion: state.selectedQuestion,
-    updateSpecName: state.updateSpecName,
-    updateSpecWeightings: state.updateSpecWeightings,
-    specError: state.specError,
-    weightingErrors: state.weightingErrors,
-    validateSpecName: state.validateSpecName,
-    validateWeightings: state.validateWeightings,
-    setSpecError: state.setSpecError,
-  }));
+  const { selectedQuestion, updateSpecName, updateSpecWeighting } =
+    useSliderQuestionEditorStore((state) => ({
+      selectedQuestion: state.selectedQuestion,
+      updateSpecName: state.updateSpecName,
+      updateSpecWeighting: state.updateSpecWeighting,
+    }));
 
   const availableSpecs = possibleSpecs.filter(
     (specName) =>
@@ -83,27 +61,30 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
         specName
       )
   );
+  const isInvalidSpec = !possibleSpecs.includes(editedSpec);
 
-  //  Error checking
-  useEffect(() => {
-    const specIsValid = validateSpecName(editedSpec, availableSpecs);
-    const weightingsAreValid = validateWeightings(editedWeightings);
-    setIsValid(specIsValid && weightingsAreValid);
-  }, [editedSpec, editedWeightings, validateSpecName, validateWeightings]);
+  const handleWeightChange = (value: number) => {
+    if (value < 1 || value > 10) {
+      setWeightError("Value must be between 1 and 10");
+    } else if (isNaN(value)) {
+      setWeightError("Please enter a number");
+    } else {
+      setWeightError("");
+    }
+    setEditedWeighting(value);
+  };
 
   // revert to previously saved values when edit is cancelled
   useEffect(() => {
     setEditedSpec(spec);
-    setEditedWeightings(weightings);
+    setEditedWeighting(weighting);
+    setWeightError("");
   }, [open]);
 
   const handleSave = () => {
-    if (isValid) {
-      if (editedSpec !== spec) {
-        setSpecError(null);
-        updateSpecName(spec, editedSpec);
-      }
-      updateSpecWeightings(editedSpec, editedWeightings);
+    if (!isInvalidSpec && !weightError) {
+      updateSpecName(spec, editedSpec);
+      updateSpecWeighting(editedSpec, editedWeighting);
       onClose();
     }
   };
@@ -136,31 +117,27 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
                 {...params}
                 label="Spec Name"
                 fullWidth
-                error={Boolean(specError)}
-                helperText={specError || ""}
+                error={isInvalidSpec}
+                helperText={
+                  isInvalidSpec ? "Please choose a specialization" : ""
+                }
               />
             )}
             fullWidth
             disableClearable
           />
-          {editedWeightings.map((weight, index) => (
-            <TextField
-              key={index}
-              label={labels[index]}
-              type="number"
-              value={weight}
-              error={Boolean(weightingErrors[index])}
-              helperText={weightingErrors[index] || ""}
-              onChange={(e) => {
-                setEditedWeightings((prev) =>
-                  prev.map((w, i) =>
-                    i === index ? parseInt(e.target.value) : w
-                  )
-                );
-              }}
-              fullWidth
-            />
-          ))}
+          <TextField
+            label="Weighting"
+            type="number"
+            value={isNaN(editedWeighting) ? "" : editedWeighting}
+            onChange={(e) => {
+              const value = parseInt(e.target.value);
+              handleWeightChange(value);
+            }}
+            error={!!weightError}
+            helperText={weightError}
+            fullWidth
+          />
           <Stack direction="row" justifyContent="flex-end" spacing={2}>
             <Button variant="outlined" onClick={onClose}>
               Cancel
@@ -169,7 +146,7 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
               variant="contained"
               color="primary"
               onClick={handleSave}
-              disabled={!isValid}
+              disabled={isInvalidSpec || !!weightError}
             >
               Confirm
             </Button>
@@ -182,12 +159,12 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
 
 type SpecialisationOptionProps = {
   spec: string;
-  weightings: number[];
+  weighting: number;
 };
 
 const SpecialisationOption: React.FC<SpecialisationOptionProps> = ({
   spec,
-  weightings,
+  weighting,
 }) => {
   const [isEditSpecWeightingOpen, setIsEditSpecWeightingOpen] = useState(false);
 
@@ -209,60 +186,52 @@ const SpecialisationOption: React.FC<SpecialisationOptionProps> = ({
 
   return (
     <>
-      <Stack
-        direction="row"
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-        gap={10}
-      >
+      <Stack direction="row" alignItems="center" spacing={3} width="90%">
         <Stack
           direction="row"
           alignItems="center"
-          bgcolor="white"
-          borderRadius="2rem"
-          width="40%"
-          p={0.7}
+          bgcolor="#f5f5f5"
+          padding={0.5}
+          borderRadius="0.5rem"
+          flexGrow={1}
+          spacing={2}
         >
-          <IconButton color="error" onClick={handleDelete}>
-            <DeleteIcon />
-          </IconButton>
-          <IconButton color="primary" onClick={handleOpenEditSpecWeighting}>
-            <EditIcon />
-          </IconButton>
-          <Typography ml={2}>{spec}</Typography>
-        </Stack>
-
-        <Stack
-          direction="row"
-          bgcolor="white"
-          width="50%"
-          borderRadius="2rem"
-          gap={5}
-          justifyContent="center"
-          p={0.8}
-        >
-          {weightings.map((weight, index) => (
-            <Box
-              key={index}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              width="2.5rem"
-              height="2.5rem"
-              bgcolor="#f5e1a4"
-              borderRadius="50%"
+          <Stack direction="row">
+            <IconButton
+              color="error"
+              sx={{ padding: "0.25rem" }}
+              onClick={handleDelete}
             >
-              <Typography>{weight}</Typography>
-            </Box>
-          ))}
+              <DeleteIcon />
+            </IconButton>
+            <IconButton
+              color="primary"
+              sx={{ padding: "0.25rem" }}
+              onClick={handleOpenEditSpecWeighting}
+            >
+              <EditIcon />
+            </IconButton>
+          </Stack>
+          <Typography>{spec}</Typography>
         </Stack>
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          width="5rem"
+          height="2rem"
+          borderRadius="0.5rem"
+          borderColor="#f5f5f5"
+          border={1}
+        >
+          <Typography fontWeight="bold">{weighting}</Typography>
+        </Box>
       </Stack>
       <EditSpecWeighting
         open={isEditSpecWeightingOpen}
         onClose={handleCloseEditSpecWeighting}
         spec={spec}
-        weightings={weightings}
+        weighting={weighting}
       />
     </>
   );
@@ -270,12 +239,12 @@ const SpecialisationOption: React.FC<SpecialisationOptionProps> = ({
 
 const SliderQuestionEditor: React.FC = () => {
   const theme = useTheme();
-  const { selectedQuestion, addNewSpec, specError } =
-    useSliderQuestionEditorStore((state) => ({
+  const { selectedQuestion, addNewSpec } = useSliderQuestionEditorStore(
+    (state) => ({
       selectedQuestion: state.selectedQuestion,
       addNewSpec: state.addNewSpec,
-      specError: state.specError,
-    }));
+    })
+  );
 
   const { setMainSelectedQuestion } = useQuizEditorStore((state) => ({
     setMainSelectedQuestion: state.setSelectedQuestion,
@@ -290,14 +259,10 @@ const SliderQuestionEditor: React.FC = () => {
   };
 
   const handleAddSpec = () => {
-    // Default name and weightings for a new spec
     const defaultSpecName = generateUniqueSpecName(
       Object.keys(selectedQuestion?.sliderRange.weightings || {})
     );
-    const defaultWeightings = [1, 1, 1, 1, 1];
-
-    // Add the new spec to the store
-    addNewSpec(defaultSpecName, defaultWeightings);
+    addNewSpec(defaultSpecName, 5);
   };
 
   const specOptions = Object.entries(
@@ -330,15 +295,6 @@ const SliderQuestionEditor: React.FC = () => {
         }}
       />
 
-      {
-        // temp error handling, can probs move up to layout component and disable save button
-      }
-      {specError && (
-        <Typography color="error" textAlign="center">
-          You have an invalid spec name!
-        </Typography>
-      )}
-
       <Stack direction="row" width="90%">
         <Button
           startIcon={<AddIcon />}
@@ -347,38 +303,12 @@ const SliderQuestionEditor: React.FC = () => {
         >
           Spec
         </Button>
-        <Stack
-          direction="row"
-          width="100%"
-          justifyContent="flex-end"
-          alignItems="center"
-          spacing={5.75}
-        >
-          {sliderLabels.map((label, index) => (
-            <Box
-              key={index}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              width="2rem"
-              height="2rem"
-            >
-              <Typography variant="body2" textAlign="center">
-                {label}
-              </Typography>
-            </Box>
-          ))}
-        </Stack>
       </Stack>
 
       {/* Render specialisation options or show no specs error */}
       {specOptions.length > 0 ? (
         specOptions.map(([spec, weighting], index) => (
-          <SpecialisationOption
-            key={index}
-            spec={spec}
-            weightings={weighting}
-          />
+          <SpecialisationOption key={index} spec={spec} weighting={weighting} />
         ))
       ) : (
         <Typography textAlign="center" color="error">

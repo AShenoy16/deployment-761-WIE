@@ -1,27 +1,19 @@
 import { create } from "zustand";
-import { ISliderQuestion } from "../types/QuestionTypes";
+import { ISliderQuestion } from "../types/Question";
 
 type SliderQuestionEditorStore = {
   selectedQuestion: ISliderQuestion | null;
   setSelectedQuestion: (question: ISliderQuestion | null) => void;
   updateQuestionTitle: (newTitle: string) => void;
   updateSpecName: (oldSpec: string, newSpec: string) => void;
-  updateSpecWeightings: (spec: string, newWeightings: number[]) => void;
-  addNewSpec: (spec: string, weightings: number[]) => void;
+  updateSpecWeighting: (spec: string, newWeighting: number) => void;
+  addNewSpec: (spec: string, weighting: number) => void;
   deleteSpec: (spec: string) => void;
-  specError: string | null;
-  weightingErrors: (string | null)[];
-  setSpecError: (error: string | null) => void;
-  setWeightingErrors: (errors: (string | null)[]) => void;
-  validateSpecName: (spec: string, availableSpecs: string[]) => boolean;
-  validateWeightings: (weightings: number[]) => boolean;
 };
 
 export const useSliderQuestionEditorStore = create<SliderQuestionEditorStore>(
   (set) => ({
     selectedQuestion: null,
-    specError: null,
-    weightingErrors: [],
 
     updateQuestionTitle: (newTitle: string) =>
       set((state) => {
@@ -33,19 +25,46 @@ export const useSliderQuestionEditorStore = create<SliderQuestionEditorStore>(
           },
         };
       }),
+
     setSelectedQuestion: (question: ISliderQuestion | null) =>
       set({ selectedQuestion: question }),
 
     updateSpecName: (oldSpec, newSpec) =>
       set((state) => {
         if (!state.selectedQuestion) return state;
+
+        const updatedWeightings: { [key: string]: number } = {};
+        // Retain the order by rebuilding the object in the original order
+        for (const key in state.selectedQuestion.sliderRange.weightings) {
+          if (key === oldSpec) {
+            updatedWeightings[newSpec] =
+              state.selectedQuestion.sliderRange.weightings[oldSpec];
+          } else {
+            updatedWeightings[key] =
+              state.selectedQuestion.sliderRange.weightings[key];
+          }
+        }
+
+        return {
+          selectedQuestion: {
+            ...state.selectedQuestion,
+            sliderRange: {
+              ...state.selectedQuestion.sliderRange,
+              weightings: updatedWeightings, // Maintain order
+            },
+          },
+        };
+      }),
+
+    updateSpecWeighting: (spec, newWeighting) =>
+      set((state) => {
+        if (!state.selectedQuestion) return state;
+
         const updatedWeightings = {
           ...state.selectedQuestion.sliderRange.weightings,
         };
-        if (updatedWeightings[oldSpec]) {
-          updatedWeightings[newSpec] = updatedWeightings[oldSpec];
-          delete updatedWeightings[oldSpec];
-        }
+        updatedWeightings[spec] = newWeighting; // Update only the weighting
+
         return {
           selectedQuestion: {
             ...state.selectedQuestion,
@@ -57,7 +76,7 @@ export const useSliderQuestionEditorStore = create<SliderQuestionEditorStore>(
         };
       }),
 
-    updateSpecWeightings: (spec, newWeightings) =>
+    addNewSpec: (spec, weighting) =>
       set((state) => {
         if (!state.selectedQuestion) return state;
         return {
@@ -67,24 +86,7 @@ export const useSliderQuestionEditorStore = create<SliderQuestionEditorStore>(
               ...state.selectedQuestion.sliderRange,
               weightings: {
                 ...state.selectedQuestion.sliderRange.weightings,
-                [spec]: newWeightings,
-              },
-            },
-          },
-        };
-      }),
-
-    addNewSpec: (spec, weightings) =>
-      set((state) => {
-        if (!state.selectedQuestion) return state;
-        return {
-          selectedQuestion: {
-            ...state.selectedQuestion,
-            sliderRange: {
-              ...state.selectedQuestion.sliderRange,
-              weightings: {
-                ...state.selectedQuestion.sliderRange.weightings,
-                [spec]: weightings,
+                [spec]: weighting,
               },
             },
           },
@@ -97,7 +99,7 @@ export const useSliderQuestionEditorStore = create<SliderQuestionEditorStore>(
         const updatedWeightings = {
           ...state.selectedQuestion.sliderRange.weightings,
         };
-        delete updatedWeightings[spec]; // Remove the spec and its weightings
+        delete updatedWeightings[spec];
         return {
           selectedQuestion: {
             ...state.selectedQuestion,
@@ -108,30 +110,5 @@ export const useSliderQuestionEditorStore = create<SliderQuestionEditorStore>(
           },
         };
       }),
-
-    setSpecError: (error) => set({ specError: error }),
-
-    setWeightingErrors: (errors) => set({ weightingErrors: errors }),
-
-    validateSpecName: (spec, availableSpecs) => {
-      if (!availableSpecs.includes(spec)) {
-        set({ specError: "Invalid spec name" });
-        return false;
-      }
-      set({ specError: null });
-      return true;
-    },
-
-    validateWeightings: (weightings) => {
-      const errors = weightings.map((weight) => {
-        if (weight < 1 || weight > 5) {
-          return "Weighting must be between 1 and 5";
-        }
-        return null;
-      });
-
-      set({ weightingErrors: errors });
-      return errors.every((error) => error === null);
-    },
   })
 );
