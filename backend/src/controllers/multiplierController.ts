@@ -24,12 +24,15 @@ export const getMultipliers = async (req: Request, res: Response) => {
 // controller to update multipler
 export const updateMultipliers = async (req: Request, res: Response) => {
   try {
+    // extract data
     const newMultiplier: IMultiplierData = req.body;
 
+    // validate data
     if (!newMultiplier || !isValidMultiplier(newMultiplier)) {
       return res.status(402).send({ message: "Incorrect Information" });
     }
 
+    // update data
     const result = await updateMultiplier(newMultiplier);
 
     if (!result) {

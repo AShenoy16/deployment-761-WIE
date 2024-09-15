@@ -14,6 +14,7 @@ export const getAllMultipliers = async () => {
   }
 };
 
+// validate type of data to ensure it is correct
 export const isValidMultiplier = (multiplier: IMultiplierData): boolean => {
   return (
     typeof multiplier._id === "string" &&
@@ -26,6 +27,7 @@ export const isValidMultiplier = (multiplier: IMultiplierData): boolean => {
 // update the multiplier information with new multiplier data
 export const updateMultiplier = async (newMultiplier: IMultiplierData) => {
   try {
+    // update collection with new info
     const updatedMultiplier = await MultiplierData.findByIdAndUpdate(
       newMultiplier._id,
       {
@@ -35,7 +37,7 @@ export const updateMultiplier = async (newMultiplier: IMultiplierData) => {
           sliderFactor: newMultiplier.sliderFactor,
         },
       },
-      { new: true }
+      { new: true } // return document
     );
 
     return updatedMultiplier;
