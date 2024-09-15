@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Typography,
@@ -236,15 +236,20 @@ const EditableQuestion = ({
 
 const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
   const theme = useTheme();
+  const questionListRef = useRef<HTMLDivElement | null>(null);
 
   const {
     setSelectedQuestionToEdit,
     setSelectedQuestionToDelete,
     setIsAddQuestionModalOpen,
+    isNewQuestionAdded,
+    setIsNewQuestionAdded,
   } = useQuizEditorStore((state) => ({
     setSelectedQuestionToEdit: state.setSelectedQuestionToEdit,
     setSelectedQuestionToDelete: state.setSelectedQuestionToDelete,
     setIsAddQuestionModalOpen: state.setIsAddQuestionModalOpen,
+    isNewQuestionAdded: state.isNewQuestionAdded,
+    setIsNewQuestionAdded: state.setIsNewQuestionAdded,
   }));
 
   const setSelectedRankingQuestion = useRankingQuestionEditorStore(
@@ -278,6 +283,16 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
     }
   };
 
+  useEffect(() => {
+    if (isNewQuestionAdded && questionListRef.current) {
+      const lastQuestion = questionListRef.current.lastElementChild;
+      if (lastQuestion) {
+        lastQuestion.scrollIntoView({ behavior: "smooth", block: "start" });
+        setIsNewQuestionAdded(false);
+      }
+    }
+  }, [isNewQuestionAdded]);
+
   return (
     <Stack
       padding={4}
@@ -306,6 +321,7 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
       </Stack>
 
       <Stack
+        ref={questionListRef}
         spacing={2}
         maxHeight={450}
         overflow="auto"
@@ -337,6 +353,7 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
     setSelectedQuestionToDelete,
     isAddQuestionModalOpen,
     setIsAddQuestionModalOpen,
+    setIsNewQuestionAdded,
   } = useQuizEditorStore((state) => ({
     selectedQuestionToEdit: state.selectedQuestionToEdit,
     setSelectedQuestionToEdit: state.setSelectedQuestionToEdit,
@@ -344,6 +361,7 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
     setSelectedQuestionToDelete: state.setSelectedQuestionToDelete,
     isAddQuestionModalOpen: state.isAddQuestionModalOpen,
     setIsAddQuestionModalOpen: state.setIsAddQuestionModalOpen,
+    setIsNewQuestionAdded: state.setIsNewQuestionAdded,
   }));
 
   const { deleteMutation, addMutation } = useQuestions();
@@ -371,6 +389,7 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
     try {
       await addMutation.mutateAsync(questionType);
       setIsAddQuestionModalOpen(false);
+      setIsNewQuestionAdded(true);
     } catch (error) {
       console.error("Error adding new question: ", error);
     }

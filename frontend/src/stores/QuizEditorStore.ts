@@ -8,6 +8,8 @@ type QuizEditorStore = {
   setSelectedQuestionToDelete: (question: IQuestion | null) => void;
   isAddQuestionModalOpen: boolean;
   setIsAddQuestionModalOpen: (isOpen: boolean) => void;
+  isNewQuestionAdded: boolean;
+  setIsNewQuestionAdded: (isAdded: boolean) => void;
 };
 
 export const useQuizEditorStore = create<QuizEditorStore>((set) => ({
@@ -20,4 +22,7 @@ export const useQuizEditorStore = create<QuizEditorStore>((set) => ({
   isAddQuestionModalOpen: false,
   setIsAddQuestionModalOpen: (isOpen) =>
     set({ isAddQuestionModalOpen: isOpen }),
+  isNewQuestionAdded: false,
+  setIsNewQuestionAdded: (isAdded: boolean) =>
+    set({ isNewQuestionAdded: isAdded }),
 }));
