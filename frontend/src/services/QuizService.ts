@@ -26,3 +26,10 @@ export const addQuizQuestion = async (
     questionType,
   });
 };
+
+export const updateQuizQuestion = async (updatedQuestion: IQuestion) => {
+  await axios.put(
+    `${API_BASE_URL}/quizzes/${updatedQuestion._id}`,
+    updatedQuestion
+  );
+};

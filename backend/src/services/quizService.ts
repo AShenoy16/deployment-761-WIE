@@ -504,3 +504,30 @@ export const updateQuestionById = async (id: string, updatedData: any) => {
 
   return updatedQuestion;
 };
+
+/**
+ * Validates the updatedData to make sure there are no default spec weightings
+ * @param updatedData
+ * @returns {boolean} - True if valid, false if invalid
+ */
+export const isValidUpdatedQuestionData = (updatedData: IQuestion): boolean => {
+  if (updatedData.questionType === "MCQ") {
+    return updatedData.answerOptions.every((option) =>
+      Object.keys(option.weightings).every(
+        (specializationName) => !specializationName.includes("New Spec")
+      )
+    );
+  } else if (updatedData.questionType === "Ranking") {
+    return updatedData.answerOptions.every((option) =>
+      Object.keys(option.weightings).every(
+        (specializationName) => !specializationName.includes("New Spec")
+      )
+    );
+  } else if (updatedData.questionType === "Slider") {
+    return Object.keys(updatedData.sliderRange.weightings).every(
+      (specializationName) => !specializationName.includes("New Spec")
+    );
+  } else {
+    return false; // Invalid question type
+  }
+};
