@@ -7,7 +7,7 @@ export interface IMCQAnswerOption {
 
 export interface IMCQQuestion {
   _id: string;
-  questionType: "mcq";
+  questionType: "MCQ";
   questionText: string;
   answerOptions: IMCQAnswerOption[];
   createdAt: Date;
@@ -23,7 +23,7 @@ export interface IRankingAnswerOption {
 
 export interface IRankingQuestion {
   _id: string;
-  questionType: "ranking";
+  questionType: "Ranking";
   questionText: string;
   answerOptions: IRankingAnswerOption[];
   createdAt: Date;
@@ -38,7 +38,7 @@ export interface ISliderWeights {
 
 export interface ISliderQuestion {
   _id: string;
-  questionType: "slider";
+  questionType: "Slider";
   questionText: string;
   sliderRange: ISliderWeights;
   createdAt: Date;

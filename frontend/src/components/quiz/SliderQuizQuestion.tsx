@@ -6,7 +6,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { useSliderQuestionStore } from "../../stores/SliderQuizQuestionStore";
-import { ISliderQuestion } from "../../types/QuestionTypes";
+import { ISliderQuestion } from "../../types/Question";
 
 type SliderQuizQuestionProps = {
   question: ISliderQuestion;

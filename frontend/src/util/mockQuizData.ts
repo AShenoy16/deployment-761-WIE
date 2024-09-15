@@ -1,11 +1,11 @@
-import { IQuestion } from "../types/QuestionTypes";
+import { IQuestion } from "../types/Question";
 
 // Updated mock data
 export const mockQuestions: IQuestion[] = [
   // MCQ Questions
   {
     _id: "mcq1",
-    questionType: "mcq",
+    questionType: "MCQ",
     questionText: "Which field interests you the most?",
     answerOptions: [
       {
@@ -34,7 +34,7 @@ export const mockQuestions: IQuestion[] = [
   },
   {
     _id: "mcq2",
-    questionType: "mcq",
+    questionType: "MCQ",
     questionText: "Which skill do you want to improve?",
     answerOptions: [
       {
@@ -65,7 +65,7 @@ export const mockQuestions: IQuestion[] = [
   // Ranking Questions
   {
     _id: "rank1",
-    questionType: "ranking",
+    questionType: "Ranking",
     questionText: "Rank the most appealing engineering disciplines.",
     answerOptions: [
       {
@@ -89,7 +89,7 @@ export const mockQuestions: IQuestion[] = [
   },
   {
     _id: "rank2",
-    questionType: "ranking",
+    questionType: "Ranking",
     questionText: "Rank these areas based on your interest.",
     answerOptions: [
       {
@@ -115,7 +115,7 @@ export const mockQuestions: IQuestion[] = [
   // Slider Questions
   {
     _id: "slider1",
-    questionType: "slider",
+    questionType: "Slider",
     questionText: "Rate your confidence in problem-solving (1-5).",
     sliderRange: {
       _id: "slider1_weight",
@@ -129,7 +129,7 @@ export const mockQuestions: IQuestion[] = [
   },
   {
     _id: "slider2",
-    questionType: "slider",
+    questionType: "Slider",
     questionText: "How excited are you about automation (1-5)?",
     sliderRange: {
       _id: "slider2_weight",

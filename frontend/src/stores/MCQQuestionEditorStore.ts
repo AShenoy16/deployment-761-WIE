@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { IMCQQuestion } from "../types/QuestionTypes";
+import { IMCQQuestion } from "../types/Question";
 
 type MCQQuestionEditorStore = {
   selectedQuestion: IMCQQuestion | null;

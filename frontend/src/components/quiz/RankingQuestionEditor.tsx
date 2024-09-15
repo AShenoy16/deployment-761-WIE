@@ -16,7 +16,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useRankingQuestionEditorStore } from "../../stores/RankingQuestionEditorStore";
-import { IRankingAnswerOption } from "../../types/QuestionTypes";
+import { IRankingAnswerOption } from "../../types/Question";
 
 const possibleSpecs = [
   "Biomedical",

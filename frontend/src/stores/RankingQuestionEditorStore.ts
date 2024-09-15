@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { IRankingQuestion } from "../types/QuestionTypes";
+import { IRankingQuestion } from "../types/Question";
 
 type RankingQuestionEditorStore = {
   selectedQuestion: IRankingQuestion | null;

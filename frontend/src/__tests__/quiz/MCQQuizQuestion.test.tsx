@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MCQQuizQuestion } from "../../components/quiz/MCQQuizQuestion";
 import { useMCQQuestionStore } from "../../stores/MCQQuestionStore";
-import { IMCQQuestion } from "../../types/QuestionTypes";
+import { IMCQQuestion } from "../../types/Question";
 import { mockQuestions } from "../../util/mockQuizData";
 
 const mockMCQ: IMCQQuestion = mockQuestions[0] as IMCQQuestion;

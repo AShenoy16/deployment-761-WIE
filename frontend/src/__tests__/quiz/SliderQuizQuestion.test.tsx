@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { SliderQuizQuestion } from "../../components/quiz/SliderQuizQuestion";
-import { ISliderQuestion } from "../../types/QuestionTypes";
+import { ISliderQuestion } from "../../types/Question";
 import { useSliderQuestionStore } from "../../stores/SliderQuizQuestionStore";
 import { mockQuestions } from "../../util/mockQuizData";
 

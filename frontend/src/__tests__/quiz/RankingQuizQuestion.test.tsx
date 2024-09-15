@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { RankingQuizQuestion } from "../../components/quiz/RankingQuizQuestion";
 import { useRankingQuestionStore } from "../../stores/RankingQuizQuestionStore";
-import { IRankingQuestion } from "../../types/QuestionTypes";
+import { IRankingQuestion } from "../../types/Question";
 import { mockQuestions } from "../../util/mockQuizData";
 
 const mockRankingQuestion: IRankingQuestion =

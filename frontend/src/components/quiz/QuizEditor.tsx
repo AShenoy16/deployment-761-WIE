@@ -12,7 +12,7 @@ import { useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { IQuestion } from "../../types/QuestionTypes";
+import { IQuestion } from "../../types/Question";
 import { useQuizEditorStore } from "../../stores/QuizEditorStore";
 import RankingQuestionEditor from "./RankingQuestionEditor";
 import QuestionEditorLayout from "../../layouts/QuestionEditorLayout";
@@ -82,13 +82,13 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
   const onClickEditQuestion = (question: IQuestion) => {
     setSelectedQuestion(question);
     switch (question.questionType) {
-      case "mcq":
+      case "MCQ":
         setSelectedMCQQuestion({ ...question });
         break;
-      case "ranking":
+      case "Ranking":
         setSelectedRankingQuestion({ ...question });
         break;
-      case "slider": // Implement
+      case "Slider": // Implement
         break;
       default:
         throw new Error("Invalid question type");
@@ -171,19 +171,19 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
 
   if (selectedQuestion) {
     switch (selectedQuestion.questionType) {
-      case "mcq": // Implement
+      case "MCQ": // Implement
         return (
           <QuestionEditorLayout onCancel={handleOnCancel} onSave={handleOnSave}>
             <MCQQuestionEditor />
           </QuestionEditorLayout>
         );
-      case "ranking":
+      case "Ranking":
         return (
           <QuestionEditorLayout onCancel={handleOnCancel} onSave={handleOnSave}>
             <RankingQuestionEditor />
           </QuestionEditorLayout>
         );
-      case "slider":
+      case "Slider":
         break; // Implement
       default:
         throw new Error("Invalid question type");

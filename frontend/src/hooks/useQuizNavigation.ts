@@ -1,5 +1,5 @@
 import { useQuizStore } from "../stores/QuizStore";
-import { IQuestion } from "../types/QuestionTypes";
+import { IQuestion } from "../types/Question";
 
 export const useQuizNavigation = (questions: IQuestion[]) => {
   const {
