@@ -1,6 +1,6 @@
 import { IRoleModel } from "../types/RoleModel";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addRoleModelType } from "../components/rolemodel/AddUpdateRoleModelModal";
+import { addUpdateRoleModelType } from "../components/rolemodel/AddUpdateRoleModelModal";
 import {
   deleteRoleModel,
   getRoleModels,
@@ -8,6 +8,11 @@ import {
   putRoleModel,
 } from "../services/RoleModelService";
 import useSnackBar from "./useSnackBar";
+
+type UpdateRoleModelMutationArg = {
+  roleModel: addUpdateRoleModelType;
+  roleModelId: string;
+};
 
 export const useGetRoleModels = () => {
   const {
@@ -29,8 +34,8 @@ export const useAddRoleModel = () => {
   const queryClient = useQueryClient();
   const showSnackbar = useSnackBar();
 
-  const mutation = useMutation<IRoleModel, Error, addRoleModelType>({
-    mutationFn: async (roleModel: addRoleModelType) => {
+  const mutation = useMutation<IRoleModel, Error, addUpdateRoleModelType>({
+    mutationFn: async (roleModel: addUpdateRoleModelType) => {
       const data = await postRoleModel(roleModel);
       return data;
     },
@@ -79,9 +84,12 @@ export const usePutRoleModel = () => {
   const queryClient = useQueryClient();
   const showSnackbar = useSnackBar();
 
-  const mutation = useMutation<IRoleModel, Error, IRoleModel>({
-    mutationFn: async (roleModel: IRoleModel) => {
-      const data = await putRoleModel(roleModel);
+  const mutation = useMutation<IRoleModel, Error, UpdateRoleModelMutationArg>({
+    mutationFn: async ({
+      roleModel,
+      roleModelId,
+    }: UpdateRoleModelMutationArg) => {
+      const data = await putRoleModel(roleModel, roleModelId);
       return data;
     },
     onSuccess: (updatedRoleModel) => {

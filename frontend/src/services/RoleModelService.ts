@@ -1,6 +1,6 @@
 import axios from "axios";
 import { IRoleModel } from "../types/RoleModel";
-import { addRoleModelType } from "../components/rolemodel/AddUpdateRoleModelModal";
+import { addUpdateRoleModelType } from "../components/rolemodel/AddUpdateRoleModelModal";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -25,7 +25,7 @@ export const getRoleModels = async (): Promise<IRoleModel[]> => {
  * @returns the role model object added to the database
  */
 export const postRoleModel = async (
-  newRoleModel: addRoleModelType
+  newRoleModel: addUpdateRoleModelType
 ): Promise<IRoleModel> => {
   try {
     const response = await axios.post(
@@ -59,11 +59,12 @@ export const deleteRoleModel = async (roleModelId: string): Promise<void> => {
  * @returns updated role model object in the database
  */
 export const putRoleModel = async (
-  roleModel: IRoleModel
+  roleModel: addUpdateRoleModelType,
+  roleModelId: string
 ): Promise<IRoleModel> => {
   try {
     const response = await axios.put(
-      `${API_BASE_URL}/role-models/${roleModel._id}`,
+      `${API_BASE_URL}/role-models/${roleModelId}`,
       roleModel
     );
     const roleModelData: IRoleModel = response.data;

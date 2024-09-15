@@ -33,7 +33,7 @@ const buttonStyle = {
   borderRadius: "12px",
 };
 
-export type addRoleModelType = Omit<IRoleModel, "_id">;
+export type addUpdateRoleModelType = Omit<IRoleModel, "_id">;
 
 interface RoleModelModalProps {
   open: boolean;
@@ -90,7 +90,7 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
     }
 
     // Construct the role model object
-    const newRoleModel: addRoleModelType = {
+    const newRoleModel: addUpdateRoleModelType = {
       name,
       title,
       description,
@@ -105,8 +105,8 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
       setError(undefined);
       roleModelToEdit
         ? putRoleModelMutation.mutate({
-            ...newRoleModel,
-            _id: roleModelToEdit._id,
+            roleModel: newRoleModel,
+            roleModelId: roleModelToEdit._id,
           })
         : addRoleModelMutation.mutate(newRoleModel);
       onClose();
