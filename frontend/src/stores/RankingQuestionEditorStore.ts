@@ -1,31 +1,25 @@
 import { create } from "zustand";
-import { IRankingQuestion, IRankingWeight } from "../types/QuestionTypes";
+import { IRankingQuestion } from "../types/QuestionTypes";
 
 type RankingQuestionEditorStore = {
   selectedQuestion: IRankingQuestion | null;
   setSelectedQuestion: (question: IRankingQuestion | null) => void;
   updateQuestionTitle: (newTitle: string) => void;
   updateOptionTitle: (optionId: string, newTitle: string) => void;
-  addWeighting: (optionId: string) => void;
-  deleteWeighting: (optionId: string, weightingId: string) => void;
-  updateWeightingSpecialization: (
+  addSpecWeighting: (optionId: string) => void;
+  deleteSpecWeighting: (optionId: string, spec: string) => void;
+  updateSpecWeightingName: (
     optionId: string,
-    weightingId: string,
-    updatedSpecializationName: string
+    oldSpec: string,
+    newSpec: string
   ) => void;
-  updateWeightingRanks: (
+  updateSpecWeightingValue: (
     optionId: string,
-    weightingId: string,
-    newWeights: { [rank: string]: number }
+    spec: string,
+    newWeight: number
   ) => void;
-  isWeightingFormOpen: boolean;
-  setIsWeightingFormOpen: (isOpen: boolean) => void;
   errors: { [rank: string]: string };
   setErrors: (errors: { [rank: string]: string }) => void;
-  selectedOptionId: string;
-  setSelectedOptionId: (optionId: string) => void;
-  selectedWeightingId: string;
-  setSelectedWeightingId: (weightingId: string) => void;
 };
 
 export const useRankingQuestionEditorStore = create<RankingQuestionEditorStore>(
@@ -61,24 +55,18 @@ export const useRankingQuestionEditorStore = create<RankingQuestionEditorStore>(
         };
       }),
 
-    addWeighting: (optionId: string) =>
+    addSpecWeighting: (optionId: string) =>
       set((state) => {
         if (!state.selectedQuestion) return state;
         const updatedOptions = state.selectedQuestion.answerOptions.map(
           (option) => {
             if (option._id === optionId) {
-              const newWeighting: IRankingWeight = {
-                _id: `new_weight_${option.weightings.length + 1}`,
-                specializationName: `New Spec ${option.weightings.length + 1}`,
-                weights: {
-                  "1": 0,
-                  "2": 0,
-                  "3": 0,
-                },
+              const newWeighting: { [specializationName: string]: number } = {
+                [`New Spec ${Object.keys(option.weightings).length + 1}`]: 0,
               };
               return {
                 ...option,
-                weightings: [...option.weightings, newWeighting],
+                weightings: { ...option.weightings, ...newWeighting },
               };
             }
             return option;
@@ -92,17 +80,19 @@ export const useRankingQuestionEditorStore = create<RankingQuestionEditorStore>(
         };
       }),
 
-    deleteWeighting: (optionId: string, weightingId: string) =>
+    deleteSpecWeighting: (optionId: string, spec: string) =>
       set((state) => {
         if (!state.selectedQuestion) return state;
         const updatedOptions = state.selectedQuestion.answerOptions.map(
           (option) => {
             if (option._id === optionId) {
+              const updatedWeightings = {
+                ...option.weightings,
+              };
+              delete updatedWeightings[spec];
               return {
                 ...option,
-                weightings: option.weightings.filter(
-                  (weighting) => weighting._id !== weightingId
-                ),
+                weightings: updatedWeightings,
               };
             }
             return option;
@@ -116,31 +106,32 @@ export const useRankingQuestionEditorStore = create<RankingQuestionEditorStore>(
         };
       }),
 
-    updateWeightingSpecialization: (
+    updateSpecWeightingName: (
       optionId: string,
-      weightingId: string,
-      updatedSpecializationName: string
+      oldSpec: string,
+      newSpec: string
     ) =>
       set((state) => {
         if (!state.selectedQuestion) return state;
         const updatedOptions = state.selectedQuestion.answerOptions.map(
           (option) => {
             if (option._id === optionId) {
+              const { [oldSpec]: oldWeight, ...remainingWeightings } =
+                option.weightings;
+
+              const updatedWeightings = {
+                ...remainingWeightings,
+                [newSpec]: oldWeight,
+              };
               return {
                 ...option,
-                weightings: option.weightings.map((weighting) =>
-                  weighting._id === weightingId
-                    ? {
-                        ...weighting,
-                        specializationName: updatedSpecializationName,
-                      }
-                    : weighting
-                ),
+                weightings: updatedWeightings,
               };
             }
             return option;
           }
         );
+
         return {
           selectedQuestion: {
             ...state.selectedQuestion,
@@ -149,31 +140,29 @@ export const useRankingQuestionEditorStore = create<RankingQuestionEditorStore>(
         };
       }),
 
-    updateWeightingRanks: (
+    updateSpecWeightingValue: (
       optionId: string,
-      weightingId: string,
-      newWeights: { [rank: string]: number }
+      spec: string,
+      newWeight: number
     ) =>
       set((state) => {
         if (!state.selectedQuestion) return state;
         const updatedOptions = state.selectedQuestion.answerOptions.map(
           (option) => {
             if (option._id === optionId) {
+              const updatedWeightings = {
+                ...option.weightings,
+              };
+              updatedWeightings[spec] = newWeight;
               return {
                 ...option,
-                weightings: option.weightings.map((weighting) =>
-                  weighting._id === weightingId
-                    ? {
-                        ...weighting,
-                        weights: newWeights,
-                      }
-                    : weighting
-                ),
+                weightings: updatedWeightings,
               };
             }
             return option;
           }
         );
+
         return {
           selectedQuestion: {
             ...state.selectedQuestion,
@@ -181,19 +170,8 @@ export const useRankingQuestionEditorStore = create<RankingQuestionEditorStore>(
           },
         };
       }),
-    isWeightingFormOpen: false,
-    setIsWeightingFormOpen: (isOpen: boolean) =>
-      set({ isWeightingFormOpen: isOpen }),
 
     errors: {},
     setErrors: (errors: { [rank: string]: string }) => set({ errors }),
-
-    selectedOptionId: "",
-    setSelectedOptionId: (optionId: string) =>
-      set({ selectedOptionId: optionId }),
-
-    selectedWeightingId: "",
-    setSelectedWeightingId: (weightingId: string) =>
-      set({ selectedWeightingId: weightingId }),
   })
 );

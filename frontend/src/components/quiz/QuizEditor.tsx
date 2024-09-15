@@ -82,13 +82,13 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
   const onClickEditQuestion = (question: IQuestion) => {
     setSelectedQuestion(question);
     switch (question.questionType) {
-      case "MCQ":
+      case "mcq":
         setSelectedMCQQuestion({ ...question });
         break;
-      case "Ranking":
+      case "ranking":
         setSelectedRankingQuestion({ ...question });
         break;
-      case "Slider": // Implement
+      case "slider": // Implement
         break;
       default:
         throw new Error("Invalid question type");
@@ -171,19 +171,19 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
 
   if (selectedQuestion) {
     switch (selectedQuestion.questionType) {
-      case "MCQ": // Implement
+      case "mcq": // Implement
         return (
           <QuestionEditorLayout onCancel={handleOnCancel} onSave={handleOnSave}>
             <MCQQuestionEditor />
           </QuestionEditorLayout>
         );
-      case "Ranking":
+      case "ranking":
         return (
           <QuestionEditorLayout onCancel={handleOnCancel} onSave={handleOnSave}>
             <RankingQuestionEditor />
           </QuestionEditorLayout>
         );
-      case "Slider":
+      case "slider":
         break; // Implement
       default:
         throw new Error("Invalid question type");
