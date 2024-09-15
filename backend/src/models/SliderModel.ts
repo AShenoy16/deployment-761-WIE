@@ -1,16 +1,14 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { ISliderRange, ISliderQuestion } from './interfaces';
+import { ISliderQuestion, ISliderWeights } from './interfaces';
 
-const sliderRangeSchema: Schema = new Schema({
-  min: { type: Number, required: true },
-  max: { type: Number, required: true },
-  weightings: { required: true, type: Map, of: [Number] },
+const sliderWeightsSchema: Schema = new Schema({
+  weightings: { required: true, type: Map, of: Number },
 });
 
 const sliderQuestionSchema: Schema = new Schema({
   questionType: { type: String, default: "Slider", required: true },
   questionText: { type: String, required: true },
-  sliderRange: {required: true, type: sliderRangeSchema},
+  sliderWeights: {type: sliderWeightsSchema, required: true},
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

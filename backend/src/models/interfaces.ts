@@ -7,7 +7,7 @@ export interface IMCQAnswerOption {
 }
 
 export interface IMCQQuestion extends Document {
-  questionType: "MCQ";
+  questionType: "mcq";
   questionText: string;
   _id: string;
   answerOptions: IMCQAnswerOption[];
@@ -16,22 +16,16 @@ export interface IMCQQuestion extends Document {
 }
 
 // Ranking interfaces
-
-export interface IRankingWeights {
-  _id: string; // ObjectId in string format
-  specializationName: string;
-  weights: { [rank: string]: number }; // Map of rank (string) to weight (number)
-}
-
 export interface IRankingAnswerOption {
   text: string;
   _id: string;
-  // map of rank to rank to weight
-  weightings: IRankingWeights[]; // Array of weightings
+  // map of specName to currentWeight
+  weightings: { [specializationName: string]: number };
 }
 
 export interface IRankingQuestion {
-  questionType: "Ranking";
+  _id: string;
+  questionType: "ranking";
   questionText: string;
   answerOptions: IRankingAnswerOption[];
   createdAt: Date;
@@ -40,19 +34,26 @@ export interface IRankingQuestion {
 
 // Slider interfaces
 
-export interface ISliderRange {
-  min: number;
-  max: number;
-  weightings: { [specializationName: string]: number[] };
+export interface ISliderWeights {
+  _id: string;
+  weightings: { [specializationName: string]: number };
 }
 
 export interface ISliderQuestion extends Document {
-  questionType: "Slider";
+  questionType: "slider";
   questionText: string;
   _id: string;
-  sliderRange: ISliderRange;
+  sliderRange: ISliderWeights;
   createdAt: Date;
   updatedAt: Date;
+}
+
+// Define the interface for the multiplier data
+export interface IMultiplierData extends Document {
+  _id: string;
+  rank2Multiplier: number;
+  rank3Multiplier: number;
+  sliderFactor: number;
 }
 
 // General quiz interface

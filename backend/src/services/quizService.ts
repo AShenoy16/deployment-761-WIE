@@ -1,5 +1,5 @@
 import { spec } from "node:test/reporters";
-import { quizResults } from "../constants/quizConstants";
+import { getInitialSpecResults } from "../constants/quizConstants";
 import {
   IMCQAnswerOption,
   IQuiz,
@@ -14,6 +14,8 @@ import SliderQuestion from "../models/SliderModel";
 import MCQQuestion from "../models/MCQModel";
 import mongoose from "mongoose";
 import { Console } from "console";
+import MultiplierData from "../models/multiplerModel";
+import { getAllMultipliers } from "./multiplierService";
 
 /**
  * Servixe code that will actually calculate the results
@@ -25,13 +27,25 @@ export const processQuizSubmission = async (
 ) => {
   try {
     // have a hashmap of the spec : score -> returning an array
-    let specMap = quizResults.specResults;
+    const intialSpecRes = getInitialSpecResults();
+    const specMap = intialSpecRes.specResults;
 
-    await mcqResults(quizSubmission.mcqAnswers, specMap);
-    await sliderResults(quizSubmission.sliderAnswers, specMap);
-    await rankingResults(quizSubmission.rankingAnswers, specMap);
+    // Run all result calculations in parallel
+    await Promise.all([
+      mcqResults(quizSubmission.mcqAnswers, specMap),
+      sliderResults(quizSubmission.sliderAnswers, specMap),
+      rankingResults(quizSubmission.rankingAnswers, specMap),
+    ]);
 
-    const entries = Object.entries(specMap);
+    // round spec calculations to 2dp
+    const roundedSpecMap = Object.fromEntries(
+      Object.entries(specMap).map(([key, value]) => [
+        key,
+        parseFloat(value.toFixed(2)),
+      ])
+    );
+
+    const entries = Object.entries(roundedSpecMap);
 
     // Sort entries by value
     entries.sort(([, valueA], [, valueB]) => valueB - valueA);
@@ -59,7 +73,7 @@ export const getSpecQuiz = async () => {
   const ranking = await fetchRanking(quizIds);
 
   // Combine all questions into a single array
-  const allQuestions = [...mcq, ...slider, ...ranking];
+  const allQuestions = [...slider, ...ranking, ...mcq];
   return allQuestions;
 };
 
@@ -160,6 +174,34 @@ const mcqResults = async (
 };
 
 /**
+ * Returns slider update amount based on slider factor, weighting and choice
+ * @param sliderChoice 1 - 5 representing users slider choice
+ * @param weighting weighting of the spec
+ * @param sliderFactor slider factor
+ * @returns
+ */
+const getSliderWeightingValue = (
+  sliderChoice: number,
+  weighting: number,
+  sliderFactor: number
+) => {
+  switch (sliderChoice) {
+    case 1:
+      return -1 * weighting;
+    case 2:
+      return -1 * (weighting / sliderFactor);
+    case 3:
+      return 0;
+    case 4:
+      return weighting / sliderFactor;
+    case 5:
+      return weighting;
+    default:
+      return 0;
+  }
+};
+
+/**
  * method to update specMap of slider results
  * @param sliderAnswers object that has questionId to number of the slider
  * -> this will be the index inside the database
@@ -182,21 +224,57 @@ const sliderResults = async (
 
   // get all the slider questions
   const sliderQuestions = await fetchSlider(objectIds);
+  const allFactors = await getAllMultipliers();
+  const sliderFactor = allFactors[0].sliderFactor;
 
   // loop through all the slider questions -> updating the correct value
 
   sliderQuestions.forEach((question) => {
-    const sliderIndex = sliderAnswers[question._id.toString()] - 1;
+    const sliderIndex = sliderAnswers[question._id.toString()];
 
     // index of weightings array to use to update data
 
-    const weightings = question.sliderRange.weightings;
-    // update spec map
+    const weightings = question.sliderWeights.weightings;
     for (const spec in weightings) {
+      // get the weightings
       const specWeighting = weightings[spec];
-      specResults[spec] += specWeighting[sliderIndex];
+      // get the update from the switch statement
+      const specUpdate = getSliderWeightingValue(
+        sliderIndex,
+        specWeighting,
+        sliderFactor
+      );
+
+      // update specMap
+      specResults[spec] += specUpdate;
     }
   });
+};
+
+/**
+ * Method to get update value for a spec based on the rank of the answer chosen
+ * @param rank of the answer option
+ * @param weighting of the spec
+ * @param rank2Factor 
+ * @param rank3Factor 
+ * @returns 
+ */
+const getRankingUpdateValue = (
+  rank: number,
+  weighting: number,
+  rank2Factor: number,
+  rank3Factor: number
+) => {
+  switch (rank) {
+    case 1:
+      return weighting;
+    case 2:
+      return weighting / rank2Factor;
+    case 3:
+      return weighting / rank3Factor;
+    default:
+      return 0
+  }
 };
 
 /**
@@ -225,7 +303,11 @@ const rankingResults = async (
   // // get all the rankingQuestions
   const rankingQuestions = await fetchRanking(objectIds);
 
-  // creates a map of question -> {answerId: weights}
+  const allFactors = await getAllMultipliers();
+  const ranking2Factor = allFactors[0].rank2Multiplier;
+  const ranking3Factor = allFactors[0].rank3Multiplier;
+
+  //creates a map of question -> {answerId: weights}
   const questionsMap = new Map();
 
   rankingQuestions.forEach((obj) => {
@@ -254,7 +336,6 @@ const rankingResults = async (
     const question = rankingAnswers[questionNumber];
     const { rankings } = question; // Extract rankings object
 
-    // get answerMap -> answerId : weights
     const answerMap = questionsMap.get(questionNumber);
 
     for (const [answerId, rank] of Object.entries(rankings)) {
@@ -262,15 +343,19 @@ const rankingResults = async (
       const answerData = answerMap.get(answerId);
       const { weightings } = answerData;
 
-      // update specMap
-      weightings.forEach(
-        (specialization: { weights: any; specializationName: string }) => {
-          const { weights, specializationName } = specialization;
-          const amount = weights[rank];
-          specResults[specializationName] += amount;
-        }
-      );
+      // loop through spec weights updating specRes
+      Object.keys(weightings).forEach((key) => {
+        const value = weightings[key];
+        const rankUpdateValue = getRankingUpdateValue(
+          rank,
+          value,
+          ranking2Factor,
+          ranking3Factor
+        );
+        specResults[key] += rankUpdateValue;
+      });
     }
   }
+
   return;
 };

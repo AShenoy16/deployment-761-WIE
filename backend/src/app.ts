@@ -6,6 +6,7 @@ import quizRoutes from "./routes/quizRoutes";
 import specializationRoutes from "./routes/specializationRoutes";
 import roleModelRoutes from "./routes/roleModelRoutes";
 import path from "path";
+import multiplierRoutes from "./routes/multiplierRoutes";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use('/api/multiplier', multiplierRoutes)
 app.use('/api/users', userRoutes);
 app.use('/api/quizzes', quizRoutes);
 app.use('/api/specializations', specializationRoutes);
