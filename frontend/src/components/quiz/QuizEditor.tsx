@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -14,12 +14,14 @@ import {
   Snackbar,
   Alert,
   CircularProgress,
+  Modal,
+  TextField,
 } from "@mui/material";
 import { useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { IQuestion } from "../../types/Question";
+import { IMultiplierData, IQuestion } from "../../types/Question";
 import { useQuizEditorStore } from "../../stores/QuizEditorStore";
 import RankingQuestionEditor from "./RankingQuestionEditor";
 import QuestionEditorLayout from "../../layouts/QuestionEditorLayout";
@@ -70,6 +72,49 @@ const ConfirmDeleteQuestionModal = ({
   );
 };
 
+type EditMultiplerDataModalProps = {
+  open: boolean;
+  onClose: () => void;
+  multipliers: IMultiplierData | null;
+};
+const EditMultiplierDataModal: React.FC<EditMultiplerDataModalProps> = ({
+  open,
+  onClose,
+  multipliers,
+}) => {
+  // modal with three text fields for rank2Multiplier, rank3Multiplier, and rank4Multiplier
+
+  return (
+    <Modal open={open} onClose={onClose}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          width: 500,
+          transform: "translate(-50%, -50%)",
+          bgcolor: "background.paper",
+          borderRadius: "0.5rem",
+          boxShadow: 24,
+          p: 4,
+        }}
+      >
+        <Stack>
+          <Typography>Edit Question Factors</Typography>
+          {multipliers && (
+            <TextField
+              label="Rank 2 Multiplier"
+              value={multipliers.sliderFactor}
+              fullWidth
+              type="number"
+            />
+          )}
+        </Stack>
+      </Box>
+    </Modal>
+  );
+};
+
 const EditableQuestion = ({
   question,
   questionNumber,
@@ -114,13 +159,29 @@ const EditableQuestion = ({
   );
 };
 
-const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
+const EditQuestionList = ({
+  questions,
+  multipliers,
+}: {
+  questions: IQuestion[];
+  multipliers: IMultiplierData | null;
+}) => {
   const theme = useTheme();
   const { setSelectedQuestionToEdit, setSelectedQuestionToDelete } =
     useQuizEditorStore((state) => ({
       setSelectedQuestionToEdit: state.setSelectedQuestionToEdit,
       setSelectedQuestionToDelete: state.setSelectedQuestionToDelete,
     }));
+
+  const [openMultiplierModal, setOpenMultiplierModal] = useState(false);
+
+  const handleOpenMultiplierModal = () => {
+    setOpenMultiplierModal(true);
+  };
+
+  const handleMultiplierModalClose = () => {
+    setOpenMultiplierModal(false);
+  };
 
   const setSelectedRankingQuestion = useRankingQuestionEditorStore(
     (state) => state.setSelectedQuestion
@@ -161,21 +222,39 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Typography variant="h5">Questions</Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          sx={{
-            backgroundColor: "white",
-            color: "black",
-            borderRadius: "1rem",
-            textTransform: "none",
-            "&:hover": {
+        <Stack direction="row" spacing={4}>
+          <Button
+            variant="contained"
+            startIcon={<EditIcon />}
+            onClick={handleOpenMultiplierModal}
+            sx={{
               backgroundColor: "white",
-            },
-          }}
-        >
-          <Typography>Question</Typography>
-        </Button>
+              color: "black",
+              borderRadius: "1rem",
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "white",
+              },
+            }}
+          >
+            <Typography>Multipliers</Typography>
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            sx={{
+              backgroundColor: "white",
+              color: "black",
+              borderRadius: "1rem",
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "white",
+              },
+            }}
+          >
+            <Typography>Question</Typography>
+          </Button>
+        </Stack>
       </Stack>
 
       <Stack
@@ -194,15 +273,21 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
           />
         ))}
       </Stack>
+      <EditMultiplierDataModal
+        open={openMultiplierModal}
+        onClose={handleMultiplierModalClose}
+        multipliers={multipliers}
+      />
     </Stack>
   );
 };
 
 type QuizEditorProps = {
   questions: IQuestion[];
+  multipliers: IMultiplierData | null;
 };
 
-const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
+const QuizEditor: React.FC<QuizEditorProps> = ({ questions, multipliers }) => {
   const {
     selectedQuestionToEdit,
     setSelectedQuestionToEdit,
@@ -248,7 +333,7 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
           )}
         </QuestionEditorLayout>
       ) : (
-        <EditQuestionList questions={questions} />
+        <EditQuestionList questions={questions} multipliers={multipliers} />
       )}
 
       <ConfirmDeleteQuestionModal

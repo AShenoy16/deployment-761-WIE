@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IQuestion } from "../types/Question";
+import { IMultiplierData, IQuestion } from "../types/Question";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -18,3 +18,11 @@ export const deleteQuizQuestion = async (
     },
   });
 };
+
+export const getQuizQuestionMultipliers =
+  async (): Promise<IMultiplierData> => {
+    const response = await axios.get(`${API_BASE_URL}/multiplier`);
+    const data = response.data;
+    console.log("Multiplier response:", data);
+    return data;
+  };
