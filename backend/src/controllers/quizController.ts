@@ -8,17 +8,6 @@ import {
   processQuizSubmission,
 } from "../services/quizService";
 import { isQuizSubmissionRequest } from "../validation/quizValidation";
-import {
-  IMCQAnswerOption,
-  IMCQQuestion,
-  IQuestion,
-  IRankingQuestion,
-  ISliderQuestion,
-} from "../models/interfaces";
-import MCQQuestion from "../models/MCQModel";
-import SliderQuestion from "../models/SliderModel";
-import RankingQuestion from "../models/RankingModel";
-import Quiz from "../models/QuizModel";
 
 export const getQuiz = async (req: Request, res: Response) => {
   const quiz = await getSpecQuiz();
@@ -44,7 +33,7 @@ export const postQuizContent = async (req: Request, res: Response) => {
   const { questionType } = req.body;
 
   // check if req.body is an empty object
-  if (!questionType || isValidQuestionType(questionType)) {
+  if (!questionType || !isValidQuestionType(questionType)) {
     return res
       .status(400)
       .json({ message: "Quiz question data are required." });

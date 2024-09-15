@@ -18,3 +18,11 @@ export const deleteQuizQuestion = async (
     },
   });
 };
+
+export const addQuizQuestion = async (
+  questionType: IQuestion["questionType"]
+) => {
+  await axios.post(`${API_BASE_URL}/quizzes`, {
+    questionType,
+  });
+};
