@@ -3,6 +3,7 @@ import { IQuestion } from "../types/Question";
 import {
   addQuizQuestion,
   deleteQuizQuestion,
+  updateQuizQuestion,
   getAllQuizQuestions,
 } from "../services/QuizService";
 
@@ -32,5 +33,18 @@ export const useQuestions = () => {
     onError: (error) => console.error("Failed to add the question", error),
   });
 
-  return { questions, isLoading, isError, deleteMutation, addMutation };
+  const updateMutation = useMutation({
+    mutationFn: (question: IQuestion) => updateQuizQuestion(question),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["questions"] }),
+    onError: (error) => console.error("Failed to edit the question", error),
+  });
+
+  return {
+    questions,
+    isLoading,
+    isError,
+    deleteMutation,
+    addMutation,
+    updateMutation,
+  };
 };
