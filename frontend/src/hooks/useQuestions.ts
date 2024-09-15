@@ -1,7 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { IQuestion } from "../types/Question";
-import { mockFetchQuizQuestions } from "../util/mockQuizData";
-import { deleteQuizQuestion } from "../services/QuizService";
+import {
+  deleteQuizQuestion,
+  getAllQuizQuestions,
+} from "../services/QuizService";
 
 export const useQuestions = () => {
   const queryClient = useQueryClient();
@@ -12,7 +14,7 @@ export const useQuestions = () => {
     isError,
   } = useQuery<IQuestion[]>({
     queryKey: ["questions"],
-    queryFn: mockFetchQuizQuestions, // TODO: Replace with actual API call later
+    queryFn: getAllQuizQuestions,
   });
 
   const deleteMutation = useMutation({
