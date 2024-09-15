@@ -76,10 +76,19 @@ const AddQuestionModal = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      sx={{
+        "& .MuiDialog-paper": {
+          width: "400px",
+          height: "250px",
+        },
+      }}
+    >
       <DialogTitle>Add New Question</DialogTitle>
       <DialogContent>
-        <FormControl fullWidth>
+        <FormControl fullWidth margin="normal">
           <InputLabel id="question-type-label">Question Type</InputLabel>
           <Select
             labelId="question-type-label"
@@ -398,15 +407,15 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
         isLoading={deleteMutation.isPending}
       />
 
-      <DeleteQuestionResultAlert
-        isSuccess={deleteMutation.isSuccess}
-        isError={deleteMutation.isError}
-        onClose={() => deleteMutation.reset()}
-      />
       <AddQuestionResultAlert
         isSuccess={deleteMutation.isSuccess}
         isError={deleteMutation.isError}
         onClose={() => addMutation.reset()}
+      />
+      <DeleteQuestionResultAlert
+        isSuccess={deleteMutation.isSuccess}
+        isError={deleteMutation.isError}
+        onClose={() => deleteMutation.reset()}
       />
     </>
   );
