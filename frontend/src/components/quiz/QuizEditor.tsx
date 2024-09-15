@@ -204,6 +204,69 @@ const EditMultiplierDataModal: React.FC<EditMultiplerDataModalProps> = ({
   onClose,
   multipliers,
 }) => {
+  const [localMultipliers, setLocalMultipliers] =
+    useState<IMultiplierData>(multipliers);
+
+  const [errors, setErrors] = useState<{
+    [key in keyof IMultiplierData]?: string;
+  }>({});
+
+  useEffect(() => {
+    // Reset local state when the modal opens
+    if (open) {
+      setLocalMultipliers(multipliers);
+      setErrors({});
+    }
+  }, [open, multipliers]);
+
+  // Function to handle changes in text fields
+  const handleChange =
+    (field: keyof IMultiplierData) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = parseFloat(e.target.value);
+
+      // Validate the input for errors
+      if (value <= 0 || isNaN(value)) {
+        setErrors((prev) => ({
+          ...prev,
+          [field]: "Value must be greater than 0",
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          [field]: "",
+        }));
+      }
+
+      setLocalMultipliers((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    };
+
+  const handleSave = () => {
+    console.log(localMultipliers);
+    onClose();
+  };
+
+  const fields = [
+    {
+      label: "Ranking Question Rank 2 Multiplier",
+      value: localMultipliers.rank2Multiplier,
+      field: "rank2Multiplier" as keyof IMultiplierData,
+    },
+    {
+      label: "Ranking Question Rank 3 Multiplier",
+      value: localMultipliers.rank3Multiplier,
+      field: "rank3Multiplier" as keyof IMultiplierData,
+    },
+    {
+      label: "Slider Question Division Factor",
+      value: localMultipliers.sliderFactor,
+      field: "sliderFactor" as keyof IMultiplierData,
+    },
+  ];
+
   return (
     <Modal open={open} onClose={onClose}>
       <Box
@@ -222,30 +285,29 @@ const EditMultiplierDataModal: React.FC<EditMultiplerDataModalProps> = ({
         <Stack spacing={4}>
           <Typography variant="h5">Edit Question Factors</Typography>
 
-          <TextField
-            label="Ranking Question Rank 2 Multiplier"
-            value={multipliers.rank2Multiplier}
-            fullWidth
-            type="number"
-          />
-          <TextField
-            label="Ranking Question Rank 3 Multiplier"
-            value={multipliers.rank3Multiplier}
-            fullWidth
-            type="number"
-          />
-          <TextField
-            label="Slider Question Division Factor"
-            value={multipliers.sliderFactor}
-            fullWidth
-            type="number"
-          />
+          {fields.map((field) => (
+            <TextField
+              key={field.field}
+              label={field.label}
+              value={field.value}
+              onChange={handleChange(field.field)}
+              fullWidth
+              type="number"
+              error={!!errors[field.field]} // Check if there's an error for this field
+              helperText={errors[field.field]}
+            />
+          ))}
 
           <Stack direction="row" justifyContent="flex-end" spacing={2}>
             <Button variant="outlined" onClick={onClose}>
               Cancel
             </Button>
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSave}
+              disabled={Object.values(errors).some((error) => !!error)}
+            >
               Save
             </Button>
           </Stack>
