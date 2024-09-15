@@ -12,6 +12,8 @@ import {
   DialogActions,
   DialogTitle,
   Snackbar,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 import { useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -27,13 +29,15 @@ import { useMCQQuestionEditorStore } from "../../stores/MCQQuestionEditorStore";
 import { useQuestions } from "../../hooks/useQuestions";
 
 const ConfirmDeleteQuestionModal = ({
-  onClose,
   selectedQuestionToDelete,
+  onClose,
   handleConfirmDelete,
+  isLoading,
 }: {
-  onClose: () => void;
   selectedQuestionToDelete: IQuestion | null;
+  onClose: () => void;
   handleConfirmDelete: () => Promise<void>;
+  isLoading: boolean;
 }) => {
   return (
     <Dialog open={!!selectedQuestionToDelete} onClose={onClose}>
@@ -43,9 +47,16 @@ const ConfirmDeleteQuestionModal = ({
         {selectedQuestionToDelete?.questionText}"?
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleConfirmDelete} color="error">
-          Confirm
+        <Button onClick={onClose} disabled={isLoading}>
+          Cancel
+        </Button>
+        <Button
+          onClick={handleConfirmDelete}
+          color="error"
+          disabled={isLoading}
+          startIcon={isLoading ? <CircularProgress size={20} /> : null}
+        >
+          {isLoading ? "Deleting..." : "Confirm"}
         </Button>
       </DialogActions>
     </Dialog>
@@ -234,22 +245,38 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
       )}
 
       <ConfirmDeleteQuestionModal
-        onClose={() => setSelectedQuestionToDelete(null)}
         selectedQuestionToDelete={selectedQuestionToDelete}
+        onClose={() => setSelectedQuestionToDelete(null)}
         handleConfirmDelete={handleConfirmDelete}
+        isLoading={deleteMutation.isPending}
       />
       <Snackbar
         open={deleteMutation.isSuccess}
         autoHideDuration={5000}
         onClose={() => deleteMutation.reset()}
-        message="Question successfully deleted!"
-      />
+      >
+        <Alert
+          onClose={() => deleteMutation.reset()}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Question successfully deleted!
+        </Alert>
+      </Snackbar>
+
       <Snackbar
         open={deleteMutation.isError}
         autoHideDuration={5000}
         onClose={() => deleteMutation.reset()}
-        message="Failed to delete question."
-      />
+      >
+        <Alert
+          onClose={() => deleteMutation.reset()}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          Failed to delete question. Please try again.
+        </Alert>
+      </Snackbar>
     </>
   );
 };
