@@ -253,6 +253,9 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
           {selectedQuestionToEdit.questionType === "Ranking" && (
             <RankingQuestionEditor />
           )}
+          {selectedQuestionToEdit.questionType === "Slider" && (
+            <SliderQuestionEditor />
+          )}
         </QuestionEditorLayout>
       ) : (
         <EditQuestionList questions={questions} />

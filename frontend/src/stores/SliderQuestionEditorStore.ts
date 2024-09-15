@@ -35,21 +35,21 @@ export const useSliderQuestionEditorStore = create<SliderQuestionEditorStore>(
 
         const updatedWeightings: { [key: string]: number } = {};
         // Retain the order by rebuilding the object in the original order
-        for (const key in state.selectedQuestion.sliderRange.weightings) {
+        for (const key in state.selectedQuestion.sliderWeights.weightings) {
           if (key === oldSpec) {
             updatedWeightings[newSpec] =
-              state.selectedQuestion.sliderRange.weightings[oldSpec];
+              state.selectedQuestion.sliderWeights.weightings[oldSpec];
           } else {
             updatedWeightings[key] =
-              state.selectedQuestion.sliderRange.weightings[key];
+              state.selectedQuestion.sliderWeights.weightings[key];
           }
         }
 
         return {
           selectedQuestion: {
             ...state.selectedQuestion,
-            sliderRange: {
-              ...state.selectedQuestion.sliderRange,
+            sliderWeights: {
+              ...state.selectedQuestion.sliderWeights,
               weightings: updatedWeightings, // Maintain order
             },
           },
@@ -61,15 +61,15 @@ export const useSliderQuestionEditorStore = create<SliderQuestionEditorStore>(
         if (!state.selectedQuestion) return state;
 
         const updatedWeightings = {
-          ...state.selectedQuestion.sliderRange.weightings,
+          ...state.selectedQuestion.sliderWeights.weightings,
         };
         updatedWeightings[spec] = newWeighting; // Update only the weighting
 
         return {
           selectedQuestion: {
             ...state.selectedQuestion,
-            sliderRange: {
-              ...state.selectedQuestion.sliderRange,
+            sliderWeights: {
+              ...state.selectedQuestion.sliderWeights,
               weightings: updatedWeightings,
             },
           },
@@ -82,10 +82,10 @@ export const useSliderQuestionEditorStore = create<SliderQuestionEditorStore>(
         return {
           selectedQuestion: {
             ...state.selectedQuestion,
-            sliderRange: {
-              ...state.selectedQuestion.sliderRange,
+            sliderWeights: {
+              ...state.selectedQuestion.sliderWeights,
               weightings: {
-                ...state.selectedQuestion.sliderRange.weightings,
+                ...state.selectedQuestion.sliderWeights.weightings,
                 [spec]: weighting,
               },
             },
@@ -97,14 +97,14 @@ export const useSliderQuestionEditorStore = create<SliderQuestionEditorStore>(
       set((state) => {
         if (!state.selectedQuestion) return state;
         const updatedWeightings = {
-          ...state.selectedQuestion.sliderRange.weightings,
+          ...state.selectedQuestion.sliderWeights.weightings,
         };
         delete updatedWeightings[spec];
         return {
           selectedQuestion: {
             ...state.selectedQuestion,
-            sliderRange: {
-              ...state.selectedQuestion.sliderRange,
+            sliderWeights: {
+              ...state.selectedQuestion.sliderWeights,
               weightings: updatedWeightings,
             },
           },

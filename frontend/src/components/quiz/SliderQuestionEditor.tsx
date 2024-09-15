@@ -57,7 +57,7 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   const availableSpecs = possibleSpecs.filter(
     (specName) =>
       specName === spec ||
-      !Object.keys(selectedQuestion?.sliderRange.weightings || {}).includes(
+      !Object.keys(selectedQuestion?.sliderWeights.weightings || {}).includes(
         specName
       )
   );
@@ -246,8 +246,8 @@ const SliderQuestionEditor: React.FC = () => {
     })
   );
 
-  const { setMainSelectedQuestion } = useQuizEditorStore((state) => ({
-    setMainSelectedQuestion: state.setSelectedQuestion,
+  const { setSelectedQuestionToEdit } = useQuizEditorStore((state) => ({
+    setSelectedQuestionToEdit: state.setSelectedQuestionToEdit,
   }));
 
   const { updateQuestionTitle } = useSliderQuestionEditorStore((state) => ({
@@ -260,17 +260,17 @@ const SliderQuestionEditor: React.FC = () => {
 
   const handleAddSpec = () => {
     const defaultSpecName = generateUniqueSpecName(
-      Object.keys(selectedQuestion?.sliderRange.weightings || {})
+      Object.keys(selectedQuestion?.sliderWeights.weightings || {})
     );
     addNewSpec(defaultSpecName, 5);
   };
 
   const specOptions = Object.entries(
-    selectedQuestion?.sliderRange.weightings || {}
+    selectedQuestion?.sliderWeights.weightings || {}
   );
 
   useEffect(() => {
-    setMainSelectedQuestion(selectedQuestion);
+    setSelectedQuestionToEdit(selectedQuestion);
   }, [selectedQuestion]);
 
   return (
