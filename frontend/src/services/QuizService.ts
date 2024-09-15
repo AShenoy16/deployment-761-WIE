@@ -26,3 +26,11 @@ export const getQuizQuestionMultipliers =
     console.log("Multiplier response:", data);
     return data;
   };
+
+export const addQuizQuestion = async (
+  questionType: IQuestion["questionType"]
+) => {
+  await axios.post(`${API_BASE_URL}/quizzes`, {
+    questionType,
+  });
+};
