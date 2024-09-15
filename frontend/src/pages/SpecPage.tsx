@@ -65,7 +65,11 @@ const SpecPage: React.FC = () => {
               }}
             >
               <CardActionArea onClick={() => handleCardClick(spec.name)}>
-                <CardContent>
+                <CardContent
+                  sx={{
+                    textAlign: "center", 
+                  }}
+                >
                   <Typography variant="h6" component="h2">
                     {spec.name}
                   </Typography>
