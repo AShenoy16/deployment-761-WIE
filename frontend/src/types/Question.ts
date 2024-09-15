@@ -57,7 +57,10 @@ export type Quiz = {
 
 // Define the interface for the multiplier data
 export interface IMultiplierData {
+  _id: string;
   rank2Multiplier: number;
   rank3Multiplier: number;
   sliderFactor: number;
+  createdAt: Date;
+  updatedAt: Date;
 }

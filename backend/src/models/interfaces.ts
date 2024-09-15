@@ -43,7 +43,7 @@ export interface ISliderQuestion extends Document {
   questionType: "Slider";
   questionText: string;
   _id: string;
-  sliderRange: ISliderWeights;
+  sliderWeights: ISliderWeights;
   createdAt: Date;
   updatedAt: Date;
 }

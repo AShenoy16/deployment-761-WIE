@@ -511,23 +511,20 @@ export const updateQuestionById = async (id: string, updatedData: any) => {
  * @returns {boolean} - True if valid, false if invalid
  */
 export const isValidUpdatedQuestionData = (updatedData: IQuestion): boolean => {
-  if (updatedData.questionType === "MCQ") {
-    return updatedData.answerOptions.every((option) =>
-      Object.keys(option.weightings).every(
-        (specializationName) => !specializationName.includes("New Spec")
-      )
-    );
-  } else if (updatedData.questionType === "Ranking") {
+  if (
+    updatedData.questionType === "MCQ" ||
+    updatedData.questionType === "Ranking"
+  ) {
     return updatedData.answerOptions.every((option) =>
       Object.keys(option.weightings).every(
         (specializationName) => !specializationName.includes("New Spec")
       )
     );
   } else if (updatedData.questionType === "Slider") {
-    return Object.keys(updatedData.sliderRange.weightings).every(
+    return Object.keys(updatedData.sliderWeights.weightings).every(
       (specializationName) => !specializationName.includes("New Spec")
     );
-  } else {
-    return false; // Invalid question type
   }
+
+  return false;
 };
