@@ -44,7 +44,7 @@ export const postQuizContent = async (req: Request, res: Response) => {
   const { questionType } = req.body;
 
   // check if req.body is an empty object
-  if (!questionType) {
+  if (!questionType || isValidQuestionType(questionType)) {
     return res
       .status(400)
       .json({ message: "Quiz question data are required." });
