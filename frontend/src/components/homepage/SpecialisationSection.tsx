@@ -82,7 +82,12 @@ const SpecialisationSection: React.FC = () => {
           <Button
             variant="contained"
             color="secondary"
-            sx={buttonStyle}
+            sx={{
+              textTransform: "none",
+              borderRadius: "12px",
+              marginTop: "0.7em",
+              fontSize: "1.1rem",
+            }}
             onClick={handleQuizButtonClick}
           >
             Take the specialisation quiz

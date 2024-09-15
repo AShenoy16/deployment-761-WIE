@@ -21,7 +21,6 @@ const ImpactSection: React.FC = () => {
       <Typography
         variant="h4"
         component="h2"
-        gutterBottom
         sx={{
           fontWeight: "bold",
           textAlign: { xs: "center", sm: "left" },
@@ -69,7 +68,7 @@ const ImpactSection: React.FC = () => {
         <CardMedia
           component="iframe"
           title="test"
-          src="https://www.youtube.com/embed/pQgxiQAMTTo?si=Az6sTDY0C0c_fEN9"
+          src="https://www.youtube.com/embed/_55adK4RXF8?si=ekGykN8KPyNF9v4z"
           sx={{
             width: "100%", // Takes up full width of container
             maxWidth: "560px", // Max width for larger screens
