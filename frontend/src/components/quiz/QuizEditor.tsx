@@ -43,8 +43,13 @@ const ConfirmDeleteQuestionModal = ({
     <Dialog open={!!selectedQuestionToDelete} onClose={onClose}>
       <DialogTitle>Confirm Deletion</DialogTitle>
       <DialogContent>
-        Are you sure you want to delete the question "
-        {selectedQuestionToDelete?.questionText}"?
+        <Typography component="span">
+          Are you sure you want to delete the question{" "}
+        </Typography>
+        <Typography component="span" fontWeight="bold">
+          "{selectedQuestionToDelete?.questionText}"
+        </Typography>
+        <Typography component="span">{" ?"}</Typography>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} disabled={isLoading}>
@@ -54,7 +59,9 @@ const ConfirmDeleteQuestionModal = ({
           onClick={handleConfirmDelete}
           color="error"
           disabled={isLoading}
-          startIcon={isLoading ? <CircularProgress size={20} /> : null}
+          startIcon={
+            isLoading ? <CircularProgress size={18} sx={{ mr: 0.25 }} /> : null
+          }
         >
           {isLoading ? "Deleting..." : "Confirm"}
         </Button>
@@ -263,7 +270,6 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
           Question successfully deleted!
         </Alert>
       </Snackbar>
-
       <Snackbar
         open={deleteMutation.isError}
         autoHideDuration={5000}
