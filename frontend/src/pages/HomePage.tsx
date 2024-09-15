@@ -8,6 +8,7 @@ import {
   CardContent,
   Button,
   Stack,
+  Link,
 } from "@mui/material";
 import uoaEngBuilding from "/engineering-building.jpg";
 import wenLogo from "../assets/wen-logo.png";
@@ -15,16 +16,24 @@ import wenLogo from "../assets/wen-logo.png";
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
+  const buttonStyle = {
+    textTransform: "none",
+    borderRadius: "12px",
+    marginTop: "0.7em",
+  };
+
   const handleQuizButtonClick = () => {
     navigate("/quiz");
   };
 
+  const handleSpecButtonClick = () => {
+    navigate("/spec-info");
+  };
+
   return (
     <div>
-      <p>HomePage</p>
-      <button onClick={handleQuizButtonClick}>Temporary quiz button</button>
       <Box sx={{ overflowX: "hidden" }}>
-        {/* Top Section */}
+        {/* Hero Section */}
         <Box
           sx={{
             position: "relative",
@@ -50,7 +59,7 @@ const HomePage: React.FC = () => {
               left: 0,
               width: "100%",
               height: "100%",
-              backgroundColor: "rgba(0, 0, 0, 0.75)",
+              backgroundColor: "rgba(0, 0, 0, 0.55)",
             }}
           />
           {/* Content */}
@@ -63,6 +72,7 @@ const HomePage: React.FC = () => {
               paddingX: "3em",
               paddingY: { xs: "2em", sm: "5em" },
               color: "#00467F",
+              borderRadius: "3px",
 
               // marginLeft: {
               //   xs: "20px",
@@ -138,211 +148,98 @@ const HomePage: React.FC = () => {
           </Box>
         </Box>
 
-        {/* Impact Section */}
-        <Box sx={{ minHeight: "100vh" }}>
-          <Grid container>
-            {/* Left Detail */}
-            <Grid item xs={12} md={6}>
-              <Card sx={{ minHeight: "50vh", alignContent: "center" }}>
-                <CardContent
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    marginLeft: {
-                      xs: "20px",
-                      sm: "50px",
-                    },
-                    width: {
-                      xs: "calc(100% - 40px)",
-                      sm: "80%",
-                    },
-                  }}
-                >
-                  <Typography
-                    variant="h4"
-                    gutterBottom
-                    sx={{
-                      color: "#00467F",
-                      fontWeight: "bold",
-                      marginBottom: "30px",
-                      fontSize: {
-                        xs: "1.5rem",
-                        sm: "2rem",
-                        md: "2.5rem",
-                      },
-                    }}
-                  >
-                    Impact
-                  </Typography>
-                  <Typography
-                    variant="body1"
-                    paragraph
-                    sx={{
-                      color: "#00467F",
-                      fontWeight: "bold",
-                      fontSize: "1.2rem",
-                    }}
-                  >
-                    {"left detail"}
-                  </Typography>
-
-                  {/* Edit Modal */}
-                  {/* <EditModalSpecInfo
-                    open={openEditModal}
-                    onClose={handleEditModalClose}
-                    specInfoResult={specialization}
-                    name={formattedName}
-                    onSave={handleSaveChanges}
-                  /> */}
-                </CardContent>
-              </Card>
-            </Grid>
-
-            {/* Left Image */}
-            <Grid item xs={12} md={6}>
-              <Box
-                sx={{
-                  height: "100%",
-                  backgroundImage: `url(${uoaEngBuilding})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              />
-            </Grid>
-          </Grid>
-
-          {/* Right Detail */}
-          <Grid container>
-            {/* Right Image */}
-            <Grid
-              item
-              xs={12}
-              md={6}
-              sx={{
-                display: {
-                  xs: "none",
-                  md: "block",
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  height: "100%",
-                  backgroundImage: `url(${uoaEngBuilding})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-            </Grid>
-
-            {/* Right Detail */}
-            <Grid item xs={12} md={6}>
-              <Card
-                sx={{
-                  minHeight: "50vh",
-                  borderRadius: "0",
-                  alignContent: "center",
-                }}
-              >
-                <CardContent
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: {
-                      xs: "calc(100% - 40px)",
-                      sm: "80%",
-                    },
-                    marginLeft: {
-                      xs: "20px",
-                      sm: "50px",
-                    },
-                  }}
-                >
-                  <Typography
-                    variant="body1"
-                    paragraph
-                    sx={{
-                      color: "#00467F",
-                      fontWeight: "bold",
-                      fontSize: "1.2rem",
-                    }}
-                  >
-                    {"right detail text "}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        </Box>
-
-        {/* Career Pathways Section */}
+        {/* Specialisation Section */}
         <Box
           sx={{
-            backgroundColor: "#00467F",
-            color: "white",
-            padding: "20px",
-            "& li": {
-              marginBottom: "10px",
-            },
-            fontWeight: "bold",
+            padding: { xs: "2em 3em", md: "2em 8em" },
+            textAlign: "center",
+            color: "#00467F",
           }}
         >
           <Typography
             variant="h4"
+            component="h2"
             gutterBottom
             sx={{
               fontWeight: "bold",
-              fontSize: {
-                xs: "1.5rem",
-                sm: "2rem",
-                md: "2.5rem",
-              },
             }}
           >
-            Career Pathways
+            Discover the Right Engineering Path for You
           </Typography>
-          <Typography variant="h6" gutterBottom>
-            {`Potential Career options as a ${"engineer"} Graduate`}
-          </Typography>
-          <Grid
-            container
-            spacing={2}
-            sx={{
-              marginLeft: "10px",
-              paddingTop: "20px",
-            }}
+          <Stack
+            direction={{ sm: "column", md: "row" }}
+            marginTop={3}
+            paddingX={10}
+            spacing={7}
+            alignItems="center" // Ensures the content aligns vertically in the center for row layout
           >
-            <Grid item xs={12} md={6}>
-              <ul
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2, 1fr)",
-                  gridAutoRows: "auto",
-                  rowGap: "10px",
-                  columnGap: "20px",
-                  padding: 0,
-                  margin: 0,
+            <Box
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+            >
+              <Typography
+                variant="h6"
+                component="p"
+                textAlign={"left"}
+                sx={{
+                  flex: 1, // Ensures equal width
+                  color: "black",
+                  fontSize: "1.1rem",
                 }}
               >
-                {/* {specialization.careerPathways
-                  .slice(0, 6)
-                  .map((pathway, index) => (
-                    <li key={index}>{pathway}</li>
-                  ))} */}
-                "more text"
-              </ul>
-            </Grid>
-          </Grid>
+                Engineering is diverse, offering various career pathways
+                depending on your interests and skills. Whether you’re
+                passionate about building the cities of the future, advancing
+                healthcare, or developing cutting-edge software, there’s a
+                specialisation for you at the University of Auckland.
+              </Typography>
+              <Link
+                sx={{ mt: 1, color: "#00467F", textDecoration: "underline" }}
+                href="/spec-info"
+                underline="hover"
+              >
+                Find out more
+              </Link>
+              {/* <Button
+                variant="contained"
+                color="secondary"
+                sx={buttonStyle}
+                onClick={handleSpecButtonClick}
+              >
+                Learn more
+              </Button> */}
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={buttonStyle}
+                onClick={handleQuizButtonClick}
+              >
+                Take the specialisation quiz
+              </Button>
+            </Box>
+
+            <Box
+              component="img"
+              sx={{
+                maxWidth: { xs: 300, sm: 350 },
+                flex: 1, // Ensures equal width
+                objectFit: "cover", // Ensures the image maintains aspect ratio
+                marginTop: { xs: 3, md: 0 },
+              }}
+              src={
+                "https://www.careers.govt.nz/assets/Posts/_resampled/ScaleWidthWyI3OTUiXQ/A-female-engineer-repairing-a-production-line-machine.jpg"
+              }
+            />
+          </Stack>
         </Box>
+
+        {/*Impact Section */}
+        {/* Specialisation Section */}
       </Box>
+
+      <p>HomePage</p>
+      <button onClick={handleQuizButtonClick}>Temporary quiz button</button>
     </div>
   );
 };
