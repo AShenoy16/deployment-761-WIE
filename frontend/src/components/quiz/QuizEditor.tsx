@@ -197,15 +197,13 @@ const ConfirmDeleteQuestionModal = ({
 type EditMultiplerDataModalProps = {
   open: boolean;
   onClose: () => void;
-  multipliers: IMultiplierData | null;
+  multipliers: IMultiplierData;
 };
 const EditMultiplierDataModal: React.FC<EditMultiplerDataModalProps> = ({
   open,
   onClose,
   multipliers,
 }) => {
-  // modal with three text fields for rank2Multiplier, rank3Multiplier, and rank4Multiplier
-
   return (
     <Modal open={open} onClose={onClose}>
       <Box
@@ -221,16 +219,36 @@ const EditMultiplierDataModal: React.FC<EditMultiplerDataModalProps> = ({
           p: 4,
         }}
       >
-        <Stack>
-          <Typography>Edit Question Factors</Typography>
-          {multipliers && (
-            <TextField
-              label="Rank 2 Multiplier"
-              value={multipliers.sliderFactor}
-              fullWidth
-              type="number"
-            />
-          )}
+        <Stack spacing={4}>
+          <Typography variant="h5">Edit Question Factors</Typography>
+
+          <TextField
+            label="Ranking Question Rank 2 Multiplier"
+            value={multipliers.rank2Multiplier}
+            fullWidth
+            type="number"
+          />
+          <TextField
+            label="Ranking Question Rank 3 Multiplier"
+            value={multipliers.rank3Multiplier}
+            fullWidth
+            type="number"
+          />
+          <TextField
+            label="Slider Question Division Factor"
+            value={multipliers.sliderFactor}
+            fullWidth
+            type="number"
+          />
+
+          <Stack direction="row" justifyContent="flex-end" spacing={2}>
+            <Button variant="outlined" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button variant="contained" color="primary">
+              Save
+            </Button>
+          </Stack>
         </Stack>
       </Box>
     </Modal>
@@ -300,7 +318,7 @@ const EditQuestionList = ({
   multipliers,
 }: {
   questions: IQuestion[];
-  multipliers: IMultiplierData | null;
+  multipliers: IMultiplierData;
 }) => {
   const theme = useTheme();
   const questionListRef = useRef<HTMLDivElement | null>(null);
@@ -460,7 +478,7 @@ const EditQuestionList = ({
 
 type QuizEditorProps = {
   questions: IQuestion[];
-  multipliers: IMultiplierData | null;
+  multipliers: IMultiplierData;
 };
 
 const QuizEditor: React.FC<QuizEditorProps> = ({ questions, multipliers }) => {

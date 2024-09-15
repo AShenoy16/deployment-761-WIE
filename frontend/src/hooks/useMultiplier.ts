@@ -4,7 +4,7 @@ import { IMultiplierData } from "../types/Question";
 
 export const useMultiplier = () => {
   const {
-    data: multipliers = null,
+    data: multipliers,
     isLoading,
     isError,
   } = useQuery<IMultiplierData>({
