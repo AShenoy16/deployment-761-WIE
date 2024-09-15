@@ -112,7 +112,7 @@ const EditModalRoleModel: React.FC<EditModalRoleModelProps> = ({
             onClick={onClose}
             sx={buttonStyle}
           >
-            Save Changes
+            Finish
           </Button>
         </Box>
       </GradientBox>
