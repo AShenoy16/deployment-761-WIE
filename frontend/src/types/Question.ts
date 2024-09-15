@@ -40,7 +40,7 @@ export interface ISliderQuestion {
   _id: string;
   questionType: "Slider";
   questionText: string;
-  sliderRange: ISliderWeights;
+  sliderWeights: ISliderWeights;
   createdAt: Date;
   updatedAt: Date;
 }

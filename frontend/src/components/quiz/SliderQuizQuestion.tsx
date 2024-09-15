@@ -12,7 +12,7 @@ type SliderQuizQuestionProps = {
   question: ISliderQuestion;
 };
 
-const sliderLabels = [
+export const sliderLabels = [
   "Strongly Disagree", // 1
   "Disagree", // 2
   "Neutral", // 3
@@ -46,8 +46,8 @@ export const SliderQuizQuestion: React.FC<SliderQuizQuestionProps> = ({
           value: index + 1,
           label: label,
         }))}
-        min={question.sliderRange.min}
-        max={question.sliderRange.max}
+        min={1}
+        max={5}
         sx={{
           width: isSmallScreen ? "5%" : "80%",
           height: isSmallScreen ? 200 : "10%",
