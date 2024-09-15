@@ -38,16 +38,15 @@ const SpecialisationSection: React.FC = () => {
         Discover the Right Engineering Path for You
       </Typography>
       <Stack
-        direction={{ sm: "column", md: "row" }}
+        direction={{ md: "column", lg: "row" }}
         marginTop={3}
-        paddingX={10}
         spacing={7}
         alignItems="center" // Ensures the content aligns vertically in the center for row layout
       >
         <Box
           display={"flex"}
           flexDirection={"column"}
-          alignItems={"flex-start"}
+          alignItems={{ sm: "center", md: "flex-start" }}
         >
           <Typography
             variant="h6"

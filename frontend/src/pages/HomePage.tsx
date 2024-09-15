@@ -14,12 +14,14 @@ import uoaEngBuilding from "/engineering-building.jpg";
 import wenLogo from "../assets/wen-logo.png";
 import HeroSection from "../components/homepage/HeroSection";
 import SpecialisationSection from "../components/homepage/SpecialisationSection";
+import ImpactSection from "../components/homepage/ImpactSection";
 
 const HomePage: React.FC = () => {
   return (
     <div>
       <HeroSection />
       <SpecialisationSection />
+      <ImpactSection />
     </div>
   );
 };

@@ -1,0 +1,86 @@
+import React from "react";
+import { Box, Typography, Stack, Button, Link, CardMedia } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
+const ImpactSection: React.FC = () => {
+  const navigate = useNavigate();
+
+  const buttonStyle = {
+    textTransform: "none",
+    borderRadius: "12px",
+    marginTop: "0.7em",
+  };
+
+  return (
+    <Box
+      sx={{
+        padding: { xs: "2em 3em", md: "2em 8em" },
+        color: "#00467F",
+      }}
+    >
+      <Typography
+        variant="h4"
+        component="h2"
+        gutterBottom
+        sx={{
+          fontWeight: "bold",
+          textAlign: { xs: "center", sm: "left" },
+        }}
+      >
+        Why Engineering? Impact on the World
+      </Typography>
+      <Stack
+        direction={{ md: "column", lg: "row" }}
+        marginTop={3}
+        spacing={10}
+        alignItems="center"
+      >
+        <Box>
+          <Typography
+            variant="body1"
+            component="p"
+            gutterBottom
+            sx={{
+              color: "black",
+              marginTop: "1em",
+            }}
+          >
+            Engineering is more than just solving problems—it’s about creating
+            solutions that impact every part of society. Engineers tackle
+            climate change, create clean energy, design sustainable cities,
+            improve healthcare, and drive technological advancements. When you
+            become an engineer, you have the power to change the world for the
+            better.
+          </Typography>
+          <Typography
+            variant="body1"
+            component="p"
+            gutterBottom
+            sx={{
+              color: "black",
+              marginTop: "1em",
+            }}
+          >
+            Imagine designing the cities of tomorrow, developing renewable
+            energy technologies, or creating medical devices that save lives.
+            Engineers make all of this possible—and so much more.
+          </Typography>
+        </Box>
+        <CardMedia
+          component="iframe"
+          title="test"
+          src="https://www.youtube.com/embed/pQgxiQAMTTo?si=Az6sTDY0C0c_fEN9"
+          sx={{
+            width: "100%", // Takes up full width of container
+            maxWidth: "560px", // Max width for larger screens
+            aspectRatio: "16/9", // Ensures the aspect ratio is 16:9
+            borderRadius: "8px", // Optional: adds some rounded corners
+            border: "none", // Removes default iframe border
+          }}
+        />
+      </Stack>
+    </Box>
+  );
+};
+
+export default ImpactSection;
