@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Typography,
@@ -8,24 +8,14 @@ import {
   CardActionArea,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 interface Specialisation {
-  id: number;
+  _id: string;
   name: string;
 }
 
-const specialisations: Specialisation[] = [
-  { id: 1, name: "Biomedical Engineering" },
-  { id: 2, name: "Chemical and Materials Engineering" },
-  { id: 3, name: "Civil Engineering" },
-  { id: 4, name: "Computer Systems Engineering" },
-  { id: 5, name: "Electrical Engineering" },
-  { id: 6, name: "Engineering Science" },
-  { id: 7, name: "Mechanical Engineering" },
-  { id: 8, name: "Mechatronics Engineering" },
-  { id: 9, name: "Software Engineering" },
-  { id: 10, name: "Structural Engineering" },
-];
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Make sure to set this in your environment variables
 
 // Utility function to slugify specialisation names
 const slugify = (name: string) => {
@@ -34,11 +24,38 @@ const slugify = (name: string) => {
 
 const SpecPage: React.FC = () => {
   const navigate = useNavigate();
+  const [specialisations, setSpecialisations] = useState<Specialisation[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleCardClick = (id: string) => {
-    const slug = slugify(id);
+  useEffect(() => {
+    const fetchSpecialisations = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/specializations`);
+        setSpecialisations(response.data);
+      } catch (err) {
+        console.error("Error fetching specialisations:", err);
+        setError("Failed to load specialisations.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSpecialisations();
+  }, []);
+
+  const handleCardClick = (name: string) => {
+    const slug = slugify(name);
     navigate(`/specialisation/${slug}`);
   };
+
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  if (error) {
+    return <Typography>{error}</Typography>;
+  }
 
   return (
     <Container>
@@ -56,7 +73,7 @@ const SpecPage: React.FC = () => {
 
       <Grid container spacing={3} paddingTop={3}>
         {specialisations.map((spec) => (
-          <Grid item xs={12} sm={6} md={4} key={spec.id}>
+          <Grid item xs={12} sm={6} md={4} key={spec._id}>
             <Card
               sx={{
                 backgroundColor: "#00467F",
@@ -67,7 +84,7 @@ const SpecPage: React.FC = () => {
               <CardActionArea onClick={() => handleCardClick(spec.name)}>
                 <CardContent
                   sx={{
-                    textAlign: "center", 
+                    textAlign: "center",
                   }}
                 >
                   <Typography variant="h6" component="h2">

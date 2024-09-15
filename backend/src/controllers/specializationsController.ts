@@ -36,24 +36,24 @@ export const getSpecByName = async (req: Request, res: Response) => {
   }
 };
 
-/// Update a specific specialization
 // Update a specific specialization
 export const updateSpecByName = async (req: Request, res: Response) => {
-  const { name } = req.params;
+  const { name: currentName } = req.params; // Renamed to 'currentName' to avoid conflict
 
   try {
- const specialization = await Specialization.findOneAndUpdate(
-   { name: { $regex: new RegExp(`^${name}$`, "i") } },
-   { new: true, runValidators: true }
- );
+    const specialization = await Specialization.findOne({
+      name: { $regex: new RegExp(`^${currentName}$`, "i") },
+    });
+
     if (!specialization) {
       return res.status(404).json({ message: "Specialization not found" });
     }
 
     // Extract text fields from the request
-    const { header, careerPathways, leftDetail, rightDetail } = req.body;
+    const { name, header, careerPathways, leftDetail, rightDetail } = req.body;
 
     // Update fields in the specialization object
+    specialization.name = name || specialization.name;
     specialization.header = header || specialization.header;
     specialization.careerPathways = careerPathways
       ? JSON.parse(careerPathways)
