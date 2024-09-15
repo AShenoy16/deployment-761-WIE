@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { QuizSubmissionRequest } from "../types/quizTypes";
 import {
+  addDefaultQuizQuestion,
   deleteQuestion,
   getSpecQuiz,
   isValidQuestionType,
@@ -18,7 +19,6 @@ import MCQQuestion from "../models/MCQModel";
 import SliderQuestion from "../models/SliderModel";
 import RankingQuestion from "../models/RankingModel";
 import Quiz from "../models/QuizModel";
-import { defaultQuizQuestions } from "../constants/quizConstants";
 
 export const getQuiz = async (req: Request, res: Response) => {
   const quiz = await getSpecQuiz();
@@ -34,6 +34,12 @@ export const getQuiz = async (req: Request, res: Response) => {
   return res.status(200).json(sortedQuizData);
 };
 
+/**
+ * Controller to add new quiz content question with default values
+ * @param req
+ * @param res
+ * @returns
+ */
 export const postQuizContent = async (req: Request, res: Response) => {
   const { questionType } = req.body;
 
@@ -45,28 +51,7 @@ export const postQuizContent = async (req: Request, res: Response) => {
   }
 
   try {
-    let question;
-    switch (questionType) {
-      case "MCQ":
-        question = new MCQQuestion(defaultQuizQuestions.mcq);
-        break;
-      case "Slider":
-        question = new SliderQuestion(defaultQuizQuestions.slider);
-        break;
-      case "Ranking":
-        question = new RankingQuestion(defaultQuizQuestions.ranking);
-        break;
-      default:
-        return res.status(400).json({ message: "Invalid question type." });
-    }
-
-    const savedQuestion = await question.save();
-
-    const updatedQuiz = await Quiz.findByIdAndUpdate(
-      "66e52088067cb204ed8509cb", // Currently hardcoded as there is only one document in quiz collection
-      { $push: { quizQuestions: savedQuestion._id } },
-      { new: true, useFindAndModify: false }
-    ).populate("quizQuestions");
+    const updatedQuiz = await addDefaultQuizQuestion(questionType);
 
     if (!updatedQuiz) {
       return res.status(404).json({ message: "Quiz not found." });

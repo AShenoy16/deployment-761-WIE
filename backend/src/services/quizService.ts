@@ -17,6 +17,7 @@ import { Console } from "console";
 import MultiplierData from "../models/multiplerModel";
 import { getAllMultipliers } from "./multiplierService";
 import { ParamsDictionary } from "express-serve-static-core";
+import { defaultQuizQuestions } from "../constants/quizConstants";
 
 /**
  * Servixe code that will actually calculate the results
@@ -438,4 +439,31 @@ export const deleteQuestion = async (id: string, questionType: string) => {
  */
 export const isValidQuestionType = (qType: string) => {
   return qType == "MCQ" || qType == "Ranking" || qType == "Slider";
+};
+
+export const addDefaultQuizQuestion = async (questionType: string) => {
+  let question;
+  switch (questionType) {
+    case "MCQ":
+      question = new MCQQuestion(defaultQuizQuestions.mcq);
+      break;
+    case "Slider":
+      question = new SliderQuestion(defaultQuizQuestions.slider);
+      break;
+    case "Ranking":
+      question = new RankingQuestion(defaultQuizQuestions.ranking);
+      break;
+    default:
+      throw new Error("Invalid question type");
+  }
+
+  const savedQuestion = await question.save();
+
+  const updatedQuiz = await Quiz.findByIdAndUpdate(
+    "66e52088067cb204ed8509cb", // Currently hardcoded as there is only one document in quiz collection
+    { $push: { quizQuestions: savedQuestion._id } },
+    { new: true, useFindAndModify: false }
+  ).populate("quizQuestions");
+
+  return updatedQuiz;
 };
