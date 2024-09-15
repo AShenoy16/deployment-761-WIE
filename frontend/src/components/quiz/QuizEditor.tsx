@@ -195,20 +195,34 @@ const EditableQuestion = ({
   questionNumber,
   onClickEditQuestion,
   onClickDeleteQuestion,
+  isHighlighted,
 }: {
   question: IQuestion;
   questionNumber: number;
   onClickEditQuestion: (question: IQuestion) => void;
   onClickDeleteQuestion: (question: IQuestion) => void;
+  isHighlighted: boolean;
 }) => {
   return (
     <Paper
-      sx={{
+      sx={(theme) => ({
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         p: 2,
-      }}
+        animation: true ? "glow 1s ease-in-out infinite" : "none",
+        "@keyframes glow": {
+          "0%": {
+            boxShadow: `0 0 5px ${theme.palette.primary.main}`,
+          },
+          "50%": {
+            boxShadow: `0 0 25px ${theme.palette.primary.light}`,
+          },
+          "100%": {
+            boxShadow: `0 0 5px ${theme.palette.primary.main}`,
+          },
+        },
+      })}
     >
       <Typography variant="body1">
         {`Question ${questionNumber}`}
@@ -244,12 +258,16 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
     setIsAddQuestionModalOpen,
     isNewQuestionAdded,
     setIsNewQuestionAdded,
+    highlightedQuestionId,
+    setHighlightedQuestionId,
   } = useQuizEditorStore((state) => ({
     setSelectedQuestionToEdit: state.setSelectedQuestionToEdit,
     setSelectedQuestionToDelete: state.setSelectedQuestionToDelete,
     setIsAddQuestionModalOpen: state.setIsAddQuestionModalOpen,
     isNewQuestionAdded: state.isNewQuestionAdded,
     setIsNewQuestionAdded: state.setIsNewQuestionAdded,
+    highlightedQuestionId: state.highlightedQuestionId,
+    setHighlightedQuestionId: state.setHighlightedQuestionId,
   }));
 
   const setSelectedRankingQuestion = useRankingQuestionEditorStore(
@@ -289,6 +307,9 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
       if (lastQuestion) {
         lastQuestion.scrollIntoView({ behavior: "smooth", block: "start" });
         setIsNewQuestionAdded(false);
+        const lastQuestionId = questions[questions.length - 1]._id;
+        setHighlightedQuestionId(lastQuestionId);
+        setTimeout(() => setHighlightedQuestionId(""), 3000);
       }
     }
   }, [isNewQuestionAdded]);
@@ -326,6 +347,7 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
         maxHeight={450}
         overflow="auto"
         sx={{ scrollbarWidth: "thin" }}
+        padding={1}
       >
         {questions.map((question, index) => (
           <EditableQuestion
@@ -334,6 +356,7 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
             questionNumber={index + 1}
             onClickEditQuestion={onClickEditQuestion}
             onClickDeleteQuestion={onClickDeleteQuestion}
+            isHighlighted={highlightedQuestionId === question._id}
           />
         ))}
       </Stack>

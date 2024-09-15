@@ -10,6 +10,8 @@ type QuizEditorStore = {
   setIsAddQuestionModalOpen: (isOpen: boolean) => void;
   isNewQuestionAdded: boolean;
   setIsNewQuestionAdded: (isAdded: boolean) => void;
+  highlightedQuestionId: string;
+  setHighlightedQuestionId: (questionId: string) => void;
 };
 
 export const useQuizEditorStore = create<QuizEditorStore>((set) => ({
@@ -23,6 +25,8 @@ export const useQuizEditorStore = create<QuizEditorStore>((set) => ({
   setIsAddQuestionModalOpen: (isOpen) =>
     set({ isAddQuestionModalOpen: isOpen }),
   isNewQuestionAdded: false,
-  setIsNewQuestionAdded: (isAdded: boolean) =>
-    set({ isNewQuestionAdded: isAdded }),
+  setIsNewQuestionAdded: (isAdded) => set({ isNewQuestionAdded: isAdded }),
+  highlightedQuestionId: "",
+  setHighlightedQuestionId: (questionId) =>
+    set({ highlightedQuestionId: questionId }),
 }));
