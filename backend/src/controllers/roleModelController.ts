@@ -44,7 +44,11 @@ export const addRoleModels = async (req: Request, res: Response) => {
  * Controller to delete a role model
  */
 export const deleteRoleModel = async (req: Request, res: Response) => {
-  const roleModelId: string = req.params.id;
+  const { roleModelId } = req.params;
+
+  if (!roleModelId) {
+    return res.status(400).json({ message: "Role model ID is required" });
+  }
 
   try {
     const result = await deleteRoleModelById(roleModelId);
@@ -64,10 +68,14 @@ export const deleteRoleModel = async (req: Request, res: Response) => {
  */
 export const putRoleModels = async (req: Request, res: Response) => {
   const roleModelData: IRoleModel = req.body;
-  const { id } = req.params;
+  const { roleModelId } = req.params;
+
+  if (!roleModelId) {
+    return res.status(400).json({ message: "Role model ID is required" });
+  }
 
   try {
-    const updatedRoleModel = await updateRoleModel(id, roleModelData);
+    const updatedRoleModel = await updateRoleModel(roleModelId, roleModelData);
     if (!updatedRoleModel) {
       return res.status(404).json({ message: "Failed to find role model" });
     }
