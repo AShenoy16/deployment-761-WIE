@@ -117,7 +117,7 @@ export const mockQuestions: IQuestion[] = [
     _id: "slider1",
     questionType: "Slider",
     questionText: "Rate your confidence in problem-solving (1-5).",
-    sliderRange: {
+    sliderWeights: {
       _id: "slider1_weight",
       weightings: {
         Engsci: 5,
@@ -131,7 +131,7 @@ export const mockQuestions: IQuestion[] = [
     _id: "slider2",
     questionType: "Slider",
     questionText: "How excited are you about automation (1-5)?",
-    sliderRange: {
+    sliderWeights: {
       _id: "slider2_weight",
       weightings: {
         Mechatronics: 5,
