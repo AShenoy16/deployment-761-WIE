@@ -7,6 +7,11 @@ import {
   IconButton,
   alpha,
   Button,
+  DialogContent,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  Snackbar,
 } from "@mui/material";
 import { useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -19,6 +24,33 @@ import QuestionEditorLayout from "../../layouts/QuestionEditorLayout";
 import { useRankingQuestionEditorStore } from "../../stores/RankingQuestionEditorStore";
 import MCQQuestionEditor from "./MCQQuestionEditor";
 import { useMCQQuestionEditorStore } from "../../stores/MCQQuestionEditorStore";
+import { useQuestions } from "../../hooks/useQuestions";
+
+const ConfirmDeleteQuestionModal = ({
+  onClose,
+  selectedQuestionToDelete,
+  handleConfirmDelete,
+}: {
+  onClose: () => void;
+  selectedQuestionToDelete: IQuestion | null;
+  handleConfirmDelete: () => Promise<void>;
+}) => {
+  return (
+    <Dialog open={!!selectedQuestionToDelete} onClose={onClose}>
+      <DialogTitle>Confirm Deletion</DialogTitle>
+      <DialogContent>
+        Are you sure you want to delete the question "
+        {selectedQuestionToDelete?.questionText}"?
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleConfirmDelete} color="error">
+          Confirm
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 const EditableQuestion = ({
   question,
@@ -66,9 +98,12 @@ const EditableQuestion = ({
 
 const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
   const theme = useTheme();
-  const setSelectedQuestion = useQuizEditorStore(
-    (state) => state.setSelectedQuestion
-  );
+  const { setSelectedQuestionToEdit, setSelectedQuestionToDelete } =
+    useQuizEditorStore((state) => ({
+      setSelectedQuestionToEdit: state.setSelectedQuestionToEdit,
+      setSelectedQuestionToDelete: state.setSelectedQuestionToDelete,
+    }));
+
   const setSelectedRankingQuestion = useRankingQuestionEditorStore(
     (state) => state.setSelectedQuestion
   );
@@ -80,7 +115,7 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
   };
 
   const onClickEditQuestion = (question: IQuestion) => {
-    setSelectedQuestion(question);
+    setSelectedQuestionToEdit(question);
     switch (question.questionType) {
       case "MCQ":
         setSelectedMCQQuestion({ ...question });
@@ -96,7 +131,7 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
   };
 
   const onClickDeleteQuestion = (question: IQuestion) => {
-    console.log(question._id);
+    setSelectedQuestionToDelete(question);
   };
 
   return (
@@ -150,47 +185,73 @@ type QuizEditorProps = {
 };
 
 const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
-  const { selectedQuestion, setSelectedQuestion } = useQuizEditorStore(
-    (state) => ({
-      selectedQuestion: state.selectedQuestion,
-      setSelectedQuestion: state.setSelectedQuestion,
-    })
-  );
-  const setSelectedRankingQuestion = useRankingQuestionEditorStore(
-    (state) => state.setSelectedQuestion
-  );
+  const {
+    selectedQuestionToEdit,
+    setSelectedQuestionToEdit,
+    selectedQuestionToDelete,
+    setSelectedQuestionToDelete,
+  } = useQuizEditorStore((state) => ({
+    selectedQuestionToEdit: state.selectedQuestionToEdit,
+    setSelectedQuestionToEdit: state.setSelectedQuestionToEdit,
+    selectedQuestionToDelete: state.selectedQuestionToDelete,
+    setSelectedQuestionToDelete: state.setSelectedQuestionToDelete,
+  }));
+
+  const { deleteMutation } = useQuestions();
 
   const handleOnCancel = () => {
-    setSelectedQuestion(null);
-    setSelectedRankingQuestion(null);
+    setSelectedQuestionToEdit(null);
   };
 
   const handleOnSave = () => {
-    console.log(selectedQuestion);
+    console.log(selectedQuestionToEdit);
   };
 
-  if (selectedQuestion) {
-    switch (selectedQuestion.questionType) {
-      case "MCQ": // Implement
-        return (
-          <QuestionEditorLayout onCancel={handleOnCancel} onSave={handleOnSave}>
-            <MCQQuestionEditor />
-          </QuestionEditorLayout>
-        );
-      case "Ranking":
-        return (
-          <QuestionEditorLayout onCancel={handleOnCancel} onSave={handleOnSave}>
-            <RankingQuestionEditor />
-          </QuestionEditorLayout>
-        );
-      case "Slider":
-        break; // Implement
-      default:
-        throw new Error("Invalid question type");
+  const handleConfirmDelete = async () => {
+    if (selectedQuestionToDelete) {
+      try {
+        await deleteMutation.mutateAsync(selectedQuestionToDelete);
+        setSelectedQuestionToDelete(null);
+      } catch (error) {
+        console.error("Error deleting the question:", error);
+      }
     }
-  }
+  };
 
-  return <EditQuestionList questions={questions} />;
+  return (
+    <>
+      {selectedQuestionToEdit ? (
+        <QuestionEditorLayout onCancel={handleOnCancel} onSave={handleOnSave}>
+          {selectedQuestionToEdit.questionType === "MCQ" && (
+            <MCQQuestionEditor />
+          )}
+          {selectedQuestionToEdit.questionType === "Ranking" && (
+            <RankingQuestionEditor />
+          )}
+        </QuestionEditorLayout>
+      ) : (
+        <EditQuestionList questions={questions} />
+      )}
+
+      <ConfirmDeleteQuestionModal
+        onClose={() => setSelectedQuestionToDelete(null)}
+        selectedQuestionToDelete={selectedQuestionToDelete}
+        handleConfirmDelete={handleConfirmDelete}
+      />
+      <Snackbar
+        open={deleteMutation.isSuccess}
+        autoHideDuration={5000}
+        onClose={() => deleteMutation.reset()}
+        message="Question successfully deleted!"
+      />
+      <Snackbar
+        open={deleteMutation.isError}
+        autoHideDuration={5000}
+        onClose={() => deleteMutation.reset()}
+        message="Failed to delete question."
+      />
+    </>
+  );
 };
 
 export default QuizEditor;
