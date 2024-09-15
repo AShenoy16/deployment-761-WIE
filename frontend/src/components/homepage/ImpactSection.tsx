@@ -14,7 +14,7 @@ const ImpactSection: React.FC = () => {
   return (
     <Box
       sx={{
-        padding: { xs: "2em 3em", md: "2em 12em 2em 12em" },
+        padding: { xs: "2em 3em", md: "2em 12em 2em 12em", xl: "2em 20em" },
         color: "#00467F",
         alignItems: { md: "center", lg: "flex-start" },
       }}
