@@ -408,8 +408,8 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
       />
 
       <AddQuestionResultAlert
-        isSuccess={deleteMutation.isSuccess}
-        isError={deleteMutation.isError}
+        isSuccess={addMutation.isSuccess}
+        isError={addMutation.isError}
         onClose={() => addMutation.reset()}
       />
       <DeleteQuestionResultAlert
