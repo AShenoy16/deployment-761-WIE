@@ -1,6 +1,11 @@
 import { Request, Response } from "express";
 import { QuizSubmissionRequest } from "../types/quizTypes";
-import { getSpecQuiz, processQuizSubmission } from "../services/quizService";
+import {
+  deleteQuestion,
+  getSpecQuiz,
+  isValidQuestionType,
+  processQuizSubmission,
+} from "../services/quizService";
 import { isQuizSubmissionRequest } from "../validation/quizValidation";
 import {
   IMCQAnswerOption,
@@ -71,6 +76,35 @@ export const postQuizContent = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error adding quiz question:", error);
     return res.status(500).json({ message: "Server error", error });
+  }
+};
+
+/**
+ * Controller endpoint method to delete quiz question by id
+ * @param req
+ * @param res
+ * @returns
+ */
+export const deleteQuizQuestion = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { questionType } = req.body;
+
+    if (!id || !questionType || !isValidQuestionType(questionType)) {
+      return res.status(422).json({ message: "Incorrect Information" });
+    }
+
+    const result = await deleteQuestion(id, questionType);
+
+    if (!result) {
+      return res
+        .status(404)
+        .json({ message: "Transaction Aborted Incorrect ID" });
+    }
+
+    return res.status(200).json({ message: "Question Deleted" });
+  } catch (error) {
+    return res.status(500).json({ message: "Network error" });
   }
 };
 

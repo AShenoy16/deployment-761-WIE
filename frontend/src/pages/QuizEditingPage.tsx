@@ -1,9 +1,9 @@
 import { Stack } from "@mui/material";
 import QuizEditor from "../components/quiz/QuizEditor";
-import { useGetQuestions } from "../hooks/useGetQuestions";
+import { useQuestions } from "../hooks/useQuestions";
 
 const QuizEditingPage = () => {
-  const { questions } = useGetQuestions();
+  const { questions } = useQuestions();
 
   return (
     <Stack

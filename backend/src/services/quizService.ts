@@ -16,6 +16,7 @@ import mongoose from "mongoose";
 import { Console } from "console";
 import MultiplierData from "../models/multiplerModel";
 import { getAllMultipliers } from "./multiplierService";
+import { ParamsDictionary } from "express-serve-static-core";
 
 /**
  * Servixe code that will actually calculate the results
@@ -255,9 +256,9 @@ const sliderResults = async (
  * Method to get update value for a spec based on the rank of the answer chosen
  * @param rank of the answer option
  * @param weighting of the spec
- * @param rank2Factor 
- * @param rank3Factor 
- * @returns 
+ * @param rank2Factor
+ * @param rank3Factor
+ * @returns
  */
 const getRankingUpdateValue = (
   rank: number,
@@ -273,7 +274,7 @@ const getRankingUpdateValue = (
     case 3:
       return weighting / rank3Factor;
     default:
-      return 0
+      return 0;
   }
 };
 
@@ -358,4 +359,83 @@ const rankingResults = async (
   }
 
   return;
+};
+
+/**
+ * Service that deletes quiz question by id from db
+ * @param id - string representing question Id
+ * @param questionType - string representing question type
+ */
+export const deleteQuestion = async (id: string, questionType: string) => {
+  // create transaction to delete question from both, otherwise rollback
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    // Step 1: Remove the question ID from the quizQuestions array in the Quiz collection
+    const quizResult = await Quiz.updateOne(
+      { quizQuestions: id }, // Match the quiz containing the question ID
+      { $pull: { quizQuestions: id } }, // Remove the question ID from the array
+      { session }
+    );
+
+    if (quizResult.modifiedCount === 0) {
+      // If the question ID is not found in the Quiz collection
+      await session.abortTransaction();
+      return null;
+    }
+
+    // Step 2: Delete question from the appropriate question type collection
+    let questionResult;
+    switch (questionType) {
+      case "MCQ":
+        questionResult = await MCQQuestion.findByIdAndDelete(
+          { _id: id },
+          { session }
+        );
+        break;
+
+      case "Ranking":
+        questionResult = await RankingQuestion.findByIdAndDelete(
+          { _id: id },
+          { session }
+        );
+        break;
+
+      case "Slider":
+        questionResult = await SliderQuestion.findByIdAndDelete(
+          { _id: id },
+          { session }
+        );
+        break;
+
+      default:
+        await session.abortTransaction();
+        return null;
+    }
+
+    // If the question is not found in the specific question collection
+    if (!questionResult) {
+      await session.abortTransaction();
+      return null;
+    }
+
+    // Step 3: If both are successful, commit the transaction
+    await session.commitTransaction();
+    return 1;
+  } catch (error) {
+    // If any error happens, abort the transaction
+    await session.abortTransaction();
+    throw new Error("Network error");
+  } finally {
+    session.endSession();
+  }
+};
+
+/**
+ * Check if question type is one of the valid question types
+ * @param qType string containing question type
+ * @returns
+ */
+export const isValidQuestionType = (qType: string) => {
+  return qType == "MCQ" || qType == "Ranking" || qType == "Slider";
 };
