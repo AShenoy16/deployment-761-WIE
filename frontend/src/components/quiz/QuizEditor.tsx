@@ -14,6 +14,8 @@ import {
   Snackbar,
   Alert,
   CircularProgress,
+  Modal,
+  TextField,
   FormControl,
   InputLabel,
   MenuItem,
@@ -28,6 +30,7 @@ import {
   IMCQQuestion,
   IRankingQuestion,
   ISliderQuestion,
+  IMultiplierData,
 } from "../../types/Question";
 import { useQuizEditorStore } from "../../stores/QuizEditorStore";
 import RankingQuestionEditor from "./RankingQuestionEditor";
@@ -38,6 +41,7 @@ import SliderQuestionEditor from "./SliderQuestionEditor";
 import MCQQuestionEditor from "./MCQQuestionEditor";
 import { useMCQQuestionEditorStore } from "../../stores/MCQQuestionEditorStore";
 import { useQuestions } from "../../hooks/useQuestions";
+import { useMultiplier } from "../../hooks/useMultiplier";
 
 const UpdateQuestionResultAlert = ({
   isSuccess,
@@ -224,6 +228,180 @@ const ConfirmDeleteQuestionModal = ({
   );
 };
 
+const MultiplierSaveResultAlert = ({
+  isSuccess,
+  isError,
+  onClose,
+}: {
+  isSuccess: boolean;
+  isError: boolean;
+  onClose: () => void;
+}) => {
+  return (
+    <>
+      <Snackbar open={isSuccess} autoHideDuration={5000} onClose={onClose}>
+        <Alert onClose={onClose} severity="success" sx={{ width: "100%" }}>
+          Multipliers successfully saved!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={isError} autoHideDuration={5000} onClose={onClose}>
+        <Alert onClose={onClose} severity="error" sx={{ width: "100%" }}>
+          Failed to save multipliers. Please try again.
+        </Alert>
+      </Snackbar>
+    </>
+  );
+};
+
+type EditMultiplerDataModalProps = {
+  open: boolean;
+  onClose: () => void;
+  multipliers: IMultiplierData;
+};
+const EditMultiplierDataModal: React.FC<EditMultiplerDataModalProps> = ({
+  open,
+  onClose,
+  multipliers,
+}) => {
+  const { updateMultiplierMutation } = useMultiplier();
+
+  const [localMultipliers, setLocalMultipliers] =
+    useState<IMultiplierData>(multipliers);
+
+  const [errors, setErrors] = useState<{
+    [key in keyof IMultiplierData]?: string;
+  }>({});
+
+  const [isSaveSuccess, setIsSaveSuccess] = useState(false);
+  const [isSaveError, setIsSaveError] = useState(false);
+
+  useEffect(() => {
+    // Reset local state when the modal opens
+    if (open) {
+      setLocalMultipliers(multipliers);
+      setErrors({});
+    }
+  }, [open, multipliers]);
+
+  // Function to handle changes in text fields
+  const handleChange =
+    (field: keyof IMultiplierData) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = parseFloat(e.target.value);
+
+      // Validate the input for errors
+      if (value <= 0) {
+        setErrors((prev) => ({
+          ...prev,
+          [field]: "Value must be greater than 0",
+        }));
+      } else if (isNaN(value)) {
+        setErrors((prev) => ({
+          ...prev,
+          [field]: "Please enter a  number",
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          [field]: "",
+        }));
+      }
+
+      setLocalMultipliers((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    };
+
+  const handleSave = async () => {
+    try {
+      await updateMultiplierMutation.mutateAsync(localMultipliers);
+      setIsSaveSuccess(true);
+      onClose();
+    } catch (error) {
+      setIsSaveError(true);
+      console.error("Error saving multipliers:", error);
+    }
+  };
+
+  const fields = [
+    {
+      label: "Ranking Question Rank 2 Divison Factor",
+      value: localMultipliers.rank2Multiplier,
+      field: "rank2Multiplier" as keyof IMultiplierData,
+    },
+    {
+      label: "Ranking Question Rank 3 Divison Factor",
+      value: localMultipliers.rank3Multiplier,
+      field: "rank3Multiplier" as keyof IMultiplierData,
+    },
+    {
+      label: "Slider Question Division Factor",
+      value: localMultipliers.sliderFactor,
+      field: "sliderFactor" as keyof IMultiplierData,
+    },
+  ];
+
+  return (
+    <>
+      <Modal open={open} onClose={onClose}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            width: 500,
+            transform: "translate(-50%, -50%)",
+            bgcolor: "background.paper",
+            borderRadius: "0.5rem",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Stack spacing={4}>
+            <Typography variant="h5">Edit Question Division Factors</Typography>
+
+            {fields.map((field) => (
+              <TextField
+                key={field.field}
+                label={field.label}
+                value={field.value}
+                onChange={handleChange(field.field)}
+                fullWidth
+                type="number"
+                error={!!errors[field.field]} // Check if there's an error for this field
+                helperText={errors[field.field]}
+              />
+            ))}
+
+            <Stack direction="row" justifyContent="flex-end" spacing={2}>
+              <Button variant="outlined" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSave}
+                disabled={Object.values(errors).some((error) => !!error)}
+              >
+                Save
+              </Button>
+            </Stack>
+          </Stack>
+        </Box>
+      </Modal>
+      <MultiplierSaveResultAlert
+        isSuccess={isSaveSuccess}
+        isError={isSaveError}
+        onClose={() => {
+          setIsSaveSuccess(false);
+          setIsSaveError(false);
+        }}
+      />
+    </>
+  );
+};
+
 const EditableQuestion = ({
   question,
   questionNumber,
@@ -282,7 +460,13 @@ const EditableQuestion = ({
   );
 };
 
-const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
+const EditQuestionList = ({
+  questions,
+  multipliers,
+}: {
+  questions: IQuestion[];
+  multipliers: IMultiplierData;
+}) => {
   const theme = useTheme();
   const questionListRef = useRef<HTMLDivElement | null>(null);
 
@@ -303,6 +487,16 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
     highlightedQuestionId: state.highlightedQuestionId,
     setHighlightedQuestionId: state.setHighlightedQuestionId,
   }));
+
+  const [openMultiplierModal, setOpenMultiplierModal] = useState(false);
+
+  const handleOpenMultiplierModal = () => {
+    setOpenMultiplierModal(true);
+  };
+
+  const handleMultiplierModalClose = () => {
+    setOpenMultiplierModal(false);
+  };
 
   const setSelectedRankingQuestion = useRankingQuestionEditorStore(
     (state) => state.setSelectedQuestion
@@ -365,22 +559,40 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Typography variant="h5">Questions</Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          sx={{
-            backgroundColor: "white",
-            color: "black",
-            borderRadius: "1rem",
-            textTransform: "none",
-            "&:hover": {
+        <Stack direction="row" spacing={4}>
+          <Button
+            variant="contained"
+            startIcon={<EditIcon />}
+            onClick={handleOpenMultiplierModal}
+            sx={{
               backgroundColor: "white",
-            },
-          }}
-          onClick={onClickAddQuestion}
-        >
-          <Typography>Question</Typography>
-        </Button>
+              color: "black",
+              borderRadius: "1rem",
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "white",
+              },
+            }}
+          >
+            <Typography>Division Factors</Typography>
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            sx={{
+              backgroundColor: "white",
+              color: "black",
+              borderRadius: "1rem",
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "white",
+              },
+            }}
+            onClick={onClickAddQuestion}
+          >
+            <Typography>Question</Typography>
+          </Button>
+        </Stack>
       </Stack>
 
       <Stack
@@ -402,15 +614,21 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
           />
         ))}
       </Stack>
+      <EditMultiplierDataModal
+        open={openMultiplierModal}
+        onClose={handleMultiplierModalClose}
+        multipliers={multipliers}
+      />
     </Stack>
   );
 };
 
 type QuizEditorProps = {
   questions: IQuestion[];
+  multipliers: IMultiplierData;
 };
 
-const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
+const QuizEditor: React.FC<QuizEditorProps> = ({ questions, multipliers }) => {
   const {
     selectedQuestionToEdit,
     setSelectedQuestionToEdit,
@@ -520,7 +738,7 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
           )}
         </QuestionEditorLayout>
       ) : (
-        <EditQuestionList questions={questions} />
+        <EditQuestionList questions={questions} multipliers={multipliers} />
       )}
 
       <AddQuestionModal

@@ -295,7 +295,7 @@ const SliderQuestionEditor: React.FC = () => {
         }}
       />
 
-      <Stack direction="row" width="90%">
+      <Stack direction="row" width="90%" justifyContent="space-between">
         <Button
           startIcon={<AddIcon />}
           variant="outlined"
@@ -303,6 +303,8 @@ const SliderQuestionEditor: React.FC = () => {
         >
           Spec
         </Button>
+
+        <Typography>Weighting</Typography>
       </Stack>
 
       {/* Render specialisation options or show no specs error */}

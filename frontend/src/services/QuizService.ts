@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IQuestion } from "../types/Question";
+import { IMultiplierData, IQuestion } from "../types/Question";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -17,6 +17,22 @@ export const deleteQuizQuestion = async (
       questionType,
     },
   });
+};
+
+export const getQuizQuestionMultipliers =
+  async (): Promise<IMultiplierData> => {
+    const response = await axios.get(`${API_BASE_URL}/multiplier`);
+    return response.data;
+  };
+
+export const updateMultiplier = async (
+  updatedMultipliers: IMultiplierData
+): Promise<IMultiplierData> => {
+  const response = await axios.put(
+    `${API_BASE_URL}/multiplier`,
+    updatedMultipliers
+  );
+  return response.data;
 };
 
 export const addQuizQuestion = async (
