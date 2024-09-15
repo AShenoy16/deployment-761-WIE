@@ -22,3 +22,25 @@ export const isValidMultiplier = (multiplier: IMultiplierData): boolean => {
     typeof multiplier.sliderFactor === "number"
   );
 };
+
+// update the multiplier information with new multiplier data
+export const updateMultiplier = async (newMultiplier: IMultiplierData) => {
+  try {
+    const updatedMultiplier = await MultiplierData.findByIdAndUpdate(
+      newMultiplier._id,
+      {
+        $set: {
+          rank2Multiplier: newMultiplier.rank2Multiplier,
+          rank3Multiplier: newMultiplier.rank3Multiplier,
+          sliderFactor: newMultiplier.sliderFactor,
+        },
+      },
+      { new: true }
+    );
+
+    return updatedMultiplier;
+  } catch (error) {
+    console.error("Error updating multipliers:", error);
+    throw error;
+  }
+};
