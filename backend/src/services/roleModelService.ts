@@ -47,3 +47,26 @@ export const deleteRoleModelById = async (roleModelId: string) => {
     return null;
   }
 };
+
+/**
+ * Service to add a new role model
+ * @param id role model id to update
+ * @param roleModelData Object containing the role model details
+ * @returns The updated role model or null in case of error
+ */
+export const updateRoleModel = async (
+  id: string,
+  roleModelData: IRoleModel
+) => {
+  try {
+    const updatedRoleModel = await RoleModel.findByIdAndUpdate(
+      id,
+      roleModelData,
+      { new: true, runValidators: true } // Returns the updated document
+    );
+    return updatedRoleModel;
+  } catch (error) {
+    console.error("Error updating new role model:", error);
+    return null;
+  }
+};

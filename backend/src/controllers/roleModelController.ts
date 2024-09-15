@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 import {
   deleteRoleModelById,
   getAllRoleModels,
+  addRoleModel,
+  updateRoleModel,
 } from "../services/roleModelService";
-import { addRoleModel } from "../services/roleModelService";
 import { IRoleModel } from "../models/interfaces";
 
 /**
@@ -53,6 +54,24 @@ export const deleteRoleModel = async (req: Request, res: Response) => {
         .json({ message: "Role model not found with ID: ", roleModelId });
     }
     return res.status(204).send();
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error });
+  }
+};
+
+/**
+ * Controller to update a role model
+ */
+export const putRoleModels = async (req: Request, res: Response) => {
+  const roleModelData: IRoleModel = req.body;
+  const { id } = req.params; 
+
+  try {
+    const updatedRoleModel = await updateRoleModel(id, roleModelData);
+    if (!updatedRoleModel) {
+      return res.status(404).json({ message: "Failed to find role model" });
+    }
+    return res.status(200).json(updatedRoleModel);
   } catch (error) {
     return res.status(500).json({ message: "Server error", error });
   }
