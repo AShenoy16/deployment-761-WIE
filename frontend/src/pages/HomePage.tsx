@@ -1,20 +1,10 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  Grid,
-  Typography,
-  Box,
-  Card,
-  CardContent,
-  Button,
-  Stack,
-  Link,
-} from "@mui/material";
-import uoaEngBuilding from "/engineering-building.jpg";
-import wenLogo from "../assets/wen-logo.png";
+
 import HeroSection from "../components/homepage/HeroSection";
 import SpecialisationSection from "../components/homepage/SpecialisationSection";
 import ImpactSection from "../components/homepage/ImpactSection";
+import { Box, Divider } from "@mui/material";
+import CardSection from "../components/homepage/CardSection";
 
 const HomePage: React.FC = () => {
   return (
@@ -22,6 +12,13 @@ const HomePage: React.FC = () => {
       <HeroSection />
       <SpecialisationSection />
       <ImpactSection />
+      <Box
+        sx={{
+          backgroundColor: "#009AC7",
+          height: "20px",
+        }}
+      ></Box>
+      <CardSection />
     </div>
   );
 };

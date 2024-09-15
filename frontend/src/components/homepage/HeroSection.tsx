@@ -37,7 +37,7 @@ const HeroSection: React.FC = () => {
           textAlign: "left",
           backgroundColor: "white",
           paddingX: "3em",
-          paddingY: { xs: "2em", sm: "5em" },
+          paddingY: { xs: "2em", md: "3em" },
           color: "#00467F",
           borderRadius: "3px",
         }}

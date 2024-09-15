@@ -22,7 +22,7 @@ const SpecialisationSection: React.FC = () => {
   return (
     <Box
       sx={{
-        padding: { xs: "2em 3em", md: "2em 8em" },
+        padding: { xs: "2em 3em", md: "2em 8em 0em 8em" },
         textAlign: "center",
         color: "#00467F",
       }}
@@ -41,12 +41,12 @@ const SpecialisationSection: React.FC = () => {
         direction={{ md: "column", lg: "row" }}
         marginTop={3}
         spacing={7}
-        alignItems="center" // Ensures the content aligns vertically in the center for row layout
+        alignItems="center"
       >
         <Box
           display={"flex"}
           flexDirection={"column"}
-          alignItems={{ sm: "center", md: "flex-start" }}
+          alignItems={{ md: "center", lg: "flex-start" }}
         >
           <Typography
             variant="h6"
@@ -69,29 +69,8 @@ const SpecialisationSection: React.FC = () => {
             href="/spec-info"
             underline="hover"
           >
-            Find out more
+            Learn more about UoA Engineering Specialisations
           </Link>
-          {/* <Button
-                variant="contained"
-                color="secondary"
-                sx={buttonStyle}
-                onClick={handleSpecButtonClick}
-              >
-                Learn more
-              </Button> */}
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{
-              textTransform: "none",
-              borderRadius: "12px",
-              marginTop: "0.7em",
-              fontSize: "1.1rem",
-            }}
-            onClick={handleQuizButtonClick}
-          >
-            Take the specialisation quiz
-          </Button>
         </Box>
 
         <Box
@@ -107,6 +86,19 @@ const SpecialisationSection: React.FC = () => {
           }
         />
       </Stack>
+      <Button
+        variant="contained"
+        color="secondary"
+        sx={{
+          textTransform: "none",
+          borderRadius: "12px",
+          marginTop: "0.7em",
+          fontSize: "1.1rem",
+        }}
+        onClick={handleQuizButtonClick}
+      >
+        Find Your Ideal Specialisation with Our Quiz
+      </Button>
     </Box>
   );
 };

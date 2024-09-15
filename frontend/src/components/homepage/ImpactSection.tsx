@@ -16,6 +16,7 @@ const ImpactSection: React.FC = () => {
       sx={{
         padding: { xs: "2em 3em", md: "2em 8em" },
         color: "#00467F",
+        alignItems: { md: "center", lg: "flex-start" },
       }}
     >
       <Typography
@@ -26,13 +27,13 @@ const ImpactSection: React.FC = () => {
           textAlign: { xs: "center", sm: "left" },
         }}
       >
-        Why Engineering? Impact on the World
+        Why Engineering?
       </Typography>
       <Stack
         direction={{ md: "column", lg: "row" }}
         marginTop={3}
         spacing={10}
-        alignItems="center"
+        alignItems={"center"}
       >
         <Box>
           <Typography
@@ -41,7 +42,6 @@ const ImpactSection: React.FC = () => {
             gutterBottom
             sx={{
               color: "black",
-              marginTop: "1em",
             }}
           >
             Engineering is more than just solving problems—it’s about creating
