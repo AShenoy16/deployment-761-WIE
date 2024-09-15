@@ -26,3 +26,44 @@ export const getInitialSpecResults = () => {
   resetMap();
   return { ...initialSpecResults }; // Return a new copy of the object
 };
+
+export const defaultQuizQuestions = {
+  mcq: {
+    questionText: "What is your preferred engineering field?",
+    answerOptions: [
+      { text: "Mechanical", weightings: { Mechanical: 10, Electrical: 5 } },
+      { text: "Electrical", weightings: { Mechanical: 5, Electrical: 10 } },
+    ],
+  },
+
+  slider: {
+    questionText: "Rate your interest in Mechanical Engineering from 1 to 10",
+    sliderWeights: {
+      weightings: { Mechanical: 5, Mechatronics: 3, Software: 7, Compsys: 4 },
+    },
+  },
+
+  ranking: {
+    questionText: "Rank the following jobs",
+    answerOptions: [
+      {
+        text: "Car Building",
+        weightings: {
+          Mechanical: 8,
+          Electrical: 6,
+          Software: 5,
+          Compsys: 3,
+        },
+      },
+      {
+        text: "Robot Building",
+        weightings: {
+          Mechanical: 15,
+          Electrical: 6,
+          Software: 5,
+          Compsys: 3,
+        },
+      },
+    ],
+  },
+};
