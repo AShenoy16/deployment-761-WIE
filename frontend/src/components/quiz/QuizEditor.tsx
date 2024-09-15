@@ -32,6 +32,31 @@ import MCQQuestionEditor from "./MCQQuestionEditor";
 import { useMCQQuestionEditorStore } from "../../stores/MCQQuestionEditorStore";
 import { useQuestions } from "../../hooks/useQuestions";
 
+const AddQuestionResultAlert = ({
+  isSuccess,
+  isError,
+  onClose,
+}: {
+  isSuccess: boolean;
+  isError: boolean;
+  onClose: () => void;
+}) => {
+  return (
+    <>
+      <Snackbar open={isSuccess} autoHideDuration={5000} onClose={onClose}>
+        <Alert onClose={onClose} severity="success" sx={{ width: "100%" }}>
+          Question successfully added!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={isError} autoHideDuration={5000} onClose={onClose}>
+        <Alert onClose={onClose} severity="error" sx={{ width: "100%" }}>
+          Failed to add question. Please try again.
+        </Alert>
+      </Snackbar>
+    </>
+  );
+};
+
 const AddQuestionModal = ({
   open,
   onClose,
@@ -86,6 +111,31 @@ const AddQuestionModal = ({
         </Button>
       </DialogActions>
     </Dialog>
+  );
+};
+
+const DeleteQuestionResultAlert = ({
+  isSuccess,
+  isError,
+  onClose,
+}: {
+  isSuccess: boolean;
+  isError: boolean;
+  onClose: () => void;
+}) => {
+  return (
+    <>
+      <Snackbar open={isSuccess} autoHideDuration={5000} onClose={onClose}>
+        <Alert onClose={onClose} severity="success" sx={{ width: "100%" }}>
+          Question successfully deleted!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={isError} autoHideDuration={5000} onClose={onClose}>
+        <Alert onClose={onClose} severity="error" sx={{ width: "100%" }}>
+          Failed to delete question. Please try again.
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 
@@ -347,60 +397,17 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
         handleConfirmDelete={handleConfirmDelete}
         isLoading={deleteMutation.isPending}
       />
-      <Snackbar
-        open={deleteMutation.isSuccess}
-        autoHideDuration={5000}
-        onClose={() => deleteMutation.reset()}
-      >
-        <Alert
-          onClose={() => deleteMutation.reset()}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Question successfully deleted!
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={deleteMutation.isError}
-        autoHideDuration={5000}
-        onClose={() => deleteMutation.reset()}
-      >
-        <Alert
-          onClose={() => deleteMutation.reset()}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          Failed to delete question. Please try again.
-        </Alert>
-      </Snackbar>
 
-      <Snackbar
-        open={addMutation.isSuccess}
-        autoHideDuration={5000}
+      <DeleteQuestionResultAlert
+        isSuccess={deleteMutation.isSuccess}
+        isError={deleteMutation.isError}
+        onClose={() => deleteMutation.reset()}
+      />
+      <AddQuestionResultAlert
+        isSuccess={deleteMutation.isSuccess}
+        isError={deleteMutation.isError}
         onClose={() => addMutation.reset()}
-      >
-        <Alert
-          onClose={() => addMutation.reset()}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Question successfully added!
-        </Alert>
-      </Snackbar>
-
-      <Snackbar
-        open={addMutation.isError}
-        autoHideDuration={5000}
-        onClose={() => addMutation.reset()}
-      >
-        <Alert
-          onClose={() => addMutation.reset()}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          Failed to add question. Please try again.
-        </Alert>
-      </Snackbar>
+      />
     </>
   );
 };
