@@ -40,7 +40,7 @@ export const deleteQuizQuestion = async (req: Request, res: Response) => {
     const result = await deleteQuestion(id, qType);
 
     if (!result) {
-      return res.status(404).json({ message: "Incorrect ID" });
+      return res.status(404).json({ message: "Transaction Aborted Incorrect ID" });
     }
 
     return res.status(200).json({ message: "Question Deleted" });
