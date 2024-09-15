@@ -5,9 +5,9 @@ import {
   deleteQuestion,
   getSpecQuiz,
   isValidQuestionType,
+  isValidUpdatedQuestionData,
   processQuizSubmission,
   updateQuestionById,
-  validateUpdatedQuestionData,
 } from "../services/quizService";
 import { isQuizSubmissionRequest } from "../validation/quizValidation";
 import mongoose from "mongoose";
@@ -72,9 +72,7 @@ export const putQuizContent = async (req: Request, res: Response) => {
   const { id } = req.params;
   const updatedData = req.body;
 
-  try {
-    validateUpdatedQuestionData(updatedData);
-  } catch (error) {
+  if (!isValidUpdatedQuestionData(updatedData)) {
     return res.status(400).json({
       message: "Please select a proper specialization for each weighting",
     });

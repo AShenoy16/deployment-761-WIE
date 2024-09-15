@@ -508,39 +508,26 @@ export const updateQuestionById = async (id: string, updatedData: any) => {
 /**
  * Validates the updatedData to make sure there are no default spec weightings
  * @param updatedData
+ * @returns {boolean} - True if valid, false if invalid
  */
-export const validateUpdatedQuestionData = (updatedData: IQuestion) => {
+export const isValidUpdatedQuestionData = (updatedData: IQuestion): boolean => {
   if (updatedData.questionType === "MCQ") {
-    updatedData.answerOptions.forEach((option) => {
-      Object.keys(option.weightings).forEach((specializationName) => {
-        if (specializationName.includes("New Spec")) {
-          throw new Error(
-            `Invalid specialization name "${specializationName}" in MCQ options.`
-          );
-        }
-      });
-    });
+    return updatedData.answerOptions.every((option) =>
+      Object.keys(option.weightings).every(
+        (specializationName) => !specializationName.includes("New Spec")
+      )
+    );
   } else if (updatedData.questionType === "Ranking") {
-    updatedData.answerOptions.forEach((option) => {
-      Object.keys(option.weightings).forEach((specializationName) => {
-        if (specializationName.includes("New Spec")) {
-          throw new Error(
-            `Invalid specialization name "${specializationName}" in Ranking options.`
-          );
-        }
-      });
-    });
+    return updatedData.answerOptions.every((option) =>
+      Object.keys(option.weightings).every(
+        (specializationName) => !specializationName.includes("New Spec")
+      )
+    );
   } else if (updatedData.questionType === "Slider") {
-    Object.keys(updatedData.sliderRange.weightings).forEach(
-      (specializationName) => {
-        if (specializationName.includes("New Spec")) {
-          throw new Error(
-            `Invalid specialization name "${specializationName}" in Slider weights.`
-          );
-        }
-      }
+    return Object.keys(updatedData.sliderRange.weightings).every(
+      (specializationName) => !specializationName.includes("New Spec")
     );
   } else {
-    throw new Error("Invalid question type.");
+    return false; // Invalid question type
   }
 };
