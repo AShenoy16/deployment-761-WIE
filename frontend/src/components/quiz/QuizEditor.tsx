@@ -35,6 +35,7 @@ import SliderQuestionEditor from "./SliderQuestionEditor";
 import MCQQuestionEditor from "./MCQQuestionEditor";
 import { useMCQQuestionEditorStore } from "../../stores/MCQQuestionEditorStore";
 import { useQuestions } from "../../hooks/useQuestions";
+import { useMultiplier } from "../../hooks/useMultiplier";
 
 const AddQuestionResultAlert = ({
   isSuccess,
@@ -194,6 +195,31 @@ const ConfirmDeleteQuestionModal = ({
   );
 };
 
+const MultiplierSaveResultAlert = ({
+  isSuccess,
+  isError,
+  onClose,
+}: {
+  isSuccess: boolean;
+  isError: boolean;
+  onClose: () => void;
+}) => {
+  return (
+    <>
+      <Snackbar open={isSuccess} autoHideDuration={5000} onClose={onClose}>
+        <Alert onClose={onClose} severity="success" sx={{ width: "100%" }}>
+          Multipliers successfully saved!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={isError} autoHideDuration={5000} onClose={onClose}>
+        <Alert onClose={onClose} severity="error" sx={{ width: "100%" }}>
+          Failed to save multipliers. Please try again.
+        </Alert>
+      </Snackbar>
+    </>
+  );
+};
+
 type EditMultiplerDataModalProps = {
   open: boolean;
   onClose: () => void;
@@ -204,12 +230,17 @@ const EditMultiplierDataModal: React.FC<EditMultiplerDataModalProps> = ({
   onClose,
   multipliers,
 }) => {
+  const { updateMultiplierMutation } = useMultiplier();
+
   const [localMultipliers, setLocalMultipliers] =
     useState<IMultiplierData>(multipliers);
 
   const [errors, setErrors] = useState<{
     [key in keyof IMultiplierData]?: string;
   }>({});
+
+  const [isSaveSuccess, setIsSaveSuccess] = useState(false);
+  const [isSaveError, setIsSaveError] = useState(false);
 
   useEffect(() => {
     // Reset local state when the modal opens
@@ -226,10 +257,15 @@ const EditMultiplierDataModal: React.FC<EditMultiplerDataModalProps> = ({
       const value = parseFloat(e.target.value);
 
       // Validate the input for errors
-      if (value <= 0 || isNaN(value)) {
+      if (value <= 0) {
         setErrors((prev) => ({
           ...prev,
           [field]: "Value must be greater than 0",
+        }));
+      } else if (isNaN(value)) {
+        setErrors((prev) => ({
+          ...prev,
+          [field]: "Please enter a  number",
         }));
       } else {
         setErrors((prev) => ({
@@ -244,19 +280,25 @@ const EditMultiplierDataModal: React.FC<EditMultiplerDataModalProps> = ({
       }));
     };
 
-  const handleSave = () => {
-    console.log(localMultipliers);
-    onClose();
+  const handleSave = async () => {
+    try {
+      await updateMultiplierMutation.mutateAsync(localMultipliers);
+      setIsSaveSuccess(true);
+      onClose();
+    } catch (error) {
+      setIsSaveError(true);
+      console.error("Error saving multipliers:", error);
+    }
   };
 
   const fields = [
     {
-      label: "Ranking Question Rank 2 Multiplier",
+      label: "Ranking Question Rank 2 Divison Factor",
       value: localMultipliers.rank2Multiplier,
       field: "rank2Multiplier" as keyof IMultiplierData,
     },
     {
-      label: "Ranking Question Rank 3 Multiplier",
+      label: "Ranking Question Rank 3 Divison Factor",
       value: localMultipliers.rank3Multiplier,
       field: "rank3Multiplier" as keyof IMultiplierData,
     },
@@ -268,52 +310,62 @@ const EditMultiplierDataModal: React.FC<EditMultiplerDataModalProps> = ({
   ];
 
   return (
-    <Modal open={open} onClose={onClose}>
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          width: 500,
-          transform: "translate(-50%, -50%)",
-          bgcolor: "background.paper",
-          borderRadius: "0.5rem",
-          boxShadow: 24,
-          p: 4,
-        }}
-      >
-        <Stack spacing={4}>
-          <Typography variant="h5">Edit Question Factors</Typography>
+    <>
+      <Modal open={open} onClose={onClose}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            width: 500,
+            transform: "translate(-50%, -50%)",
+            bgcolor: "background.paper",
+            borderRadius: "0.5rem",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Stack spacing={4}>
+            <Typography variant="h5">Edit Question Division Factors</Typography>
 
-          {fields.map((field) => (
-            <TextField
-              key={field.field}
-              label={field.label}
-              value={field.value}
-              onChange={handleChange(field.field)}
-              fullWidth
-              type="number"
-              error={!!errors[field.field]} // Check if there's an error for this field
-              helperText={errors[field.field]}
-            />
-          ))}
+            {fields.map((field) => (
+              <TextField
+                key={field.field}
+                label={field.label}
+                value={field.value}
+                onChange={handleChange(field.field)}
+                fullWidth
+                type="number"
+                error={!!errors[field.field]} // Check if there's an error for this field
+                helperText={errors[field.field]}
+              />
+            ))}
 
-          <Stack direction="row" justifyContent="flex-end" spacing={2}>
-            <Button variant="outlined" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSave}
-              disabled={Object.values(errors).some((error) => !!error)}
-            >
-              Save
-            </Button>
+            <Stack direction="row" justifyContent="flex-end" spacing={2}>
+              <Button variant="outlined" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSave}
+                disabled={Object.values(errors).some((error) => !!error)}
+              >
+                Save
+              </Button>
+            </Stack>
           </Stack>
-        </Stack>
-      </Box>
-    </Modal>
+        </Box>
+      </Modal>
+      <MultiplierSaveResultAlert
+        isSuccess={isSaveSuccess}
+        isError={isSaveError}
+        onClose={() => {
+          setIsSaveSuccess(false);
+          setIsSaveError(false);
+        }}
+      />
+    </>
   );
 };
 
@@ -489,7 +541,7 @@ const EditQuestionList = ({
               },
             }}
           >
-            <Typography>Multipliers</Typography>
+            <Typography>Division Factors</Typography>
           </Button>
           <Button
             variant="contained"

@@ -22,10 +22,18 @@ export const deleteQuizQuestion = async (
 export const getQuizQuestionMultipliers =
   async (): Promise<IMultiplierData> => {
     const response = await axios.get(`${API_BASE_URL}/multiplier`);
-    const data = response.data;
-    console.log("Multiplier response:", data);
-    return data;
+    return response.data;
   };
+
+export const updateMultiplier = async (
+  updatedMultipliers: IMultiplierData
+): Promise<IMultiplierData> => {
+  const response = await axios.put(
+    `${API_BASE_URL}/multiplier`,
+    updatedMultipliers
+  );
+  return response.data;
+};
 
 export const addQuizQuestion = async (
   questionType: IQuestion["questionType"]
