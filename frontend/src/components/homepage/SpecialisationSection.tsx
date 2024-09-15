@@ -1,6 +1,8 @@
 import React from "react";
 import { Box, Typography, Stack, Button, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import Slideshow from "./Slideshow";
+import { specialisations } from "./specialisationsData";
 
 const SpecialisationSection: React.FC = () => {
   const navigate = useNavigate();
@@ -47,6 +49,7 @@ const SpecialisationSection: React.FC = () => {
           display={"flex"}
           flexDirection={"column"}
           alignItems={{ md: "center", lg: "flex-start" }}
+          marginBottom={{ xs: "2em", md: 0 }}
         >
           <Typography
             variant="h6"
@@ -73,18 +76,7 @@ const SpecialisationSection: React.FC = () => {
           </Link>
         </Box>
 
-        <Box
-          component="img"
-          sx={{
-            maxWidth: { xs: 300, sm: 350 },
-            flex: 1, // Ensures equal width
-            objectFit: "cover", // Ensures the image maintains aspect ratio
-            marginTop: { xs: 3, md: 0 },
-          }}
-          src={
-            "https://www.careers.govt.nz/assets/Posts/_resampled/ScaleWidthWyI3OTUiXQ/A-female-engineer-repairing-a-production-line-machine.jpg"
-          }
-        />
+        <Slideshow slides={specialisations} />
       </Stack>
       <Button
         variant="contained"
