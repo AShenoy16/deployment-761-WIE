@@ -1,17 +1,24 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+
+import HeroSection from "../components/homepage/HeroSection";
+import SpecialisationSection from "../components/homepage/SpecialisationSection";
+import ImpactSection from "../components/homepage/ImpactSection";
+import { Box, Divider } from "@mui/material";
+import CardSection from "../components/homepage/CardSection";
 
 const HomePage: React.FC = () => {
-  const navigate = useNavigate();
-
-  const handleQuizButtonClick = () => {
-    navigate("/quiz");
-  };
-
   return (
     <div>
-      <p>HomePage</p>
-      <button onClick={handleQuizButtonClick}>Temporary quiz button</button>
+      <HeroSection />
+      <SpecialisationSection />
+      <ImpactSection />
+      <Box
+        sx={{
+          backgroundColor: "#009AC7",
+          height: "20px",
+        }}
+      ></Box>
+      <CardSection />
     </div>
   );
 };
