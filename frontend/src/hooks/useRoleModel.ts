@@ -1,12 +1,18 @@
 import { IRoleModel } from "../types/RoleModel";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addRoleModelType } from "../components/rolemodel/AddRoleModelModal";
+import { addUpdateRoleModelType } from "../components/rolemodel/AddUpdateRoleModelModal";
 import {
   deleteRoleModel,
   getRoleModels,
   postRoleModel,
+  putRoleModel,
 } from "../services/RoleModelService";
 import useSnackBar from "./useSnackBar";
+
+type UpdateRoleModelMutationArg = {
+  roleModel: addUpdateRoleModelType;
+  roleModelId: string;
+};
 
 export const useGetRoleModels = () => {
   const {
@@ -28,8 +34,8 @@ export const useAddRoleModel = () => {
   const queryClient = useQueryClient();
   const showSnackbar = useSnackBar();
 
-  const mutation = useMutation<IRoleModel, Error, addRoleModelType>({
-    mutationFn: async (roleModel: addRoleModelType) => {
+  const mutation = useMutation<IRoleModel, Error, addUpdateRoleModelType>({
+    mutationFn: async (roleModel: addUpdateRoleModelType) => {
       const data = await postRoleModel(roleModel);
       return data;
     },
@@ -72,4 +78,37 @@ export const useDeleteRoleModel = () => {
   });
 
   return { mutation };
+};
+
+export const usePutRoleModel = () => {
+  const queryClient = useQueryClient();
+  const showSnackbar = useSnackBar();
+
+  const mutation = useMutation<IRoleModel, Error, UpdateRoleModelMutationArg>({
+    mutationFn: async ({
+      roleModel,
+      roleModelId,
+    }: UpdateRoleModelMutationArg) => {
+      const data = await putRoleModel(roleModel, roleModelId);
+      return data;
+    },
+    onSuccess: (updatedRoleModel) => {
+      queryClient.setQueryData(
+        ["RoleModels"],
+        (oldData: IRoleModel[] | undefined) => {
+          const previousData = oldData ?? [];
+          return previousData.map((role) =>
+            role._id === updatedRoleModel._id ? updatedRoleModel : role
+          ); // Update the role model in the query cache
+        }
+      );
+      showSnackbar("Successfully updated role model");
+    },
+    onError: (error) => {
+      showSnackbar("Error updating role model, please try again");
+      console.error("Error updating role model:", error);
+    },
+  });
+
+  return mutation;
 };

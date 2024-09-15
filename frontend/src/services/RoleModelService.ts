@@ -1,6 +1,6 @@
 import axios from "axios";
 import { IRoleModel } from "../types/RoleModel";
-import { addRoleModelType } from "../components/rolemodel/AddRoleModelModal";
+import { addUpdateRoleModelType } from "../components/rolemodel/AddUpdateRoleModelModal";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -25,7 +25,7 @@ export const getRoleModels = async (): Promise<IRoleModel[]> => {
  * @returns the role model object added to the database
  */
 export const postRoleModel = async (
-  newRoleModel: addRoleModelType
+  newRoleModel: addUpdateRoleModelType
 ): Promise<IRoleModel> => {
   try {
     const response = await axios.post(
@@ -49,6 +49,28 @@ export const deleteRoleModel = async (roleModelId: string): Promise<void> => {
     await axios.delete(`${API_BASE_URL}/role-models/${roleModelId}`);
   } catch (error) {
     console.error("Error deleting role model:", error);
+    throw error; // Throw the error so the query can handle it
+  }
+};
+
+/**
+ * Service to update role model object in the database by ID
+ * @param roleModel role model object from user input
+ * @returns updated role model object in the database
+ */
+export const putRoleModel = async (
+  roleModel: addUpdateRoleModelType,
+  roleModelId: string
+): Promise<IRoleModel> => {
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/role-models/${roleModelId}`,
+      roleModel
+    );
+    const roleModelData: IRoleModel = response.data;
+    return roleModelData;
+  } catch (error) {
+    console.error("Error updating role model:", error);
     throw error; // Throw the error so the query can handle it
   }
 };

@@ -15,8 +15,10 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { useDeleteRoleModel } from "../../hooks/useRoleModel";
 import { useState } from "react";
+import AddUpdateRoleModelModal from "./AddUpdateRoleModelModal";
 
 const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
+  const [addEditFormOpen, setAddEditFormOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const { mutation } = useDeleteRoleModel();
 
@@ -30,6 +32,12 @@ const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
 
   const deleteRoleModel = async () => {
     mutation.mutate(roleModel._id);
+  };
+
+  const openAddEditModal = () => setAddEditFormOpen(true);
+
+  const handleCloseAddEditModal = () => {
+    setAddEditFormOpen(false);
   };
 
   return (
@@ -54,9 +62,14 @@ const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
         <IconButton sx={{ color: "red" }} onClick={handleClickDeleteRoleModel}>
           <CloseIcon />
         </IconButton>
-        <IconButton sx={{ color: "gray" }}>
+        <IconButton onClick={openAddEditModal} sx={{ color: "gray" }}>
           <EditNoteIcon />
         </IconButton>
+        <AddUpdateRoleModelModal
+          open={addEditFormOpen}
+          onClose={handleCloseAddEditModal}
+          roleModelToEdit={roleModel}
+        />
       </Box>
       {/* Dialog for deleting role model */}
       <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
