@@ -15,7 +15,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { useMCQQuestionEditorStore } from "../../stores/MCQQuestionEditorStore";
-import { IMCQAnswerOption } from "../../types/QuestionTypes";
+import { IMCQAnswerOption } from "../../types/Question";
 import { useState } from "react";
 const possibleSpecs = [
   "Biomedical",

@@ -1,7 +1,7 @@
 import { Box, Stack, Typography, useTheme } from "@mui/material";
 import React from "react";
 import { useMCQQuestionStore } from "../../stores/MCQQuestionStore";
-import { IMCQAnswerOption, IMCQQuestion } from "../../types/QuestionTypes";
+import { IMCQAnswerOption, IMCQQuestion } from "../../types/Question";
 
 type MCQOptionProps = {
   option: IMCQAnswerOption;

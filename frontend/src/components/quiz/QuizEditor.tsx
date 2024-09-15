@@ -12,7 +12,7 @@ import { useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { IQuestion } from "../../types/QuestionTypes";
+import { IQuestion } from "../../types/Question";
 import { useQuizEditorStore } from "../../stores/QuizEditorStore";
 import RankingQuestionEditor from "./RankingQuestionEditor";
 import QuestionEditorLayout from "../../layouts/QuestionEditorLayout";

@@ -15,16 +15,10 @@ export interface IMCQQuestion {
 }
 
 // Ranking interfaces
-export interface IRankingWeight {
-  _id: string;
-  specializationName: string;
-  weights: { [rank: string]: number };
-}
-
 export interface IRankingAnswerOption {
   _id: string;
   text: string;
-  weightings: IRankingWeight[];
+  weightings: { [specializationName: string]: number };
 }
 
 export interface IRankingQuestion {
@@ -37,17 +31,16 @@ export interface IRankingQuestion {
 }
 
 // Slider interfaces
-export interface ISliderRange {
-  min: number;
-  max: number;
-  weightings: { [specializationName: string]: number[] };
+export interface ISliderWeights {
+  _id: string;
+  weightings: { [specializationName: string]: number };
 }
 
 export interface ISliderQuestion {
   _id: string;
   questionType: "Slider";
   questionText: string;
-  sliderRange: ISliderRange;
+  sliderRange: ISliderWeights;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -61,3 +54,10 @@ export type Quiz = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+// Define the interface for the multiplier data
+export interface IMultiplierData {
+  rank2Multiplier: number;
+  rank3Multiplier: number;
+  sliderFactor: number;
+}

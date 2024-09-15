@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { IQuestion } from "../types/QuestionTypes";
+import { IQuestion } from "../types/Question";
 
 type QuizEditorStore = {
   selectedQuestion: IQuestion | null;

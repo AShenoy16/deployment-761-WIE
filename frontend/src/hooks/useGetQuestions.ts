@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { IQuestion } from "../types/QuestionTypes";
+import { IQuestion } from "../types/Question";
 import { mockFetchQuizQuestions } from "../util/mockQuizData";
 
 export const useGetQuestions = () => {
