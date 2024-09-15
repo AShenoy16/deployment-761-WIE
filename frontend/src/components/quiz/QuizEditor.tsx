@@ -474,7 +474,7 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
         setSelectedQuestionToEdit(null);
         setUpdateError("");
       } catch (error) {
-        setUpdateError((error as any).response.data.message || "");
+        setUpdateError((error as any)?.response?.data?.message || "");
         console.error("Error updating the question: ", error);
       }
     }
