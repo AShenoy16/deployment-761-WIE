@@ -15,7 +15,7 @@ export const getMultipliers = async (req: Request, res: Response) => {
       return res.status(404).send({ message: "Multipliers Not Found" });
     }
 
-    return res.status(200).json(multiplier);
+    return res.status(200).json(multiplier[0]);
   } catch (error) {
     return res.status(500).json({ message: "Network error" });
   }
