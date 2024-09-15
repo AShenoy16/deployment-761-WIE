@@ -36,18 +36,18 @@ const AddQuestionModal = ({
   open,
   onClose,
   onAdd,
+  isLoading,
 }: {
   open: boolean;
   onClose: () => void;
-  onAdd: (questionType: string) => void;
+  onAdd: (questionType: IQuestion["questionType"]) => void;
+  isLoading: boolean;
 }) => {
   const [selectedQuestionType, setSelectedQuestionType] =
     useState<IQuestion["questionType"]>("MCQ");
 
   const handleAdd = () => {
-    console.log(selectedQuestionType);
     onAdd(selectedQuestionType);
-    onClose();
   };
 
   return (
@@ -74,8 +74,15 @@ const AddQuestionModal = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleAdd} color="primary">
-          Add Question
+        <Button
+          onClick={handleAdd}
+          color="primary"
+          disabled={isLoading}
+          startIcon={
+            isLoading ? <CircularProgress size={18} sx={{ mr: 0.25 }} /> : null
+          }
+        >
+          {isLoading ? "Adding..." : "Add Question"}
         </Button>
       </DialogActions>
     </Dialog>
@@ -280,7 +287,7 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
     setIsAddQuestionModalOpen: state.setIsAddQuestionModalOpen,
   }));
 
-  const { deleteMutation } = useQuestions();
+  const { deleteMutation, addMutation } = useQuestions();
 
   const handleCancelEdit = () => {
     setSelectedQuestionToEdit(null);
@@ -301,7 +308,14 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
     }
   };
 
-  const handleAddQuestion = async () => {};
+  const handleAddQuestion = async (questionType: IQuestion["questionType"]) => {
+    try {
+      await addMutation.mutateAsync(questionType);
+      setIsAddQuestionModalOpen(false);
+    } catch (error) {
+      console.error("Error adding new question: ", error);
+    }
+  };
 
   return (
     <>
@@ -324,7 +338,8 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
       <AddQuestionModal
         open={isAddQuestionModalOpen}
         onClose={() => setIsAddQuestionModalOpen(false)}
-        onAdd={handleAddQuestion}
+        onAdd={(questionType) => handleAddQuestion(questionType)}
+        isLoading={addMutation.isPending}
       />
       <ConfirmDeleteQuestionModal
         selectedQuestionToDelete={selectedQuestionToDelete}
@@ -356,6 +371,34 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
           sx={{ width: "100%" }}
         >
           Failed to delete question. Please try again.
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={addMutation.isSuccess}
+        autoHideDuration={5000}
+        onClose={() => addMutation.reset()}
+      >
+        <Alert
+          onClose={() => addMutation.reset()}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Question successfully added!
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={addMutation.isError}
+        autoHideDuration={5000}
+        onClose={() => addMutation.reset()}
+      >
+        <Alert
+          onClose={() => addMutation.reset()}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          Failed to add question. Please try again.
         </Alert>
       </Snackbar>
     </>

@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { IQuestion } from "../types/Question";
 import {
+  addQuizQuestion,
   deleteQuizQuestion,
   getAllQuizQuestions,
 } from "../services/QuizService";
@@ -24,5 +25,12 @@ export const useQuestions = () => {
     onError: (error) => console.error("Failed to delete the question", error),
   });
 
-  return { questions, isLoading, isError, deleteMutation };
+  const addMutation = useMutation({
+    mutationFn: (questionType: IQuestion["questionType"]) =>
+      addQuizQuestion(questionType),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["questions"] }),
+    onError: (error) => console.error("Failed to add the question", error),
+  });
+
+  return { questions, isLoading, isError, deleteMutation, addMutation };
 };
