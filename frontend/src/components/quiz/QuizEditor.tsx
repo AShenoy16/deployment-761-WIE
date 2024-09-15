@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -14,6 +14,10 @@ import {
   Snackbar,
   Alert,
   CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import { useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -27,6 +31,56 @@ import { useRankingQuestionEditorStore } from "../../stores/RankingQuestionEdito
 import MCQQuestionEditor from "./MCQQuestionEditor";
 import { useMCQQuestionEditorStore } from "../../stores/MCQQuestionEditorStore";
 import { useQuestions } from "../../hooks/useQuestions";
+
+const AddQuestionModal = ({
+  open,
+  onClose,
+  onAdd,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onAdd: (questionType: string) => void;
+}) => {
+  const [selectedQuestionType, setSelectedQuestionType] =
+    useState<IQuestion["questionType"]>("MCQ");
+
+  const handleAdd = () => {
+    console.log(selectedQuestionType);
+    onAdd(selectedQuestionType);
+    onClose();
+  };
+
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>Add New Question</DialogTitle>
+      <DialogContent>
+        <FormControl fullWidth>
+          <InputLabel id="question-type-label">Question Type</InputLabel>
+          <Select
+            labelId="question-type-label"
+            value={selectedQuestionType}
+            onChange={(e) =>
+              setSelectedQuestionType(
+                e.target.value as IQuestion["questionType"]
+              )
+            }
+            label="Question Type"
+          >
+            <MenuItem value="MCQ">MCQ</MenuItem>
+            <MenuItem value="Ranking">Ranking</MenuItem>
+            <MenuItem value="Slider">Slider</MenuItem>
+          </Select>
+        </FormControl>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleAdd} color="primary">
+          Add Question
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 const ConfirmDeleteQuestionModal = ({
   selectedQuestionToDelete,
@@ -116,11 +170,16 @@ const EditableQuestion = ({
 
 const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
   const theme = useTheme();
-  const { setSelectedQuestionToEdit, setSelectedQuestionToDelete } =
-    useQuizEditorStore((state) => ({
-      setSelectedQuestionToEdit: state.setSelectedQuestionToEdit,
-      setSelectedQuestionToDelete: state.setSelectedQuestionToDelete,
-    }));
+
+  const {
+    setSelectedQuestionToEdit,
+    setSelectedQuestionToDelete,
+    setIsAddQuestionModalOpen,
+  } = useQuizEditorStore((state) => ({
+    setSelectedQuestionToEdit: state.setSelectedQuestionToEdit,
+    setSelectedQuestionToDelete: state.setSelectedQuestionToDelete,
+    setIsAddQuestionModalOpen: state.setIsAddQuestionModalOpen,
+  }));
 
   const setSelectedRankingQuestion = useRankingQuestionEditorStore(
     (state) => state.setSelectedQuestion
@@ -128,8 +187,13 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
   const setSelectedMCQQuestion = useMCQQuestionEditorStore(
     (state) => state.setSelectedQuestion
   );
-  const onClickAddQuestion = (question: IQuestion) => {
-    console.log(question._id);
+
+  const onClickAddQuestion = () => {
+    setIsAddQuestionModalOpen(true);
+  };
+
+  const onClickDeleteQuestion = (question: IQuestion) => {
+    setSelectedQuestionToDelete(question);
   };
 
   const onClickEditQuestion = (question: IQuestion) => {
@@ -146,10 +210,6 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
       default:
         throw new Error("Invalid question type");
     }
-  };
-
-  const onClickDeleteQuestion = (question: IQuestion) => {
-    setSelectedQuestionToDelete(question);
   };
 
   return (
@@ -173,6 +233,7 @@ const EditQuestionList = ({ questions }: { questions: IQuestion[] }) => {
               backgroundColor: "white",
             },
           }}
+          onClick={onClickAddQuestion}
         >
           <Typography>Question</Typography>
         </Button>
@@ -208,20 +269,24 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
     setSelectedQuestionToEdit,
     selectedQuestionToDelete,
     setSelectedQuestionToDelete,
+    isAddQuestionModalOpen,
+    setIsAddQuestionModalOpen,
   } = useQuizEditorStore((state) => ({
     selectedQuestionToEdit: state.selectedQuestionToEdit,
     setSelectedQuestionToEdit: state.setSelectedQuestionToEdit,
     selectedQuestionToDelete: state.selectedQuestionToDelete,
     setSelectedQuestionToDelete: state.setSelectedQuestionToDelete,
+    isAddQuestionModalOpen: state.isAddQuestionModalOpen,
+    setIsAddQuestionModalOpen: state.setIsAddQuestionModalOpen,
   }));
 
   const { deleteMutation } = useQuestions();
 
-  const handleOnCancel = () => {
+  const handleCancelEdit = () => {
     setSelectedQuestionToEdit(null);
   };
 
-  const handleOnSave = () => {
+  const handleSaveEdit = () => {
     console.log(selectedQuestionToEdit);
   };
 
@@ -236,10 +301,15 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
     }
   };
 
+  const handleAddQuestion = async () => {};
+
   return (
     <>
       {selectedQuestionToEdit ? (
-        <QuestionEditorLayout onCancel={handleOnCancel} onSave={handleOnSave}>
+        <QuestionEditorLayout
+          onCancel={handleCancelEdit}
+          onSave={handleSaveEdit}
+        >
           {selectedQuestionToEdit.questionType === "MCQ" && (
             <MCQQuestionEditor />
           )}
@@ -251,6 +321,11 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ questions }) => {
         <EditQuestionList questions={questions} />
       )}
 
+      <AddQuestionModal
+        open={isAddQuestionModalOpen}
+        onClose={() => setIsAddQuestionModalOpen(false)}
+        onAdd={handleAddQuestion}
+      />
       <ConfirmDeleteQuestionModal
         selectedQuestionToDelete={selectedQuestionToDelete}
         onClose={() => setSelectedQuestionToDelete(null)}
