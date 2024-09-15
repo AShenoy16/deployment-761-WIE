@@ -210,7 +210,7 @@ const EditableQuestion = ({
         justifyContent: "space-between",
         alignItems: "center",
         p: 2,
-        animation: true ? "glow 1s ease-in-out infinite" : "none",
+        animation: isHighlighted ? "glow 1s ease-in-out infinite" : "none",
         "@keyframes glow": {
           "0%": {
             boxShadow: `0 0 5px ${theme.palette.primary.main}`,
