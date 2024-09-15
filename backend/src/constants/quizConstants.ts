@@ -29,7 +29,7 @@ export const getInitialSpecResults = () => {
 
 export const defaultQuizQuestions = {
   mcq: {
-    questionText: "What is your preferred engineering field?",
+    questionText: "New Example: What is your preferred engineering field?",
     answerOptions: [
       { text: "Mechanical", weightings: { Mechanical: 10, Electrical: 5 } },
       { text: "Electrical", weightings: { Mechanical: 5, Electrical: 10 } },
@@ -37,14 +37,15 @@ export const defaultQuizQuestions = {
   },
 
   slider: {
-    questionText: "Rate your interest in Mechanical Engineering from 1 to 10",
+    questionText:
+      "New Example: Rate your interest in Mechanical Engineering from 1 to 10",
     sliderWeights: {
       weightings: { Mechanical: 5, Mechatronics: 3, Software: 7, Compsys: 4 },
     },
   },
 
   ranking: {
-    questionText: "Rank the following jobs",
+    questionText: "New Example: Rank the following jobs",
     answerOptions: [
       {
         text: "Car Building",
