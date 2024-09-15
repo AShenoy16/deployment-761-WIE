@@ -6,8 +6,10 @@ import {
   getSpecQuiz,
   isValidQuestionType,
   processQuizSubmission,
+  updateQuestionById,
 } from "../services/quizService";
 import { isQuizSubmissionRequest } from "../validation/quizValidation";
+import mongoose from "mongoose";
 
 export const getQuiz = async (req: Request, res: Response) => {
   const quiz = await getSpecQuiz();
@@ -48,8 +50,47 @@ export const postQuizContent = async (req: Request, res: Response) => {
 
     return res.status(200).json(updatedQuiz);
   } catch (error) {
-    console.error("Error adding quiz question:", error);
-    return res.status(500).json({ message: "Server error", error });
+    if (error instanceof mongoose.Error.ValidationError) {
+      // Handle Mongoose validation errors specifically
+      console.error("Validation Error:", error.errors);
+      throw new Error("Validation error: " + error.message);
+    } else {
+      console.error("Error adding quiz question:", error);
+      return res.status(500).json({ message: "Server error", error });
+    }
+  }
+};
+
+/**
+ * Controller to update quiz content question by question Id
+ * @param req
+ * @param res
+ * @returns
+ */
+export const putQuizContent = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const updatedData = req.body;
+
+  try {
+    const updatedQuestion = await updateQuestionById(id, updatedData);
+
+    if (!updatedQuestion) {
+      return res.status(404).json({ message: "Question not found." });
+    }
+
+    return res.status(200).json({
+      message: "Question updated successfully",
+      updatedQuestion,
+    });
+  } catch (error) {
+    if (error instanceof mongoose.Error.ValidationError) {
+      // Handle Mongoose validation errors specifically
+      console.error("Validation Error:", error.errors);
+      throw new Error("Validation error: " + error.message);
+    } else {
+      console.error("Error updating quiz question:", error);
+      return res.status(500).json({ message: "Server error", error });
+    }
   }
 };
 
