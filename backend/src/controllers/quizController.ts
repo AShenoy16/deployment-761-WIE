@@ -1,12 +1,24 @@
 import { Request, Response } from "express";
 import { QuizSubmissionRequest } from "../types/quizTypes";
 import {
+  addDefaultQuizQuestion,
   deleteQuestion,
   getSpecQuiz,
   isValidQuestionType,
   processQuizSubmission,
 } from "../services/quizService";
 import { isQuizSubmissionRequest } from "../validation/quizValidation";
+import {
+  IMCQAnswerOption,
+  IMCQQuestion,
+  IQuestion,
+  IRankingQuestion,
+  ISliderQuestion,
+} from "../models/interfaces";
+import MCQQuestion from "../models/MCQModel";
+import SliderQuestion from "../models/SliderModel";
+import RankingQuestion from "../models/RankingModel";
+import Quiz from "../models/QuizModel";
 
 export const getQuiz = async (req: Request, res: Response) => {
   const quiz = await getSpecQuiz();
@@ -20,6 +32,36 @@ export const getQuiz = async (req: Request, res: Response) => {
   );
 
   return res.status(200).json(sortedQuizData);
+};
+
+/**
+ * Controller to add new quiz content question with default values
+ * @param req
+ * @param res
+ * @returns
+ */
+export const postQuizContent = async (req: Request, res: Response) => {
+  const { questionType } = req.body;
+
+  // check if req.body is an empty object
+  if (!questionType || isValidQuestionType(questionType)) {
+    return res
+      .status(400)
+      .json({ message: "Quiz question data are required." });
+  }
+
+  try {
+    const updatedQuiz = await addDefaultQuizQuestion(questionType);
+
+    if (!updatedQuiz) {
+      return res.status(404).json({ message: "Quiz not found." });
+    }
+
+    return res.status(200).json(updatedQuiz);
+  } catch (error) {
+    console.error("Error adding quiz question:", error);
+    return res.status(500).json({ message: "Server error", error });
+  }
 };
 
 /**
@@ -40,7 +82,9 @@ export const deleteQuizQuestion = async (req: Request, res: Response) => {
     const result = await deleteQuestion(id, questionType);
 
     if (!result) {
-      return res.status(404).json({ message: "Transaction Aborted Incorrect ID" });
+      return res
+        .status(404)
+        .json({ message: "Transaction Aborted Incorrect ID" });
     }
 
     return res.status(200).json({ message: "Question Deleted" });
