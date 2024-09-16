@@ -53,7 +53,7 @@ export const useMCQQuestionEditorStore = create<MCQQuestionEditorStore>(
           (option) => {
             if (option._id === optionId) {
               const newWeighting: { [specializationName: string]: number } = {
-                [`New Spec ${Object.keys(option.weightings).length + 1}`]: 0,
+                [`New Spec ${Object.keys(option.weightings).length + 1}`]: 5,
               };
 
               return {
