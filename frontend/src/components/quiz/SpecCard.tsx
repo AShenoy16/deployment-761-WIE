@@ -8,9 +8,11 @@ import {
   ListItemText,
   Box,
   Link,
+  useTheme,
 } from "@mui/material";
 import { useState } from "react";
 import { SpecSummary } from "../../types/Specialization";
+import { slugify } from "../../pages/SpecPage";
 
 const SpecCard: React.FC<SpecSummary> = ({
   name,
@@ -18,6 +20,7 @@ const SpecCard: React.FC<SpecSummary> = ({
   careerPathways,
 }) => {
   const [hovered, setHovered] = useState(false);
+  const theme = useTheme();
 
   return (
     <Stack
@@ -73,7 +76,12 @@ const SpecCard: React.FC<SpecSummary> = ({
             }}
           >
             <Typography textAlign="center">{description}</Typography>
-            <Link href="/">Click to find out more</Link>
+            <Link
+              sx={{ color: `${theme.palette.primary.light}` }}
+              href={`/specialisation/${slugify(name)}`}
+            >
+              Click to find out more
+            </Link>
           </Box>
         )}
       </Card>
