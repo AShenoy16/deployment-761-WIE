@@ -2,11 +2,18 @@ import { Box, Stack, Typography } from "@mui/material";
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 import SpecCard from "../components/quiz/SpecCard";
 import { useCalculateQuizResults } from "../hooks/useQuestions";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { QuizSubmissionRequest } from "../types/Question";
 import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
 import { useSliderQuestionStore } from "../stores/SliderQuizQuestionStore";
 import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
+import { useSearchParams } from "react-router-dom";
+import { SpecSummary } from "../types/Specialization";
+
+const serializeResults = (results: SpecSummary[]) =>
+  encodeURIComponent(JSON.stringify(results));
+const deserializeResults = (queryString: string) =>
+  JSON.parse(decodeURIComponent(queryString));
 
 const buildQuizSubmissionObj = (): QuizSubmissionRequest => {
   const rankingQuestionState = useRankingQuestionStore.getState();
@@ -36,9 +43,20 @@ const buildQuizSubmissionObj = (): QuizSubmissionRequest => {
 const QuizResultsPage = () => {
   const [quizSubmissionRequest, _] = useState(() => buildQuizSubmissionObj());
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const existingResults = searchParams.get("results");
+
   const { quizResults, isLoading, isError } = useCalculateQuizResults(
-    quizSubmissionRequest
+    quizSubmissionRequest,
+    existingResults ? deserializeResults(existingResults) : undefined
   );
+
+  useEffect(() => {
+    if (quizResults.length > 0) {
+      const serializedResults = serializeResults(quizResults);
+      setSearchParams({ results: serializedResults });
+    }
+  }, [quizResults, setSearchParams]);
 
   if (isLoading) {
     return <LoadingSpinnerScreen />;
@@ -47,6 +65,8 @@ const QuizResultsPage = () => {
   if (isError) {
     return <Box>Error loading quiz results</Box>;
   }
+
+  console.log(quizResults);
 
   return (
     <Stack alignItems="center" margin="auto" gap={2}>
