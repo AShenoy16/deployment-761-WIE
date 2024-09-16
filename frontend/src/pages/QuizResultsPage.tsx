@@ -1,17 +1,53 @@
 import { Box, Stack, Typography } from "@mui/material";
-import { useGetQuizResults } from "../hooks/useGetQuizResults";
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 import SpecCard from "../components/quiz/SpecCard";
+import { useCalculateQuizResults } from "../hooks/useQuestions";
+import { useState } from "react";
+import { QuizSubmissionRequest } from "../types/Question";
+import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
+import { useSliderQuestionStore } from "../stores/SliderQuizQuestionStore";
+import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
+
+const buildQuizSubmissionObj = (): QuizSubmissionRequest => {
+  const rankingQuestionState = useRankingQuestionStore.getState();
+  const rankingAnswers = Object.entries(
+    rankingQuestionState.questionRankings
+  ).reduce(
+    (acc, [questionId, rankings]) => {
+      acc[questionId] = { rankings };
+      return acc;
+    },
+    {} as { [questionId: string]: { rankings: { [optionId: string]: number } } }
+  );
+
+  const sliderQuestionState = useSliderQuestionStore.getState();
+  const sliderAnswers = sliderQuestionState.selectedValue;
+
+  const mcqQuestionState = useMCQQuestionStore.getState();
+  const mcqAnswers = mcqQuestionState.selectedOptionId;
+
+  return {
+    mcqAnswers,
+    sliderAnswers,
+    rankingAnswers,
+  };
+};
 
 const QuizResultsPage = () => {
-  const { quizResults, isLoading, isError } = useGetQuizResults();
+  const [quizSubmissionRequest, _] = useState(() => buildQuizSubmissionObj());
+
+  const { quizResults, isLoading, isError } = useCalculateQuizResults(
+    quizSubmissionRequest
+  );
+
+  console.log(quizResults);
 
   if (isLoading) {
     return <LoadingSpinnerScreen />;
   }
 
   if (isError) {
-    return <div>Error loading quiz results</div>;
+    return <Box>Error loading quiz results</Box>;
   }
 
   return (
@@ -24,9 +60,9 @@ const QuizResultsPage = () => {
       </Box>
 
       <Stack direction="row" gap={2}>
-        {quizResults.map((spec, index) => (
+        {/* {quizResults.map((spec, index) => (
           <SpecCard key={index} {...spec} />
-        ))}
+        ))} */}
       </Stack>
 
       {
