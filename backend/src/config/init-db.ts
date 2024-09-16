@@ -411,9 +411,9 @@ async function run() {
   console.log();
 
   // add multiplier Data
-  console.log("Adding Multipler Data")
-  await createMultiplierData()
-  console.log()
+  console.log("Adding Multipler Data");
+  await createMultiplierData();
+  console.log();
 
   // add spec info
   console.log("Adding Spec Info...");
@@ -437,7 +437,7 @@ async function clearDatabase() {
   await SliderQuestion.deleteMany({});
   await MCQQuestion.deleteMany({});
   await RoleModel.deleteMany({});
-  await MultiplierData.deleteMany({})
+  await MultiplierData.deleteMany({});
 
   console.log(`Cleared database`);
 }
@@ -475,18 +475,88 @@ async function populateNewQuiz() {
   try {
     // Create multiple sample MCQ questions
     const mcqQuestion1 = new MCQQuestion({
-      questionText: "What is your preferred engineering field?",
+      questionText:
+        "Which area of engineering do you believe plays the biggest role in promoting sustainability?",
       answerOptions: [
-        { text: "Mechanical", weightings: { Mechanical: 10, Electrical: 5 } },
-        { text: "Electrical", weightings: { Mechanical: 5, Electrical: 10 } },
+        {
+          text: "Designing efficient systems and processes",
+          weightings: {
+            Mechatronics: 10,
+            Software: 7,
+            Engsci: 6,
+            Mechanical: 5,
+            Civil: 4,
+          },
+        },
+        {
+          text: "Improving environmental protection and reducing emissions",
+          weightings: {
+            Mechanical: 10,
+            Civil: 7,
+            Chemmat: 4,
+            Software: 2,
+          },
+        },
+        {
+          text: "Building infrastructure and sustainable cities",
+          weightings: {
+            Structural: 10,
+            Civil: 8,
+            Mechanical: 6,
+            Chemmat: 5,
+          },
+        },
+        {
+          text: "Transforming raw materials into usable products",
+          weightings: {
+            Chemmat: 9,
+            Mechanical: 6,
+            Civil: 5,
+          },
+        },
       ],
     });
 
     const mcqQuestion2 = new MCQQuestion({
-      questionText: "Which programming language do you prefer?",
+      questionText:
+        "Which aspect of engineering do you think is most critical to advancing renewable energy?",
       answerOptions: [
-        { text: "Python", weightings: { Software: 10, Compsys: 8 } },
-        { text: "Java", weightings: { Software: 7, Compsys: 9 } },
+        {
+          text: "Developing energy generation and transmission systems",
+          weightings: {
+            Electrical: 10,
+            Mechanical: 8,
+            Compsys: 7,
+            Mechatronics: 6,
+          },
+        },
+        {
+          text: "Designing renewable energy technologies",
+          weightings: {
+            Chemmat: 10,
+            Electrical: 8,
+            Mechanical: 6,
+          },
+        },
+        {
+          text: "Creating mechanical systems to support renewable energy production",
+          weightings: {
+            Mechanical: 9,
+            Electrical: 8,
+            Mechatronics: 7,
+            Environmental: 6,
+            Civil: 5,
+          },
+        },
+        {
+          text: "Building software to optimize energy efficiency",
+          weightings: {
+            Software: 10,
+            Compsys: 9,
+            Engsci: 7,
+            Electrical: 6,
+          },
+        },
       ],
     });
 
@@ -495,49 +565,44 @@ async function populateNewQuiz() {
 
     // Create multiple sample Ranking questions
     const rankingQuestion1 = new RankingQuestion({
-      questionText: "Rank the following Tasks based on their enjoyment",
+      questionText:
+        "Rank the following in terms of their importance in reducing environmental impact",
       answerOptions: [
         {
-          text: "Sky Diving",
-          weightings: {
-            Mechanical: 10,
-            Electrical: 8,
-            Software: 5,
-            Compsys: 3,
-          },
+          text: "Developing energy-efficient systems",
+          weightings: { Mechanical: 10, Electrical: 8, Engsci: 9 },
         },
         {
-          text: "Soldering",
+          text: "Reducing waste and emissions",
+          weightings: { Chemmat: 10, Civil: 7 },
+        },
+        {
+          text: "Designing renewable energy infrastructure",
           weightings: {
-            Mechanical: 8,
-            Electrical: 7,
+            Electrical: 9,
+            Compsys: 7,
             Software: 6,
-            Compsys: 4,
+            Mechatronics: 5,
           },
         },
       ],
     });
 
     const rankingQuestion2 = new RankingQuestion({
-      questionText: "Rank the following jobs",
+      questionText:
+        "Rank the following tasks by how much they contribute to global innovation",
       answerOptions: [
         {
-          text: "Car Building",
-          weightings: {
-            Mechanical: 8,
-            Electrical: 6,
-            Software: 5,
-            Compsys: 3,
-          },
+          text: "Developing AI and machine learning systems",
+          weightings: { Software: 10, Compsys: 9, Engsci: 7 },
         },
         {
-          text: "Robot Building",
-          weightings: {
-            Mechanical: 15,
-            Electrical: 6,
-            Software: 5,
-            Compsys: 3,
-          },
+          text: "Advancing robotics and automation",
+          weightings: { Mechatronics: 10, Compsys: 9, Electrical: 8 },
+        },
+        {
+          text: "Designing sustainable cities and infrastructures",
+          weightings: { Structural: 10, Civil: 9, Mechanical: 8 },
         },
       ],
     });
@@ -548,16 +613,23 @@ async function populateNewQuiz() {
     // Create multiple sample Slider questions
     // Create multiple sample Slider questions
     const sliderQuestion1 = new SliderQuestion({
-      questionText: "Rate your interest in Mechanical Engineering from 1 to 10",
+      questionText: "Sustainability is very important when choosing my career.",
       sliderWeights: {
-        weightings: { Mechanical: 5, Mechatronics: 3, Software: 7, Compsys: 4 },
+        weightings: { Civil: 10, Structural: 8, Chemmat: 7 },
       },
     });
 
     const sliderQuestion2 = new SliderQuestion({
-      questionText: "Rate your comfort with coding from 1 to 10",
+      questionText:
+        "I am comfortable with using technology to solve global challenges.",
       sliderWeights: {
-        weightings: { Software: 8, Mechatronics: 5, Compsys: 6, Electrical: 6 },
+        weightings: {
+          Software: 10,
+          Mechatronics: 8,
+          Engsci: 7,
+          Compsys: 6,
+          Electrical: 5,
+        },
       },
     });
 
@@ -586,9 +658,9 @@ async function populateNewQuiz() {
 const createMultiplierData = async () => {
   try {
     const multiplierData = new MultiplierData({
-      rank2Multiplier: 1.5, 
-      rank3Multiplier: 2.0,    
-      sliderFactor: 1.2
+      rank2Multiplier: 1.5,
+      rank3Multiplier: 2.0,
+      sliderFactor: 1.2,
     });
 
     // Save the document to the database
