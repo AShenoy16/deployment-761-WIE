@@ -1,5 +1,8 @@
 import { spec } from "node:test/reporters";
-import { getInitialSpecResults } from "../constants/quizConstants";
+import {
+  getInitialSpecResults,
+  specAbbreviationMap,
+} from "../constants/quizConstants";
 import {
   IMCQAnswerOption,
   IQuestion,
@@ -19,6 +22,7 @@ import MultiplierData from "../models/multiplerModel";
 import { getAllMultipliers } from "./multiplierService";
 import { ParamsDictionary } from "express-serve-static-core";
 import { defaultQuizQuestions } from "../constants/quizConstants";
+import Specialization from "../models/SpecializationModel";
 
 /**
  * Servixe code that will actually calculate the results
@@ -48,18 +52,24 @@ export const processQuizSubmission = async (
       ])
     );
 
-    const entries = Object.entries(roundedSpecMap);
+    const topSpecs = Object.entries(roundedSpecMap)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 3);
 
-    // Sort entries by value
-    entries.sort(([, valueA], [, valueB]) => valueB - valueA);
+    const topSpecDetails = await Promise.all(
+      topSpecs.map(async ([specAbbreviation, score]) => {
+        const fullSpecName = specAbbreviationMap[specAbbreviation];
+        const specDetails = await getSpecializationDetails(fullSpecName);
 
-    const top3Entries = entries.slice(0, 3);
-
-    // Convert sorted array back to object
-    const sortedObj = Object.fromEntries(top3Entries);
+        return {
+          ...specDetails,
+          score,
+        };
+      })
+    );
 
     // return top three specs
-    return sortedObj;
+    return topSpecDetails;
   } catch (error) {
     return null;
   }
@@ -527,4 +537,10 @@ export const isValidUpdatedQuestionData = (updatedData: IQuestion): boolean => {
   }
 
   return false;
+};
+
+export const getSpecializationDetails = async (specializationName: string) => {
+  return await Specialization.findOne({ name: specializationName })
+    .select("name description careerPathways")
+    .lean();
 };

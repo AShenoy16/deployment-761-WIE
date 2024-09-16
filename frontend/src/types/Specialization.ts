@@ -16,3 +16,8 @@ export type Testimonial = {
   name: string;
   description: string;
 };
+
+export type SpecSummary = Pick<
+  Specialization,
+  "name" | "description" | "careerPathways"
+>;

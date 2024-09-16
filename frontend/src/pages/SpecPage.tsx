@@ -18,7 +18,7 @@ interface Specialisation {
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Make sure to set this in your environment variables
 
 // Utility function to slugify specialisation names
-const slugify = (name: string) => {
+export const slugify = (name: string) => {
   return name.toLowerCase().replace(/\s+/g, "-");
 };
 

@@ -1,9 +1,4 @@
-import { Specialization } from "../types/Specialization";
-
-export type SpecSummary = Pick<
-  Specialization,
-  "name" | "description" | "careerPathways"
->;
+import { SpecSummary } from "../types/Specialization";
 
 const mockResultsData: SpecSummary[] = [
   {
