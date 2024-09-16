@@ -10,7 +10,7 @@ import {
   Link,
 } from "@mui/material";
 import { useState } from "react";
-import { SpecSummary } from "../../util/mockResultsData";
+import { SpecSummary } from "../../types/Specialization";
 
 const SpecCard: React.FC<SpecSummary> = ({
   name,

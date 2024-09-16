@@ -60,9 +60,9 @@ const QuizResultsPage = () => {
       </Box>
 
       <Stack direction="row" gap={2}>
-        {/* {quizResults.map((spec, index) => (
+        {quizResults.map((spec, index) => (
           <SpecCard key={index} {...spec} />
-        ))} */}
+        ))}
       </Stack>
 
       {

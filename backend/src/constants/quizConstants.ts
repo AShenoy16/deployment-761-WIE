@@ -68,3 +68,16 @@ export const defaultQuizQuestions = {
     ],
   },
 };
+
+export const specAbbreviationMap: { [abbreviation: string]: string } = {
+  Software: "Software Engineering",
+  Electrical: "Electrical Engineering",
+  Civil: "Civil Engineering",
+  Compsys: "Computer Systems Engineering",
+  Structural: "Structural Engineering",
+  Chemmat: "Chemical and Materials Engineering",
+  Mechanical: "Mechanical Engineering",
+  Mechatronics: "Mechatronics Engineering",
+  Engsci: "Engineering Science",
+  Biomedical: "Biomedical Engineering",
+};
