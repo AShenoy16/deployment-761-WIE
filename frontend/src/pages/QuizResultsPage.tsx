@@ -9,11 +9,13 @@ import { useSliderQuestionStore } from "../stores/SliderQuizQuestionStore";
 import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
 import { useSearchParams } from "react-router-dom";
 import { SpecSummary } from "../types/Specialization";
+import LZString from "lz-string";
 
 const serializeResults = (results: SpecSummary[]) =>
-  encodeURIComponent(JSON.stringify(results));
+  LZString.compressToEncodedURIComponent(JSON.stringify(results));
+
 const deserializeResults = (queryString: string) =>
-  JSON.parse(decodeURIComponent(queryString));
+  JSON.parse(LZString.decompressFromEncodedURIComponent(queryString));
 
 const buildQuizSubmissionObj = (): QuizSubmissionRequest => {
   const rankingQuestionState = useRankingQuestionStore.getState();
@@ -65,8 +67,6 @@ const QuizResultsPage = () => {
   if (isError) {
     return <Box>Error loading quiz results</Box>;
   }
-
-  console.log(quizResults);
 
   return (
     <Stack alignItems="center" margin="auto" gap={2}>
