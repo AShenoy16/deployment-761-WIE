@@ -17,18 +17,11 @@ import {
 import { useMCQQuestionEditorStore } from "../../stores/MCQQuestionEditorStore";
 import { IMCQAnswerOption } from "../../types/Question";
 import { useState } from "react";
-const possibleSpecs = [
-  "Biomedical",
-  "Chemmat",
-  "Civil",
-  "Compsys",
-  "Electrical",
-  "Engsci",
-  "Mechanical",
-  "Mechatronics",
-  "Software",
-  "Structural",
-];
+import {
+  possibleSpecs,
+  reverseSpecAbbreviationMap,
+  specAbbreviationMap,
+} from "../../util/common";
 
 type EditSpecWeightingProps = {
   open: boolean;
@@ -67,9 +60,11 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   const [weightError, setWeightError] = useState<string>("");
 
   const existingSpecs = Object.keys(option.weightings);
-
   const availableSpecs = possibleSpecs.filter(
-    (spec) => !existingSpecs.includes(spec)
+    (specName) => specName === spec || !existingSpecs.includes(specName)
+  );
+  const availableSpecFullNames = availableSpecs.map(
+    (specAbbreviation) => specAbbreviationMap[specAbbreviation]
   );
   const isInvalidSpec = !possibleSpecs.includes(editedSpec);
 
@@ -104,9 +99,11 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
         </Typography>
         <Stack spacing={2}>
           <Autocomplete
-            options={availableSpecs}
-            value={editedSpec}
-            onChange={(_, newSpec) => setEditedSpec(newSpec)}
+            options={availableSpecFullNames}
+            value={specAbbreviationMap[editedSpec]}
+            onChange={(_, newSpecAsFullName) =>
+              setEditedSpec(reverseSpecAbbreviationMap[newSpecAsFullName])
+            }
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -275,7 +272,7 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({
               <EditIcon />
             </IconButton>
           </Stack>
-          <Typography>{specializationName}</Typography>
+          <Typography>{specAbbreviationMap[specializationName]}</Typography>
         </Stack>
         <Box
           display="flex"
