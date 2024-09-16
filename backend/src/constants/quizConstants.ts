@@ -33,6 +33,8 @@ export const defaultQuizQuestions = {
     answerOptions: [
       { text: "Mechanical", weightings: { Mechanical: 10, Electrical: 5 } },
       { text: "Electrical", weightings: { Mechanical: 5, Electrical: 10 } },
+      { text: "Software", weightings: { Software: 10, Compsys: 8 } },
+      { text: "Civil", weightings: { Civil: 10, Structural: 7 } },
     ],
   },
 
@@ -59,10 +61,17 @@ export const defaultQuizQuestions = {
       {
         text: "Robot Building",
         weightings: {
-          Mechanical: 15,
+          Mechanical: 10,
           Electrical: 6,
           Software: 5,
           Compsys: 3,
+        },
+      },
+      {
+        text: "Road Building",
+        weightings: {
+          Civil: 10,
+          Structural: 8,
         },
       },
     ],
