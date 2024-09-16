@@ -40,8 +40,6 @@ const QuizResultsPage = () => {
     quizSubmissionRequest
   );
 
-  console.log(quizResults);
-
   if (isLoading) {
     return <LoadingSpinnerScreen />;
   }
