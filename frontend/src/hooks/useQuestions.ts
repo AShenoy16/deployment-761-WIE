@@ -52,7 +52,8 @@ export const useQuestions = () => {
 };
 
 export const useCalculateQuizResults = (
-  quizSubmissionRequest: QuizSubmissionRequest
+  quizSubmissionRequest: QuizSubmissionRequest,
+  preloadedResults?: SpecSummary[]
 ) => {
   const {
     data: quizResults = [],
@@ -60,7 +61,9 @@ export const useCalculateQuizResults = (
     isError,
   } = useQuery<SpecSummary[]>({
     queryKey: ["quizResults", quizSubmissionRequest],
-    queryFn: () => calculateQuizResults(quizSubmissionRequest),
+    queryFn: preloadedResults
+      ? async () => preloadedResults
+      : () => calculateQuizResults(quizSubmissionRequest),
   });
 
   return { quizResults, isLoading, isError };
