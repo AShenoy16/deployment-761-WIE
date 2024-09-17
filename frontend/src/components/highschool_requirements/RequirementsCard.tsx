@@ -1,6 +1,16 @@
 import { Box, List, ListItem, Stack, Typography } from "@mui/material";
+import React from "react";
 
-const RequirementsCard = () => {
+type RequirementsCardProps = {
+  title: string;
+  requiredScore: number;
+  requirements: string[];
+};
+const RequirementsCard: React.FC<RequirementsCardProps> = ({
+  title,
+  requiredScore,
+  requirements,
+}) => {
   return (
     <Box>
       <Stack
@@ -22,7 +32,7 @@ const RequirementsCard = () => {
           p={2}
         >
           <Typography variant="h4" fontWeight="bold">
-            NCEA
+            {title}
           </Typography>
 
           <Box>
@@ -30,7 +40,7 @@ const RequirementsCard = () => {
               Required
             </Typography>
             <Typography variant="h4" fontWeight="bold">
-              260
+              {requiredScore}
             </Typography>
             <Typography variant="h4" fontWeight="bold">
               Score
@@ -44,16 +54,13 @@ const RequirementsCard = () => {
           }}
         >
           <List sx={{ listStyleType: "disc", pl: 0 }}>
-            <ListItem sx={{ display: "list-item" }}>
-              <Typography variant="h6" fontWeight="bold">
-                17 external Level 3 credits in Calculus
-              </Typography>
-            </ListItem>
-            <ListItem sx={{ display: "list-item" }}>
-              <Typography variant="h6" fontWeight="bold">
-                16 external Level 3 credits in Physics
-              </Typography>
-            </ListItem>
+            {requirements.map((req, idx) => (
+              <ListItem key={idx} sx={{ display: "list-item" }}>
+                <Typography variant="h6" fontWeight="bold">
+                  {req}
+                </Typography>
+              </ListItem>
+            ))}
           </List>
         </Stack>
       </Stack>

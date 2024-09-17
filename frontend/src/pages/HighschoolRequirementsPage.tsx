@@ -8,6 +8,27 @@ const buttonStyle = {
   borderRadius: "12px",
 };
 
+const highschoolRequirementsData = [
+  {
+    title: "NCEA",
+    requiredScore: 260,
+    requirements: [
+      "17 external Level 3 credits in Calculus",
+      "16 external Level 3 credits in Physics",
+    ],
+  },
+  {
+    title: "CIE",
+    requiredScore: 310,
+    requirements: ["Mathematics and Physics at A Levels"],
+  },
+  {
+    title: "IB",
+    requiredScore: 33,
+    requirements: ["Mathematics and Physics at HL Levels"],
+  },
+];
+
 const HighschoolRequirementsPage = () => {
   const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
@@ -46,7 +67,9 @@ const HighschoolRequirementsPage = () => {
         </Box>
       )}
 
-      <RequirementsCard />
+      {highschoolRequirementsData.map((req, idx) => (
+        <RequirementsCard key={idx} {...req} />
+      ))}
     </Container>
   );
 };
