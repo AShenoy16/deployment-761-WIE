@@ -98,8 +98,8 @@ const LoginPage: React.FC = () => {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            height: "80vh",
-            gap: 30,
+            flex: 1,
+            gap: 30
           }}
         >
           <Typography variant={isSmallScreen ? "h4" : "h2"} textAlign="center">
