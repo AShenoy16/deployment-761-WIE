@@ -98,7 +98,7 @@ const QuizPage: React.FC = () => {
   const currentQuestion = questions[currentQuestionIndex];
   const navigate = useNavigate();
 
-  const hasStarted = useQuizStore((state) => state.hasStarted);
+  const hasStarted = currentQuestionIndex >= 0;
   const isFinalQuestion = currentQuestionIndex === questions.length - 1;
 
   const isRankingQuestionAnsweredMap = useRankingQuestionStore(
@@ -115,13 +115,14 @@ const QuizPage: React.FC = () => {
     (currentQuestion?.questionType === "Ranking" &&
       isRankingQuestionAnsweredMap[currentQuestion._id]);
 
-  const handleSubmit = () => {
-    navigate("/quiz/results");
-  };
   const isMCQQuestionAnswered =
     currentQuestion?.questionType !== "MCQ" ||
     (currentQuestion?.questionType === "MCQ" &&
       isMCQQuestionAnsweredMap[currentQuestion._id]);
+
+  const handleSubmit = () => {
+    navigate("/quiz/results");
+  };
 
   if (isLoading) {
     return <LoadingSpinnerScreen />;

@@ -10,6 +10,7 @@ import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
 import { useSearchParams } from "react-router-dom";
 import { SpecSummary } from "../types/Specialization";
 import LZString from "lz-string";
+import { resetQuizProgress } from "../util/common";
 
 const serializeResults = (results: SpecSummary[]) =>
   LZString.compressToEncodedURIComponent(JSON.stringify(results));
@@ -57,6 +58,7 @@ const QuizResultsPage = () => {
     if (quizResults.length > 0) {
       const serializedResults = serializeResults(quizResults);
       setSearchParams({ results: serializedResults });
+      resetQuizProgress();
     }
   }, [quizResults, setSearchParams]);
 
