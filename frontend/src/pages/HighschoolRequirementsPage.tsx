@@ -1,5 +1,6 @@
 import { Box, Button, Container, Typography } from "@mui/material";
 import { useAuthStore } from "../stores/AuthenticationStore";
+import RequirementsCard from "../components/highschool_requirements/RequirementsCard";
 
 const buttonStyle = {
   textTransform: "none",
@@ -44,6 +45,8 @@ const HighschoolRequirementsPage = () => {
           </Button>
         </Box>
       )}
+
+      <RequirementsCard />
     </Container>
   );
 };
