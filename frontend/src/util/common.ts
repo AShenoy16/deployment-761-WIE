@@ -1,8 +1,3 @@
-import { useQuizStore } from "../stores/QuizStore";
-import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
-import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
-import { useSliderQuestionStore } from "../stores/SliderQuizQuestionStore";
-
 export const possibleSpecs = [
   "Biomedical",
   "Chemmat",
