@@ -13,6 +13,7 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import EmailIcon from "@mui/icons-material/Email";
 import wenLogo from "../assets/wen-logo.png";
+import { useAuthStore } from "../stores/AuthenticationStore";
 
 // MUI doesn't have its own tiktok icon
 const TikTokIcon = () => {
@@ -31,6 +32,7 @@ const TikTokIcon = () => {
 // TODO: Edit links later
 const Footer: React.FC = () => {
   const theme = useTheme();
+  const { isLoggedIn } = useAuthStore();
 
   return (
     <Box
@@ -98,9 +100,15 @@ const Footer: React.FC = () => {
 
       <Box>
         <MuiLink component={Link} to="/login">
-          <Typography variant="body1" color="white">
-            Staff Login
-          </Typography>
+          {isLoggedIn ? (
+            <Typography variant="body1" color="white">
+              Logout
+            </Typography>
+          ) : (
+            <Typography variant="body1" color="white">
+              Staff Login
+            </Typography>
+          )}
         </MuiLink>
       </Box>
     </Box>
