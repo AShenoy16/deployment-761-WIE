@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import {
   AuthProvider,
@@ -18,8 +17,8 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const LoginPage: React.FC = () => {
   const { isLoggedIn, setIsLoggedIn } = useAuthStore();
-  const [isLogInAndOutAlert, setIsLogInAndOutAlert] = React.useState<boolean>(false);
-
+  const [isLogInAndOutAlert, setIsLogInAndOutAlert] =
+    React.useState<boolean>(false);
 
   const handleSuccessfulLogin = () => {
     // set login to true
@@ -54,7 +53,6 @@ const LoginPage: React.FC = () => {
       const email = formData?.get("email");
       const password = formData?.get("password");
 
-      // TODO change to actual backend server
       fetch(`${API_BASE_URL}/users`, {
         method: "POST",
         headers: {
@@ -89,7 +87,7 @@ const LoginPage: React.FC = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  // conditionally render signIn page if not signed in
+  // conditionally render signIn page if not signed in otherwise logout button
   return (
     <AppProvider theme={theme}>
       {isLoggedIn ? (
@@ -125,6 +123,7 @@ const LoginPage: React.FC = () => {
         <SignInPage signIn={signIn} providers={providers} />
       )}
       <Snackbar
+        // snackbar and alerts to notify admin about login/logout state
         open={isLogInAndOutAlert}
         autoHideDuration={1000}
         message="Note archived"
