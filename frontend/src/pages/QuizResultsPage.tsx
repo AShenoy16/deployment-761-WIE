@@ -4,12 +4,27 @@ import SpecCard from "../components/quiz/SpecCard";
 import { useCalculateQuizResults } from "../hooks/useQuestions";
 import { useState, useEffect } from "react";
 import { QuizSubmissionRequest } from "../types/Question";
+import { useQuizStore } from "../stores/QuizStore";
 import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
 import { useSliderQuestionStore } from "../stores/SliderQuizQuestionStore";
 import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
 import { useSearchParams } from "react-router-dom";
 import { SpecSummary } from "../types/Specialization";
 import LZString from "lz-string";
+
+const resetQuizProgress = () => {
+  const resetQuiz = useQuizStore.getState().resetQuiz;
+  const resetMCQ = useMCQQuestionStore.getState().resetMcqQuestionProgress;
+  const resetRanking =
+    useRankingQuestionStore.getState().resetRankingQuestionProgress;
+  const resetSlider =
+    useSliderQuestionStore.getState().resetSliderQuestionProgress;
+
+  resetQuiz();
+  resetMCQ();
+  resetRanking();
+  resetSlider();
+};
 
 const serializeResults = (results: SpecSummary[]) =>
   LZString.compressToEncodedURIComponent(JSON.stringify(results));
@@ -57,6 +72,7 @@ const QuizResultsPage = () => {
     if (quizResults.length > 0) {
       const serializedResults = serializeResults(quizResults);
       setSearchParams({ results: serializedResults });
+      resetQuizProgress();
     }
   }, [quizResults, setSearchParams]);
 

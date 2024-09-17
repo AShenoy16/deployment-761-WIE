@@ -11,6 +11,7 @@ type RankingQuestionStore = {
   ) => void;
   isQuestionAnsweredMap: { [questionId: string]: boolean };
   setIsQuestionAnswered: (questionId: string, optionCount: number) => void;
+  resetRankingQuestionProgress: () => void;
 };
 
 export const useRankingQuestionStore = create<RankingQuestionStore>((set) => ({
@@ -50,4 +51,9 @@ export const useRankingQuestionStore = create<RankingQuestionStore>((set) => ({
       };
     });
   },
+  resetRankingQuestionProgress: () =>
+    set({
+      questionRankings: {},
+      isQuestionAnsweredMap: {},
+    }),
 }));

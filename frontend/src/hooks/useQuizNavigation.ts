@@ -9,10 +9,8 @@ export const useQuizNavigation = (questions: IQuestion[]) => {
     setCurrentQuestionIndex,
   } = useQuizStore();
 
-  const goToQuestion = (index: number) => {
-    if (questions && index >= 0 && index < questions.length) {
-      setCurrentQuestionIndex(index);
-    }
+  const handleExitQuiz = () => {
+    setCurrentQuestionIndex(-1);
   };
 
   const handleNextQuestion = () => {
@@ -31,6 +29,6 @@ export const useQuizNavigation = (questions: IQuestion[]) => {
     currentQuestionIndex,
     nextQuestion: handleNextQuestion,
     prevQuestion: handlePrevQuestion,
-    goToQuestion,
+    exitQuiz: handleExitQuiz,
   };
 };
