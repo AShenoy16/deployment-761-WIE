@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { SpecSummary, mockGetQuizResults } from "../util/mockResultsData";
+import {mockGetQuizResults } from "../util/mockResultsData";
+import { SpecSummary } from "../types/Specialization";
 
 export const useGetQuizResults = () => {
   const {
