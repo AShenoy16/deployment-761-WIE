@@ -1,4 +1,4 @@
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { useAuthStore } from "../stores/AuthenticationStore";
 import RequirementsCard from "../components/highschool_requirements/RequirementsCard";
 
@@ -67,9 +67,31 @@ const HighschoolRequirementsPage = () => {
         </Box>
       )}
 
-      {highschoolRequirementsData.map((req, idx) => (
-        <RequirementsCard key={idx} {...req} />
-      ))}
+      <Grid container spacing={5}>
+        {highschoolRequirementsData.map((req, idx) => (
+          <Grid item xs={12} sm={6} key={idx}>
+            <RequirementsCard {...req} />
+          </Grid>
+        ))}
+
+        <Grid item xs={12} sm={6}>
+          <Typography
+            color="#00467F"
+            fontStyle="italic"
+            fontWeight="bold"
+            textAlign="center"
+          >
+            {`If your rank score is slightly lower than the guaranteed score, we
+        encourage you to still apply. We will consider your application if
+        places are available. If you don't meet the requirement. For Cambridge
+        International students, AS Mathematics and Physics may be accepted based
+        on the level of grade achieved. For IB students, SL Physics and SL
+        Mathematics “Analysis and Approaches” may be accepted based on the level
+        of grade achieved. SL Mathematics “ Applications and interpretation”
+        will not be accepted.`}
+          </Typography>
+        </Grid>
+      </Grid>
     </Container>
   );
 };
