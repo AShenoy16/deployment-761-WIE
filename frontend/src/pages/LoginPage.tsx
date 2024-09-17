@@ -24,6 +24,11 @@ const LoginPage: React.FC = () => {
     setIsLoggedIn(true);
   };
 
+  const handleLogOut = () => {
+    // set admin logged in as false
+    setIsLoggedIn(false);
+  };
+
   const providers = [{ id: "credentials", name: "Email and Password" }];
 
   // callback function called on sign in
@@ -74,6 +79,7 @@ const LoginPage: React.FC = () => {
   return (
     <AppProvider theme={theme}>
       {isLoggedIn ? (
+        // return logout page with button if signed in
         <div
           style={{
             display: "flex",
@@ -96,6 +102,7 @@ const LoginPage: React.FC = () => {
                 backgroundColor: theme.palette.secondary.dark,
               },
             }}
+            onClick={handleLogOut}
           >
             Logout
           </Button>
