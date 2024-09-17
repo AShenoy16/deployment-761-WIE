@@ -11,6 +11,7 @@ import QuizEditingPage from "./pages/QuizEditingPage";
 import RoleModelsPage from "./pages/RoleModelsPage";
 import LoginPage from "./pages/LoginPage";
 import AuthWrapper from "./components/AuthWrapper";
+import HighschoolRequirementsPage from "./pages/HighschoolRequirementsPage";
 
 function App() {
   return (
@@ -34,6 +35,10 @@ function App() {
             <Route path="/specialisation/:name" element={<SpecDetailPage />} />
             <Route path="/role-models" element={<RoleModelsPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/highschool-requirements"
+              element={<HighschoolRequirementsPage />}
+            />
           </Routes>
         </GeneralLayout>
       </BrowserRouter>
