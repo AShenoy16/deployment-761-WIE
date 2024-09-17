@@ -27,6 +27,14 @@ const cardsData = [
       "https://www.auckland.ac.nz/content/auckland/en/engineering/study-with-us/study-options/undergraduate-study-at-the-faculty-of-engineering0/jcr:content/par/linkspagetemplategri_763583401/par2/subflexicomponentlin/image.img.768.medium.jpg/1716425560576.jpg",
     link: "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-engineering-honours-behons.html", // Internal link
   },
+  {
+    title: "Highschool Requirements",
+    description:
+      "Find out the secondary school entry requirements to do UoA's Engineering Programme.",
+    image:
+      "https://www.auckland.ac.nz/content/auckland/en/engineering/study-with-us/study-options/undergraduate-study-at-the-faculty-of-engineering0/jcr:content/par/linkspagetemplategri_763583401/par2/subflexicomponentlin/image.img.768.medium.jpg/1716425560576.jpg",
+    link: "/highschool-requirements", // External link
+  },
   // Add more card data as needed
 ];
 
