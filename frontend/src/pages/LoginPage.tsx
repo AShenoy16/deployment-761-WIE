@@ -17,30 +17,29 @@ import Alert from "@mui/material/Alert";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const LoginPage: React.FC = () => {
-  const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useAuthStore();
-  const [isLogoutAlert, setIsLogoutAlert] = React.useState<boolean>(false);
+  const [isLogInAndOutAlert, setIsLogInAndOutAlert] = React.useState<boolean>(false);
 
-  // navigate to home page and set login state
+
   const handleSuccessfulLogin = () => {
-    // set state to true
+    // set login to true
     setIsLoggedIn(true);
-    setIsLogoutAlert(true);
-
-    // Hide logout snackbar after 1 second
-    setTimeout(() => {
-      setIsLogoutAlert(false);
-    }, 1000);
+    showAlert();
   };
 
   const handleLogOut = () => {
     // set admin logged in as false
     setIsLoggedIn(false);
-    setIsLogoutAlert(true);
+    showAlert();
+  };
 
-    // Hide logout snackbar after 1 second
+  // show the login/logout alert
+  const showAlert = () => {
+    setIsLogInAndOutAlert(true);
+
+    // Hide loging/logout snackbar and alert after 1 second
     setTimeout(() => {
-      setIsLogoutAlert(false);
+      setIsLogInAndOutAlert(false);
     }, 1000);
   };
 
@@ -126,7 +125,7 @@ const LoginPage: React.FC = () => {
         <SignInPage signIn={signIn} providers={providers} />
       )}
       <Snackbar
-        open={isLogoutAlert}
+        open={isLogInAndOutAlert}
         autoHideDuration={1000}
         message="Note archived"
       >
