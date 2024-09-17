@@ -11,22 +11,37 @@ import { useAuthStore } from "../stores/AuthenticationStore";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useAuthStore();
+  const [isLogoutAlert, setIsLogoutAlert] = React.useState<boolean>(false);
 
   // navigate to home page and set login state
   const handleSuccessfulLogin = () => {
     // set state to true
     setIsLoggedIn(true);
+    setIsLogoutAlert(true);
+
+    // Hide logout snackbar after 1 second
+    setTimeout(() => {
+      setIsLogoutAlert(false);
+    }, 1000);
   };
 
   const handleLogOut = () => {
     // set admin logged in as false
     setIsLoggedIn(false);
+    setIsLogoutAlert(true);
+
+    // Hide logout snackbar after 1 second
+    setTimeout(() => {
+      setIsLogoutAlert(false);
+    }, 1000);
   };
 
   const providers = [{ id: "credentials", name: "Email and Password" }];
@@ -110,6 +125,15 @@ const LoginPage: React.FC = () => {
       ) : (
         <SignInPage signIn={signIn} providers={providers} />
       )}
+      <Snackbar
+        open={isLogoutAlert}
+        autoHideDuration={1000}
+        message="Note archived"
+      >
+        <Alert severity="success" sx={{ width: "100%" }}>
+          {isLoggedIn ? "Successfully Logged In" : "Successfully Logged Out"}
+        </Alert>
+      </Snackbar>
     </AppProvider>
   );
 };
