@@ -37,17 +37,3 @@ export const reverseSpecAbbreviationMap: { [fullName: string]: string } =
     },
     {} as { [abbreviation: string]: string }
   );
-
-export const resetQuizProgress = () => {
-  const resetQuiz = useQuizStore.getState().resetQuiz;
-  const resetMCQ = useMCQQuestionStore.getState().resetMcqQuestionProgress;
-  const resetRanking =
-    useRankingQuestionStore.getState().resetRankingQuestionProgress;
-  const resetSlider =
-    useSliderQuestionStore.getState().resetSliderQuestionProgress;
-
-  resetQuiz();
-  resetMCQ();
-  resetRanking();
-  resetSlider();
-};
