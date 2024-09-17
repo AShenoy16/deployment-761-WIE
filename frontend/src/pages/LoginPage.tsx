@@ -8,6 +8,9 @@ import {
   AuthResponse,
 } from "@toolpad/core";
 import { useAuthStore } from "../stores/AuthenticationStore";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -19,7 +22,6 @@ const LoginPage: React.FC = () => {
   const handleSuccessfulLogin = () => {
     // set state to true
     setIsLoggedIn(true);
-    navigate("/");
   };
 
   const providers = [{ id: "credentials", name: "Email and Password" }];
@@ -66,12 +68,38 @@ const LoginPage: React.FC = () => {
   };
 
   const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   // conditionally render signIn page if not signed in
   return (
     <AppProvider theme={theme}>
       {isLoggedIn ? (
-        <div>ALREADY LOGGED IN</div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "80vh",
+            gap: 30,
+          }}
+        >
+          <Typography variant={isSmallScreen ? "h4" : "h2"} textAlign="center">
+            Admin Currently Logged In
+          </Typography>
+          <Button
+            variant="contained"
+            size="large"
+            sx={{
+              backgroundColor: theme.palette.secondary.main,
+              "&:hover": {
+                backgroundColor: theme.palette.secondary.dark,
+              },
+            }}
+          >
+            Logout
+          </Button>
+        </div>
       ) : (
         <SignInPage signIn={signIn} providers={providers} />
       )}
