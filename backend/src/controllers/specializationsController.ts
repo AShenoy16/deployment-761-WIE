@@ -111,7 +111,7 @@ export const addTestimonialsBySpecName = async (
   req: Request,
   res: Response
 ) => {
-  const { name } = req.params;
+  const { name: currentName } = req.params;
   const testimonial: ITestimonial = req.body;
 
   try {
@@ -119,12 +119,36 @@ export const addTestimonialsBySpecName = async (
       return res.status(400).json({ message: "Invalid testimonial data" });
     }
 
-    const specialization = await getSpecializationByName(name);
+    const specialization = await getSpecializationByName(currentName);
 
     if (!specialization) {
       return res.status(404).json({ message: "Specialization not found" });
     }
     specialization.testimonials.push(testimonial);
+    specialization.save();
+    const testimonials = specialization.testimonials;
+
+    return res.status(200).json(testimonials);
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error });
+  }
+};
+
+export const deleteTestimonial = async (req: Request, res: Response) => {
+  const { name: currentName, id: testimonialId } = req.params;
+
+  try {
+    const specialization = await getSpecializationByName(currentName);
+
+    if (!specialization) {
+      return res.status(404).json({ message: "Specialization not found" });
+    }
+
+    // Use $pull to remove the testimonial with the matching _id
+    specialization.testimonials = specialization.testimonials.filter(
+      (testimonial: ITestimonial) =>
+        testimonial._id.toString() !== testimonialId
+    );
     specialization.save();
     const testimonials = specialization.testimonials;
 

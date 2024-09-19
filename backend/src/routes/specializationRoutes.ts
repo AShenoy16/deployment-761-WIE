@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addTestimonialsBySpecName,
+  deleteTestimonial,
   getSpecByName,
   getSpecs,
   getTestimonialsBySpecName,
@@ -38,6 +39,6 @@ router.patch(
 // Routes for testimonials
 router.get("/testimonials/:name", getTestimonialsBySpecName);
 router.post("/testimonials/:name", addTestimonialsBySpecName);
-router.delete("/testimonials/:name/:id");
+router.delete("/testimonials/:name/:id", deleteTestimonial);
 
 export default router;
