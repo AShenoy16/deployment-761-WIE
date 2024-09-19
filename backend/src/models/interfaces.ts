@@ -66,8 +66,7 @@ export interface IQuiz extends Document {
   updatedAt: Date;
 }
 
-export interface Testimonial extends Document {
-  testimonialId: string;
+export interface ITestimonial extends Document {
   name: string;
   description: string;
 }
@@ -81,7 +80,7 @@ export interface Specialization extends Document {
   medianSalary: number;
   experiencedSalary: number;
   jobAvailability: string;
-  testimonials: Testimonial[];
+  testimonials: ITestimonial[];
   header: string;
   leftDetail: string;
   rightDetail: string;
