@@ -1,8 +1,8 @@
-import mongoose, { Schema, model } from 'mongoose';
-import { Testimonial } from './interfaces'; // Use the correct interface import
+import mongoose, { Schema, model } from "mongoose";
+import { ITestimonial } from "./interfaces"; // Use the correct interface import
 
-const TestimonialSchema = new Schema<Testimonial>({
-  testimonialId: { type: String, required: true },
+const TestimonialSchema = new Schema<ITestimonial>({
+  testimonialId: { type: String, required: false },
   name: { type: String, required: true },
   description: { type: String, required: true },
 });
