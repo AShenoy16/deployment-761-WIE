@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  addTestimonialsBySpecName,
   getSpecByName,
   getSpecs,
   getTestimonialsBySpecName,
@@ -36,5 +37,6 @@ router.patch(
 
 // Routes for testimonials
 router.get("/testimonials/:name", getTestimonialsBySpecName);
+router.post("/testimonials/:name", addTestimonialsBySpecName);
 
 export default router;

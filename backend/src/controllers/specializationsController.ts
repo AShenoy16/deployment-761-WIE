@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
 import Specialization from "../models/SpecializationModel";
 import { MulterFile } from "../types/MulterFile";
-import { getSpecializationByName } from "../services/specializationService";
+import {
+  getSpecializationByName,
+  isTestimonial,
+} from "../services/specializationService";
+import { ITestimonial } from "../models/interfaces";
 
 // Get all specializations
 export const getSpecs = async (req: Request, res: Response) => {
@@ -85,7 +89,10 @@ export const updateSpecByName = async (req: Request, res: Response) => {
 /**
  * Controller to get testimonials by spec name
  */
-export const getTestimonialsBySpecName = async (req: Request, res: Response) => {
+export const getTestimonialsBySpecName = async (
+  req: Request,
+  res: Response
+) => {
   const { name } = req.params;
   try {
     const specialization = await getSpecializationByName(name);
@@ -94,6 +101,33 @@ export const getTestimonialsBySpecName = async (req: Request, res: Response) => 
       return res.status(404).json({ message: "Specialization not found" });
     }
     const testimonials = specialization.testimonials;
+    return res.status(200).json(testimonials);
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error });
+  }
+};
+
+export const addTestimonialsBySpecName = async (
+  req: Request,
+  res: Response
+) => {
+  const { name } = req.params;
+  const testimonial: ITestimonial = req.body;
+
+  try {
+    if (!isTestimonial(testimonial)) {
+      return res.status(400).json({ message: "Invalid testimonial data" });
+    }
+
+    const specialization = await getSpecializationByName(name);
+
+    if (!specialization) {
+      return res.status(404).json({ message: "Specialization not found" });
+    }
+    specialization.testimonials.push(testimonial);
+    specialization.save();
+    const testimonials = specialization.testimonials;
+
     return res.status(200).json(testimonials);
   } catch (error) {
     return res.status(500).json({ message: "Server error", error });
