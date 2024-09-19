@@ -1,8 +1,8 @@
 import mongoose, { Schema, model, Document } from "mongoose";
-import { Specialization } from "./interfaces";
+import { ISpecialization } from "./interfaces";
 import TestimonialSchema from "./TestimonalModel";
 
-const SpecializationSchema = new Schema<Specialization>({
+const SpecializationSchema = new Schema<ISpecialization>({
   name: { type: String, required: true },
   description: { type: String, required: true },
   photoUrl: { type: String, required: true },
@@ -21,7 +21,7 @@ const SpecializationSchema = new Schema<Specialization>({
   updatedAt: { type: Date, default: Date.now },
 });
 
-const Specialization = mongoose.model<Specialization>(
+const Specialization = mongoose.model<ISpecialization>(
   "Specialization",
   SpecializationSchema
 );

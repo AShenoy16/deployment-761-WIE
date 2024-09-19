@@ -72,7 +72,7 @@ export interface ITestimonial extends Document {
   description: string;
 }
 
-export interface Specialization extends Document {
+export interface ISpecialization extends Document {
   name: string;
   description: string;
   photoUrl: string;
