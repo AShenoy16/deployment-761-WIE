@@ -38,5 +38,6 @@ router.patch(
 // Routes for testimonials
 router.get("/testimonials/:name", getTestimonialsBySpecName);
 router.post("/testimonials/:name", addTestimonialsBySpecName);
+router.delete("/testimonials/:name/:id");
 
 export default router;
