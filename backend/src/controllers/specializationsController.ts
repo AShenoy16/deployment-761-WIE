@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Specialization from "../models/SpecializationModel";
 import { MulterFile } from "../types/MulterFile";
+import { getSpecializationByName } from "../services/specializationService";
 
 // Get all specializations
 export const getSpecs = async (req: Request, res: Response) => {
@@ -20,10 +21,7 @@ export const getSpecs = async (req: Request, res: Response) => {
 export const getSpecByName = async (req: Request, res: Response) => {
   const { name } = req.params;
   try {
-    // Case-insensitive search using regex with the 'i' flag
-    const specialization = await Specialization.findOne({
-      name: { $regex: new RegExp(`^${name}$`, "i") },
-    });
+    const specialization = await getSpecializationByName(name);
 
     if (!specialization) {
       return res.status(404).json({ message: "Specialization not found" });
