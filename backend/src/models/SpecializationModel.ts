@@ -1,6 +1,6 @@
 import mongoose, { Schema, model, Document } from "mongoose";
 import { Specialization } from "./interfaces";
-import { TestimonialSchema } from "./TestimonalModel";
+import TestimonialSchema from "./TestimonalModel";
 
 const SpecializationSchema = new Schema<Specialization>({
   name: { type: String, required: true },

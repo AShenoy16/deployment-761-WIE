@@ -81,3 +81,21 @@ export const updateSpecByName = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+/**
+ * Controller to get testimonials by spec name
+ */
+export const getTestimonialsBySpecName = async (req: Request, res: Response) => {
+  const { name } = req.params;
+  try {
+    const specialization = await getSpecializationByName(name);
+
+    if (!specialization) {
+      return res.status(404).json({ message: "Specialization not found" });
+    }
+    const testimonials = specialization.testimonials;
+    return res.status(200).json(testimonials);
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error });
+  }
+};
