@@ -28,27 +28,32 @@ interface HomePageData {
 const HomePage: React.FC = () => {
   const [data, setData] = useState<HomePageData | null>(null);
   const [loading, setLoading] = useState(true);
-  const API_URL = import.meta.env.VITE_API_BASE_URL; // Use your env variable
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
 
   const [openModal, setOpenModal] = useState(false);
-  const [homeData, setHomeData] = useState<HomePageData | null>(null);
+  const [homeData, setHomeData] = useState<HomePageData | null>(null); // Update this line
 
   const handleSubmit = async (data: HomePageData) => {
-    await fetch(`${API_URL}/homepage`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    setHomeData(data); // Update local state
+    try {
+      await fetch(`${API_URL}/homepage`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      setHomeData(data); // Update local state
+      setOpenModal(false); // Close modal after submission
+    } catch (error) {
+      console.error("Error updating homepage data:", error);
+    }
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${API_URL}/homepage`);
-        setData(response.data);
+        setHomeData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -59,36 +64,39 @@ const HomePage: React.FC = () => {
     fetchData();
   }, [API_URL]);
 
-  if (loading) return <CircularProgress />; // Show loading spinner while fetching data
-
-  if (!data) return <div>No data available</div>; // Handle case where data is null
+  if (loading) return <CircularProgress />;
+  if (!homeData) return <div>No data available</div>; // Updated this line
 
   return (
     <div>
       <HeroSection
-        title={data.heroTitle}
-        subtitle={data.heroSubtitle}
-        image={data.heroImage}
+        title={homeData.heroTitle}
+        subtitle={homeData.heroSubtitle}
+        image={homeData.heroImage}
       />
 
       <Box sx={{ backgroundColor: "#009AC7", height: "20px" }} />
-      <ImpactSection header={data.section1Header} text={data.section1Text} />
-      <SpecialisationSection
-        header={data.section2Header}
-        text={data.section2Text}
-      />
-      <Box sx={{ backgroundColor: "#009AC7", height: "20px" }} />
-      <CardSection resources={data.additionalResources} />
-
-      <Button variant="contained" onClick={() => setOpenModal(true)}>
-        Edit Home Page
-      </Button>
+      <Box display="flex" justifyContent="center" marginTop={4}>
+        <Button variant="contained" onClick={() => setOpenModal(true)}>
+          Edit Home Page
+        </Button>
+      </Box>
       <EditHomepageModal
         open={openModal}
         handleClose={() => setOpenModal(false)}
-        initialData={data}
+        initialData={homeData}
         onSubmit={handleSubmit}
       />
+      <ImpactSection
+        header={homeData.section1Header}
+        text={homeData.section1Text}
+      />
+      <SpecialisationSection
+        header={homeData.section2Header}
+        text={homeData.section2Text}
+      />
+      <Box sx={{ backgroundColor: "#009AC7", height: "20px" }} />
+      <CardSection resources={homeData.additionalResources} />
     </div>
   );
 };
