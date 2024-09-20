@@ -165,6 +165,12 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       pathway.trim().replace(/\s+/g, " ")
     );
 
+    // Map testimonials and sanitize them
+    const sanitizedTestimonials = testimonials.map((testimonial) => ({
+      name: testimonial.name.trim().replace(/\s+/g, " "),
+      description: testimonial.description.trim().replace(/\s+/g, " "),
+    }));
+
     const formData = new FormData();
 
     formData.append("name", sanitizedTitle); // Add the title to formData
@@ -172,6 +178,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
     formData.append("careerPathways", JSON.stringify(sanitizedCareerPathways));
     formData.append("leftDetail", sanitizedLeftDetail);
     formData.append("rightDetail", sanitizedRightDetail);
+    formData.append("testimonials", JSON.stringify(sanitizedTestimonials)); 
 
     if (leftImage) {
       formData.append("leftImage", leftImage);
@@ -196,7 +203,9 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       // Navigate to the new URL if the name has changed
       if (response.data.name !== name) {
         navigate(
-          `/specialisation/${encodeURIComponent(response.data.name.replace(/\s+/g, "-").toLowerCase())}`
+          `/specialisation/${encodeURIComponent(
+            response.data.name.replace(/\s+/g, "-").toLowerCase()
+          )}`
         );
       }
 
@@ -409,7 +418,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
           </Button>
 
           {/* Testimonials */}
-          <Typography variant="h6" marginTop={4} gutterBottom>
+          <Typography variant="h6" marginTop={4} marginBottom={3} gutterBottom>
             Testimonials <span style={{ color: "red" }}>*</span>
           </Typography>
           {testimonials.map((testimonial, index) => (
@@ -431,8 +440,9 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
                 InputLabelProps={{
                   sx: {
                     transform: "translate(5px, -15px) scale(0.85)",
-                    marginTop: "-5px",
+                    marginTop: "-10px",
                     color: "black",
+                    fontSize: "1.25rem",
                   },
                 }}
               />
@@ -453,8 +463,9 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
                 InputLabelProps={{
                   sx: {
                     transform: "translate(5px, -15px) scale(0.85)",
-                    marginTop: "-5px",
+                    marginTop: "-10px",
                     color: "black",
+                    fontSize: "1.25rem",
                   },
                 }}
               />

@@ -40,11 +40,11 @@ export const getSpecByName = async (req: Request, res: Response) => {
 
 // Update a specific specialization
 export const updateSpecByName = async (req: Request, res: Response) => {
-  const { name: currentName } = req.params; // Renamed to 'currentName' to avoid conflict
+  const { name } = req.params;
 
   try {
     const specialization = await Specialization.findOne({
-      name: { $regex: new RegExp(`^${currentName}$`, "i") },
+      name: { $regex: new RegExp(`^${name}$`, "i") },
     });
 
     if (!specialization) {
@@ -52,16 +52,19 @@ export const updateSpecByName = async (req: Request, res: Response) => {
     }
 
     // Extract text fields from the request
-    const { name, header, careerPathways, leftDetail, rightDetail } = req.body;
+    const { name: newName, header, careerPathways, leftDetail, rightDetail, testimonials } = req.body;
 
     // Update fields in the specialization object
-    specialization.name = name || specialization.name;
+    specialization.name = newName || specialization.name;
     specialization.header = header || specialization.header;
     specialization.careerPathways = careerPathways
       ? JSON.parse(careerPathways)
       : specialization.careerPathways;
     specialization.leftDetail = leftDetail || specialization.leftDetail;
     specialization.rightDetail = rightDetail || specialization.rightDetail;
+    specialization.testimonials = testimonials ? JSON.parse(testimonials) : specialization.testimonials;
+
+   
 
     // Handle image uploads
     const files = req.files as { [fieldname: string]: MulterFile[] };
@@ -85,6 +88,7 @@ export const updateSpecByName = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
 
 /**
  * Controller to get testimonials by spec name
