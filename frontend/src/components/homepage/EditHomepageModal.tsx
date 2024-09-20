@@ -36,7 +36,7 @@ interface EditHomepageModalProps {
   onSubmit: (data: HomePageData) => void;
 }
 
-const defaultImage = "https://via.placeholder.com/150"; // Default image URL
+const defaultImage = "https://via.placeholder.com/650"; // Default image URL
 
 const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
   open,
@@ -112,19 +112,18 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
           bgcolor: "background.paper",
           padding: 4,
           borderRadius: 1,
-          maxWidth: "90%",
-          width: "600px",
+          maxWidth: "70%",
           margin: "auto",
           marginTop: "5%",
           overflowY: "auto",
           maxHeight: "80vh",
+          paddingY: 3,
         }}
       >
         <Typography variant="h6" component="h2" gutterBottom>
           Edit Home Page
         </Typography>
 
-        {/* Wrapping all modal content in a Box */}
         <Box>
           {formData && (
             <>
@@ -165,8 +164,8 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 label="Section 1 Text"
                 value={formData.section1Text}
                 onChange={handleInputChange}
-                fullWidth
                 multiline
+                fullWidth
                 rows={4}
                 margin="normal"
               />
@@ -212,7 +211,9 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                     onChange={(e) =>
                       handleCardChange(index, "description", e.target.value)
                     }
+                    multiline
                     fullWidth
+                    rows={4}
                     margin="normal"
                   />
                   <TextField
@@ -243,22 +244,20 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 </Box>
               ))}
 
-              <Button
-                variant="contained"
-                onClick={handleAddCard}
-                sx={{ marginTop: 2 }}
-              >
+              <Button variant="contained" onClick={handleAddCard}>
                 Add New Card
-              </Button>
-              <Button
-                variant="contained"
-                onClick={handleSubmit}
-                sx={{ marginTop: 2 }}
-              >
-                Submit
               </Button>
             </>
           )}
+        </Box>
+        <Box display="flex" justifyContent="center" marginTop={2}>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            sx={{ marginTop: 2 }}
+          >
+            Submit
+          </Button>
         </Box>
 
         {/* Confirmation Dialog */}
