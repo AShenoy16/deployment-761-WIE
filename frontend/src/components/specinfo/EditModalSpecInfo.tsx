@@ -95,7 +95,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setRightDetail(specInfoResult.rightDetail);
       setLeftImage(null);
       setRightImage(null);
-      setTestimonials([]);
+      setTestimonials(specInfoResult.testimonials);
     }
   };
 
