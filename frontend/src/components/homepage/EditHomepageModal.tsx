@@ -11,7 +11,6 @@ import {
   DialogTitle,
   IconButton,
 } from "@mui/material";
-
 import CloseIcon from "@mui/icons-material/Close";
 
 interface Card {
@@ -124,22 +123,30 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
           maxWidth: "70%",
           margin: "auto",
           marginTop: "5%",
-          overflowY: "auto",
-          maxHeight: "80vh",
-          paddingY: 3,
+          display: "flex",
+          flexDirection: "column",
+          height: "80vh", // Set a fixed height for the modal
         }}
       >
+        {/* Modal header */}
         <Box sx={headerStyle}>
           <Typography variant="h6" component="h2">
             Edit Home Page
           </Typography>
-          {/* Close button */}
           <IconButton onClick={handleClose} aria-label="close">
             <CloseIcon />
           </IconButton>
         </Box>
 
-        <Box>
+        {/* Scrollable content */}
+        <Box
+          sx={{
+            overflowY: "auto",
+            flexGrow: 1, // Ensures the content grows and the footer stays at the bottom
+            paddingRight: 2,
+            marginBottom: 2,
+          }}
+        >
           {formData && (
             <>
               <TextField
@@ -265,13 +272,18 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
             </>
           )}
         </Box>
-        <Box display="flex" justifyContent="center" marginTop={2}>
-          <Button
-            variant="contained"
-            onClick={handleSubmit}
-            sx={{ marginTop: 2 }}
-          >
-            Submit
+
+        {/* Sticky submit button */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            paddingTop: 2,
+            borderTop: "1px solid #ccc",
+          }}
+        >
+          <Button variant="contained" onClick={handleSubmit}>
+            Save Changes
           </Button>
         </Box>
 
