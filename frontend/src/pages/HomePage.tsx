@@ -6,6 +6,7 @@ import ImpactSection from "../components/homepage/ImpactSection";
 import { Box, Button, CircularProgress } from "@mui/material";
 import CardSection from "../components/homepage/CardSection";
 import EditHomepageModal from "../components/homepage/EditHomepageModal";
+import { useAuthStore } from "../stores/AuthenticationStore";
 
 interface Card {
   title: string;
@@ -29,7 +30,7 @@ const HomePage: React.FC = () => {
   const [data, setData] = useState<HomePageData | null>(null);
   const [loading, setLoading] = useState(true);
   const API_URL = import.meta.env.VITE_API_BASE_URL;
-
+  const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn); // Check if admin is logged in
   const [openModal, setOpenModal] = useState(false);
   const [homeData, setHomeData] = useState<HomePageData | null>(null); // Update this line
 
@@ -76,11 +77,13 @@ const HomePage: React.FC = () => {
       />
 
       <Box sx={{ backgroundColor: "#009AC7", height: "20px" }} />
-      <Box display="flex" justifyContent="center" marginTop={4}>
-        <Button variant="contained" onClick={() => setOpenModal(true)}>
-          Edit Home Page
-        </Button>
-      </Box>
+      {isAdminLoggedIn && (
+        <Box display="flex" justifyContent="center" marginTop={4}>
+          <Button variant="contained" onClick={() => setOpenModal(true)}>
+            Edit Home Page
+          </Button>
+        </Box>
+      )}
       <EditHomepageModal
         open={openModal}
         handleClose={() => setOpenModal(false)}

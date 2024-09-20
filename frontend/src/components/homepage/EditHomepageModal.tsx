@@ -9,7 +9,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
 } from "@mui/material";
+
+import CloseIcon from "@mui/icons-material/Close";
 
 interface Card {
   title: string;
@@ -105,6 +108,12 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
     }
   };
 
+  const headerStyle = {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  };
+
   return (
     <Modal open={open} onClose={handleClose}>
       <Box
@@ -120,9 +129,15 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
           paddingY: 3,
         }}
       >
-        <Typography variant="h6" component="h2" gutterBottom>
-          Edit Home Page
-        </Typography>
+        <Box sx={headerStyle}>
+          <Typography variant="h6" component="h2">
+            Edit Home Page
+          </Typography>
+          {/* Close button */}
+          <IconButton onClick={handleClose} aria-label="close">
+            <CloseIcon />
+          </IconButton>
+        </Box>
 
         <Box>
           {formData && (
