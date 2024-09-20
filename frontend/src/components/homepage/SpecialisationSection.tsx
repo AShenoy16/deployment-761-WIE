@@ -4,18 +4,16 @@ import { useNavigate } from "react-router-dom";
 import Slideshow from "./Slideshow";
 import { specialisations } from "./specialisationsData";
 
-const SpecialisationSection: React.FC = () => {
+interface SpecialisationSectionProps {
+  header: string;
+  text: string;
+}
+
+const SpecialisationSection: React.FC<SpecialisationSectionProps> = ({
+  header,
+  text,
+}) => {
   const navigate = useNavigate();
-
-  const buttonStyle = {
-    textTransform: "none",
-    borderRadius: "12px",
-    marginTop: "0.7em",
-  };
-
-  const handleSpecButtonClick = () => {
-    navigate("/spec-info");
-  };
 
   const handleQuizButtonClick = () => {
     navigate("/quiz");
@@ -37,7 +35,7 @@ const SpecialisationSection: React.FC = () => {
           fontWeight: "bold",
         }}
       >
-        Discover the Right Engineering Path for You
+        {header}
       </Typography>
       <Stack
         direction={{ md: "column", lg: "row" }}
@@ -61,11 +59,7 @@ const SpecialisationSection: React.FC = () => {
               fontSize: "1.1rem",
             }}
           >
-            Engineering is diverse, offering various career pathways depending
-            on your interests and skills. Whether you’re passionate about
-            building the cities of the future, advancing healthcare, or
-            developing cutting-edge software, there’s a specialisation for you
-            at the University of Auckland.
+            {text}
           </Typography>
           <Link
             sx={{ mt: 1, color: "#00467F", textDecoration: "underline" }}

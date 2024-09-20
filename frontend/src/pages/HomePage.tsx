@@ -55,7 +55,10 @@ const HomePage: React.FC = () => {
       />
       <Box sx={{ backgroundColor: "#009AC7", height: "20px" }} />
       <ImpactSection header={data.section1Header} text={data.section1Text} />
-      <SpecialisationSection />
+      <SpecialisationSection
+        header={data.section2Header}
+        text={data.section2Text}
+      />
       <Box sx={{ backgroundColor: "#009AC7", height: "20px" }} />
       <CardSection resources={data.additionalResources} />
     </div>
