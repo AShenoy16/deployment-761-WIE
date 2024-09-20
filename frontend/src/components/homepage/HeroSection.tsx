@@ -2,12 +2,22 @@ import React from "react";
 import { Box, Typography, Stack } from "@mui/material";
 import wenlogo from "../../assets/wen-logo.png";
 
-const HeroSection: React.FC = () => {
+interface HeroSectionProps {
+  title: string;
+  subtitle: string;
+  image: string;
+}
+
+const HeroSection: React.FC<HeroSectionProps> = ({
+  title,
+  subtitle,
+  image,
+}) => {
   return (
     <Box
       sx={{
         position: "relative",
-        backgroundImage: `url(/engineering-building.jpg)`, // You can import this if necessary
+        backgroundImage: `url(/engineering-building.jpg)`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         color: "white",
@@ -58,7 +68,7 @@ const HeroSection: React.FC = () => {
                 fontSize: { xs: "2rem", sm: "2.5rem", md: "4rem" },
               }}
             >
-              {"Women in Engineering"}
+              {title}
             </Typography>
             <Typography
               variant="h6"
@@ -69,15 +79,13 @@ const HeroSection: React.FC = () => {
                 maxWidth: { xs: "100%", sm: "80%", md: "85%" },
               }}
             >
-              {"Towards more diversity in Engineering"}
+              {subtitle}
             </Typography>
           </Box>
 
           <Box
             component="img"
-            sx={{
-              maxHeight: { xs: 120, md: 140 },
-            }}
+            sx={{ maxHeight: { xs: 120, md: 140 } }}
             src={wenlogo}
           />
         </Stack>
