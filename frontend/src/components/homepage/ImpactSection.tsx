@@ -1,16 +1,12 @@
 import React from "react";
-import { Box, Typography, Stack, Button, Link, CardMedia } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Box, Typography, Stack, CardMedia } from "@mui/material";
 
-const ImpactSection: React.FC = () => {
-  const navigate = useNavigate();
+interface ImpactSectionProps {
+  header: string;
+  text: string;
+}
 
-  const buttonStyle = {
-    textTransform: "none",
-    borderRadius: "12px",
-    marginTop: "0.7em",
-  };
-
+const ImpactSection: React.FC<ImpactSectionProps> = ({ header, text }) => {
   return (
     <Box
       sx={{
@@ -27,7 +23,7 @@ const ImpactSection: React.FC = () => {
           textAlign: "center",
         }}
       >
-        Why Engineering?
+        {header}
       </Typography>
       <Stack
         direction={{ md: "column", lg: "row" }}
@@ -44,25 +40,7 @@ const ImpactSection: React.FC = () => {
               color: "black",
             }}
           >
-            Engineering is more than just solving problems—it’s about creating
-            solutions that impact every part of society. Engineers tackle
-            climate change, create clean energy, design sustainable cities,
-            improve healthcare, and drive technological advancements. When you
-            become an engineer, you have the power to change the world for the
-            better.
-          </Typography>
-          <Typography
-            variant="body1"
-            component="p"
-            gutterBottom
-            sx={{
-              color: "black",
-              marginTop: "1em",
-            }}
-          >
-            Imagine designing the cities of tomorrow, developing renewable
-            energy technologies, or creating medical devices that save lives.
-            Engineers make all of this possible—and so much more.
+            {text}
           </Typography>
         </Box>
         <CardMedia

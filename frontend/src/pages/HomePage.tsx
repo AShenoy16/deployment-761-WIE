@@ -54,7 +54,7 @@ const HomePage: React.FC = () => {
         image={data.heroImage}
       />
       <Box sx={{ backgroundColor: "#009AC7", height: "20px" }} />
-      <ImpactSection />
+      <ImpactSection header={data.section1Header} text={data.section1Text} />
       <SpecialisationSection />
       <Box sx={{ backgroundColor: "#009AC7", height: "20px" }} />
       <CardSection resources={data.additionalResources} />
