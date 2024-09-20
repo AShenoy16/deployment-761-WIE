@@ -439,7 +439,7 @@ const EditableQuestion = ({
       <Typography variant="body1">
         {`Question ${questionNumber}`}
         <Typography variant="body1" component="span" color="grey">
-          {` ~ ${question.questionType}`}
+          {` ~ ${question.questionType === "MCQ" ? "Multi-Choice" : question.questionType}`}
         </Typography>
       </Typography>
       <Box>

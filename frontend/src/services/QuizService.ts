@@ -1,5 +1,10 @@
 import axios from "axios";
-import { IMultiplierData, IQuestion } from "../types/Question";
+import {
+  IMultiplierData,
+  IQuestion,
+  QuizSubmissionRequest,
+} from "../types/Question";
+import { SpecSummary } from "../types/Specialization";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -48,4 +53,20 @@ export const updateQuizQuestion = async (updatedQuestion: IQuestion) => {
     `${API_BASE_URL}/quizzes/${updatedQuestion._id}`,
     updatedQuestion
   );
+};
+
+export const calculateQuizResults = async (
+  quizSubmission: QuizSubmissionRequest
+): Promise<SpecSummary[]> => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/quizzes/submit`,
+      quizSubmission
+    );
+    const questions = response.data;
+    return questions;
+  } catch (error) {
+    console.error("Error retrieving quiz results:", error);
+    throw error; // Throw the error so the query can handle it
+  }
 };

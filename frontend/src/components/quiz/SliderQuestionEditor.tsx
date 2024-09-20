@@ -16,19 +16,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import React, { useEffect, useState } from "react";
 import { useSliderQuestionEditorStore } from "../../stores/SliderQuestionEditorStore";
 import { useQuizEditorStore } from "../../stores/QuizEditorStore";
-
-const possibleSpecs = [
-  "Biomedical",
-  "Chemmat",
-  "Civil",
-  "Compsys",
-  "Electrical",
-  "Engsci",
-  "Mechanical",
-  "Mechatronics",
-  "Software",
-  "Structural",
-];
+import {
+  possibleSpecs,
+  reverseSpecAbbreviationMap,
+  specAbbreviationMap,
+} from "../../util/common";
 
 type EditSpecWeightingProps = {
   open: boolean;
@@ -60,6 +52,9 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
       !Object.keys(selectedQuestion?.sliderWeights.weightings || {}).includes(
         specName
       )
+  );
+  const availableSpecFullNames = availableSpecs.map(
+    (specAbbreviation) => specAbbreviationMap[specAbbreviation]
   );
   const isInvalidSpec = !possibleSpecs.includes(editedSpec);
 
@@ -109,9 +104,11 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
         </Typography>
         <Stack spacing={2}>
           <Autocomplete
-            options={availableSpecs}
-            value={editedSpec}
-            onChange={(_, newValue) => setEditedSpec(newValue || "")}
+            options={availableSpecFullNames}
+            value={specAbbreviationMap[editedSpec]}
+            onChange={(_, newSpecAsFullName) =>
+              setEditedSpec(reverseSpecAbbreviationMap[newSpecAsFullName])
+            }
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -212,7 +209,7 @@ const SpecialisationOption: React.FC<SpecialisationOptionProps> = ({
               <EditIcon />
             </IconButton>
           </Stack>
-          <Typography>{spec}</Typography>
+          <Typography>{specAbbreviationMap[spec]}</Typography>
         </Stack>
         <Box
           display="flex"

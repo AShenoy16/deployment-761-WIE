@@ -1,11 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { IQuestion } from "../types/Question";
+import { IQuestion, QuizSubmissionRequest } from "../types/Question";
 import {
   addQuizQuestion,
   deleteQuizQuestion,
   updateQuizQuestion,
   getAllQuizQuestions,
+  calculateQuizResults,
 } from "../services/QuizService";
+import { SpecSummary } from "../types/Specialization";
 
 export const useQuestions = () => {
   const queryClient = useQueryClient();
@@ -47,4 +49,22 @@ export const useQuestions = () => {
     addMutation,
     updateMutation,
   };
+};
+
+export const useCalculateQuizResults = (
+  quizSubmissionRequest: QuizSubmissionRequest,
+  preloadedResults?: SpecSummary[]
+) => {
+  const {
+    data: quizResults = [],
+    isLoading,
+    isError,
+  } = useQuery<SpecSummary[]>({
+    queryKey: ["quizResults", quizSubmissionRequest],
+    queryFn: preloadedResults
+      ? async () => preloadedResults
+      : () => calculateQuizResults(quizSubmissionRequest),
+  });
+
+  return { quizResults, isLoading, isError };
 };

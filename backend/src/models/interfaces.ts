@@ -1,3 +1,5 @@
+import { ObjectId } from "mongoose";
+
 // MCQ interfaces
 export interface IMCQAnswerOption {
   text: string;
@@ -66,13 +68,14 @@ export interface IQuiz extends Document {
   updatedAt: Date;
 }
 
-export interface Testimonial extends Document {
+export interface ITestimonial extends Document {
+  _id: string | ObjectId;
   testimonialId: string;
   name: string;
   description: string;
 }
 
-export interface Specialization extends Document {
+export interface ISpecialization extends Document {
   name: string;
   description: string;
   photoUrl: string;
@@ -81,7 +84,7 @@ export interface Specialization extends Document {
   medianSalary: number;
   experiencedSalary: number;
   jobAvailability: string;
-  testimonials: Testimonial[];
+  testimonials: ITestimonial[];
   header: string;
   leftDetail: string;
   rightDetail: string;

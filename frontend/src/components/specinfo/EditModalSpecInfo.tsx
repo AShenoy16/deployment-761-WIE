@@ -11,7 +11,7 @@ import {
 import { useState, useEffect, useRef } from "react";
 import GradientBox from "../GradientBox";
 import axios from "axios";
-import { Specialization } from "../../types/Specialization";
+import { Specialization, Testimonial } from "../../types/Specialization";
 import useSnackBar from "../../hooks/useSnackBar";
 import { useNavigate } from "react-router-dom";
 
@@ -47,6 +47,7 @@ interface EditModalSpecInfoProps {
     rightDetail: string;
     leftImage: string;
     rightImage: string;
+    testimonials: Testimonial[];
   } | null;
   name: string;
   onSave: (updatedSpecialization: Partial<Specialization>) => void;
@@ -67,6 +68,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
   const [rightDetail, setRightDetail] = useState<string>("");
   const [leftImage, setLeftImage] = useState<File | null>(null);
   const [rightImage, setRightImage] = useState<File | null>(null);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
   const leftImageInputRef = useRef<HTMLInputElement | null>(null);
   const rightImageInputRef = useRef<HTMLInputElement | null>(null);
@@ -79,6 +81,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setHeader(specInfoResult.header);
       setLeftDetail(specInfoResult.leftDetail);
       setRightDetail(specInfoResult.rightDetail);
+      setTestimonials(specInfoResult.testimonials);
     }
   }, [specInfoResult]);
 
@@ -92,6 +95,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setRightDetail(specInfoResult.rightDetail);
       setLeftImage(null);
       setRightImage(null);
+      setTestimonials(specInfoResult.testimonials);
     }
   };
 
@@ -108,6 +112,27 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
   const handleRemoveCareerPathway = (index: number) => {
     const newCareerPathways = careerPathways.filter((_, i) => i !== index);
     setCareerPathways(newCareerPathways);
+  };
+
+  const handleTestimonialNameChange = (index: number, value: string) => {
+    const newTestimonial = [...testimonials];
+    newTestimonial[index].name = value;
+    setTestimonials(newTestimonial);
+  };
+
+  const handleTestimonialDescChange = (index: number, value: string) => {
+    const newTestimonial = [...testimonials];
+    newTestimonial[index].description = value;
+    setTestimonials(newTestimonial);
+  };
+
+  const handleAddTestimonial = () => {
+    setTestimonials([...testimonials, { name: "", description: "" }]);
+  };
+
+  const handleRemoveTestimonial = (index: number) => {
+    const newTestimonials = testimonials.filter((_, i) => i !== index);
+    setTestimonials(newTestimonials);
   };
 
   const handleImageChange = (
@@ -381,6 +406,69 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
             onClick={() => leftImageInputRef.current?.click()}
           >
             Choose Left Image
+          </Button>
+
+          {/* Testimonials */}
+          <Typography variant="h6" marginTop={4} gutterBottom>
+            Testimonials <span style={{ color: "red" }}>*</span>
+          </Typography>
+          {testimonials.map((testimonial, index) => (
+            <Box key={index} sx={{ display: "flex", mb: 2 }}>
+              <TextField
+                fullWidth
+                value={testimonial.name}
+                onChange={(e) =>
+                  handleTestimonialNameChange(index, e.target.value)
+                }
+                label={`Testimonial ${index + 1} name`}
+                sx={{
+                  mr: 2,
+                  mt: 1,
+                  backgroundColor: "white",
+                  borderRadius: "8px",
+                  marginBottom: "10px",
+                }}
+                InputLabelProps={{
+                  sx: {
+                    transform: "translate(5px, -15px) scale(0.85)",
+                    marginTop: "-5px",
+                    color: "black",
+                  },
+                }}
+              />
+              <TextField
+                fullWidth
+                value={testimonial.description}
+                onChange={(e) =>
+                  handleTestimonialDescChange(index, e.target.value)
+                }
+                label={`Testimonial ${index + 1} description`}
+                sx={{
+                  mr: 2,
+                  mt: 1,
+                  backgroundColor: "white",
+                  borderRadius: "8px",
+                  marginBottom: "10px",
+                }}
+                InputLabelProps={{
+                  sx: {
+                    transform: "translate(5px, -15px) scale(0.85)",
+                    marginTop: "-5px",
+                    color: "black",
+                  },
+                }}
+              />
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => handleRemoveTestimonial(index)}
+              >
+                Remove
+              </Button>
+            </Box>
+          ))}
+          <Button onClick={handleAddTestimonial} variant="contained">
+            Add Testimonial
           </Button>
         </Box>
 

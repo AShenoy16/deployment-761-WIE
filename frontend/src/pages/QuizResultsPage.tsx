@@ -1,17 +1,87 @@
 import { Box, Stack, Typography } from "@mui/material";
-import { useGetQuizResults } from "../hooks/useGetQuizResults";
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 import SpecCard from "../components/quiz/SpecCard";
+import { useCalculateQuizResults } from "../hooks/useQuestions";
+import { useState, useEffect } from "react";
+import { QuizSubmissionRequest } from "../types/Question";
+import { useQuizStore } from "../stores/QuizStore";
+import { useRankingQuestionStore } from "../stores/RankingQuizQuestionStore";
+import { useSliderQuestionStore } from "../stores/SliderQuizQuestionStore";
+import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
+import { useSearchParams } from "react-router-dom";
+import { SpecSummary } from "../types/Specialization";
+import LZString from "lz-string";
+
+const resetQuizProgress = () => {
+  const resetQuiz = useQuizStore.getState().resetQuiz;
+  const resetMCQ = useMCQQuestionStore.getState().resetMcqQuestionProgress;
+  const resetRanking =
+    useRankingQuestionStore.getState().resetRankingQuestionProgress;
+  const resetSlider =
+    useSliderQuestionStore.getState().resetSliderQuestionProgress;
+
+  resetQuiz();
+  resetMCQ();
+  resetRanking();
+  resetSlider();
+};
+
+const serializeResults = (results: SpecSummary[]) =>
+  LZString.compressToEncodedURIComponent(JSON.stringify(results));
+
+const deserializeResults = (queryString: string) =>
+  JSON.parse(LZString.decompressFromEncodedURIComponent(queryString));
+
+const buildQuizSubmissionObj = (): QuizSubmissionRequest => {
+  const rankingQuestionState = useRankingQuestionStore.getState();
+  const rankingAnswers = Object.entries(
+    rankingQuestionState.questionRankings
+  ).reduce(
+    (acc, [questionId, rankings]) => {
+      acc[questionId] = { rankings };
+      return acc;
+    },
+    {} as { [questionId: string]: { rankings: { [optionId: string]: number } } }
+  );
+
+  const sliderQuestionState = useSliderQuestionStore.getState();
+  const sliderAnswers = sliderQuestionState.selectedValue;
+
+  const mcqQuestionState = useMCQQuestionStore.getState();
+  const mcqAnswers = mcqQuestionState.selectedOptionId;
+
+  return {
+    mcqAnswers,
+    sliderAnswers,
+    rankingAnswers,
+  };
+};
 
 const QuizResultsPage = () => {
-  const { quizResults, isLoading, isError } = useGetQuizResults();
+  const [quizSubmissionRequest, _] = useState(() => buildQuizSubmissionObj());
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const existingResults = searchParams.get("results");
+
+  const { quizResults, isLoading, isError } = useCalculateQuizResults(
+    quizSubmissionRequest,
+    existingResults ? deserializeResults(existingResults) : undefined
+  );
+
+  useEffect(() => {
+    if (quizResults.length > 0) {
+      const serializedResults = serializeResults(quizResults);
+      setSearchParams({ results: serializedResults });
+      resetQuizProgress();
+    }
+  }, [quizResults, setSearchParams]);
 
   if (isLoading) {
     return <LoadingSpinnerScreen />;
   }
 
   if (isError) {
-    return <div>Error loading quiz results</div>;
+    return <Box>Error loading quiz results</Box>;
   }
 
   return (

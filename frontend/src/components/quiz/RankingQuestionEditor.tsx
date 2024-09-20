@@ -17,19 +17,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useRankingQuestionEditorStore } from "../../stores/RankingQuestionEditorStore";
 import { IRankingAnswerOption } from "../../types/Question";
-
-const possibleSpecs = [
-  "Biomedical",
-  "Chemmat",
-  "Civil",
-  "Compsys",
-  "Electrical",
-  "Engsci",
-  "Mechanical",
-  "Mechatronics",
-  "Software",
-  "Structural",
-];
+import {
+  possibleSpecs,
+  reverseSpecAbbreviationMap,
+  specAbbreviationMap,
+} from "../../util/common";
 
 type EditSpecWeightingProps = {
   open: boolean;
@@ -52,22 +44,25 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
 
   const handleOnConfirm = () => {
     if (!isInvalidSpec && !weightError) {
-      updateSpecWeightingName(option._id, spec, localSpec);
-      updateSpecWeightingValue(option._id, localSpec, localWeight);
+      updateSpecWeightingName(option._id, spec, editedSpec);
+      updateSpecWeightingValue(option._id, editedSpec, editedWeight);
       onClose();
     }
   };
 
-  const [localSpec, setLocalSpec] = useState(spec);
-  const [localWeight, setLocalWeight] = useState(option.weightings[spec]);
+  const [editedSpec, setEditedSpec] = useState(spec);
+  const [editedWeight, setEditedWeight] = useState(option.weightings[spec]);
 
   const [weightError, setWeightError] = useState<string>("");
 
   const existingSpecs = Object.keys(option.weightings);
   const availableSpecs = possibleSpecs.filter(
-    (spec) => !existingSpecs.includes(spec)
+    (specName) => specName === spec || !existingSpecs.includes(specName)
   );
-  const isInvalidSpec = !possibleSpecs.includes(localSpec);
+  const availableSpecFullNames = availableSpecs.map(
+    (specAbbreviation) => specAbbreviationMap[specAbbreviation]
+  );
+  const isInvalidSpec = !possibleSpecs.includes(editedSpec);
 
   const handleWeightChange = (value: number) => {
     if (value < 1 || value > 10) {
@@ -77,7 +72,7 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
     } else {
       setWeightError("");
     }
-    setLocalWeight(value);
+    setEditedWeight(value);
   };
 
   return (
@@ -100,9 +95,11 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
         </Typography>
         <Stack spacing={2}>
           <Autocomplete
-            options={availableSpecs}
-            value={localSpec}
-            onChange={(_, newSpec) => setLocalSpec(newSpec)}
+            options={availableSpecFullNames}
+            value={specAbbreviationMap[editedSpec]}
+            onChange={(_, newSpecAsFullName) =>
+              setEditedSpec(reverseSpecAbbreviationMap[newSpecAsFullName])
+            }
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -120,7 +117,7 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
           <TextField
             label={`Weighting`}
             type="number"
-            value={isNaN(localWeight) ? "" : localWeight}
+            value={isNaN(editedWeight) ? "" : editedWeight}
             onChange={(e) => {
               const value = parseInt(e.target.value);
               handleWeightChange(value);
@@ -204,7 +201,7 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({
               <EditIcon />
             </IconButton>
           </Stack>
-          <Typography>{specializationName}</Typography>
+          <Typography>{specAbbreviationMap[specializationName]}</Typography>
         </Stack>
         <Box
           display="flex"

@@ -93,12 +93,12 @@ const StartingScreen: React.FC = () => {
 
 const QuizPage: React.FC = () => {
   const { questions, isLoading, isError } = useQuestions();
-  const { currentQuestionIndex, nextQuestion, prevQuestion } =
+  const { currentQuestionIndex, exitQuiz, nextQuestion, prevQuestion } =
     useQuizNavigation(questions);
   const currentQuestion = questions[currentQuestionIndex];
   const navigate = useNavigate();
 
-  const hasStarted = useQuizStore((state) => state.hasStarted);
+  const hasStarted = currentQuestionIndex >= 0;
   const isFinalQuestion = currentQuestionIndex === questions.length - 1;
 
   const isRankingQuestionAnsweredMap = useRankingQuestionStore(
@@ -115,13 +115,14 @@ const QuizPage: React.FC = () => {
     (currentQuestion?.questionType === "Ranking" &&
       isRankingQuestionAnsweredMap[currentQuestion._id]);
 
-  const handleSubmit = () => {
-    navigate("/quiz/results");
-  };
   const isMCQQuestionAnswered =
     currentQuestion?.questionType !== "MCQ" ||
     (currentQuestion?.questionType === "MCQ" &&
       isMCQQuestionAnsweredMap[currentQuestion._id]);
+
+  const handleSubmit = () => {
+    navigate("/quiz/results");
+  };
 
   if (isLoading) {
     return <LoadingSpinnerScreen />;
@@ -141,22 +142,28 @@ const QuizPage: React.FC = () => {
       {hasStarted ? (
         <>
           {renderQuestionComponent(currentQuestion)}
-          <Box display="flex" justifyContent="flex-end" width="100%" gap={1}>
-            <Button
-              variant="outlined"
-              onClick={prevQuestion}
-              disabled={currentQuestionIndex === 0}
-            >
-              Previous
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <Button variant="outlined" onClick={exitQuiz}>
+              Exit Quiz
             </Button>
 
-            <Button
-              variant="contained"
-              onClick={isFinalQuestion ? handleSubmit : nextQuestion}
-              disabled={!isRankingQuestionAnswered || !isMCQQuestionAnswered}
-            >
-              {isFinalQuestion ? "Submit" : "Next"}
-            </Button>
+            <Box display="flex" gap={1}>
+              <Button
+                variant="outlined"
+                onClick={prevQuestion}
+                disabled={currentQuestionIndex === 0}
+              >
+                Previous
+              </Button>
+
+              <Button
+                variant="contained"
+                onClick={isFinalQuestion ? handleSubmit : nextQuestion}
+                disabled={!isRankingQuestionAnswered || !isMCQQuestionAnswered}
+              >
+                {isFinalQuestion ? "Submit" : "Next"}
+              </Button>
+            </Box>
           </Box>
         </>
       ) : (

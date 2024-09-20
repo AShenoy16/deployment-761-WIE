@@ -15,6 +15,7 @@ import axios from "axios";
 import { useAuthStore } from "../stores/AuthenticationStore";
 import EditModalSpecInfo from "../components/specinfo/EditModalSpecInfo";
 import { useSnackbarStore } from "../stores/SnackBarStore";
+import { Specialization } from "../types/Specialization";
 
 // Button styles
 const buttonStyle = {
@@ -25,23 +26,6 @@ const buttonStyle = {
   padding: "12px 24px",
   height: "48px",
 };
-
-// Specialization interface
-interface Specialization {
-  name: string;
-  description: string;
-  photoUrl: string;
-  careerPathways: string[];
-  startingSalary: number;
-  medianSalary: number;
-  experiencedSalary: number;
-  jobAvailability: string;
-  header: string;
-  leftDetail: string;
-  rightDetail: string;
-  leftImage: string;
-  rightImage: string;
-}
 
 const SpecDetailPage: React.FC = () => {
   const { name } = useParams<{ name: string }>(); // Get specialization name from route params
@@ -349,6 +333,8 @@ const SpecDetailPage: React.FC = () => {
           backgroundColor: "#00467F",
           color: "white",
           padding: "20px",
+          display: "flex",
+          flexDirection: "column",
           "& li": {
             marginBottom: "10px",
           },
@@ -358,6 +344,7 @@ const SpecDetailPage: React.FC = () => {
         <Typography
           variant="h4"
           gutterBottom
+          textAlign="center"
           sx={{
             fontWeight: "bold",
             fontSize: {
@@ -369,7 +356,7 @@ const SpecDetailPage: React.FC = () => {
         >
           Career Pathways
         </Typography>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom textAlign="center">
           {`Potential Career options as a ${specialization.name} Graduate`}
         </Typography>
         <Grid
@@ -378,9 +365,15 @@ const SpecDetailPage: React.FC = () => {
           sx={{
             marginLeft: "10px",
             paddingTop: "20px",
+            justifyContent: "center",
           }}
         >
-          <Grid item xs={12} md={6}>
+          <Grid
+            item
+            xs={12}
+            md={6}
+            sx={{ display: "flex", justifyContent: "space-evenly" }}
+          >
             <ul
               style={{
                 display: "grid",
@@ -390,6 +383,7 @@ const SpecDetailPage: React.FC = () => {
                 columnGap: "20px",
                 padding: 0,
                 margin: 0,
+                listStylePosition: "inside",
               }}
             >
               {specialization.careerPathways
@@ -401,6 +395,73 @@ const SpecDetailPage: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
+
+      {/* Testimonials Section */}
+      <Box pt="1.25rem">
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          textAlign="center"
+          gutterBottom
+          sx={{
+            fontSize: {
+              xs: "1.5rem",
+              sm: "2rem",
+              md: "2.5rem",
+            },
+          }}
+        >
+          Testimonials
+        </Typography>
+
+        {isAdminLoggedIn && (
+          <Box display="flex" justifyContent="center" padding="10px">
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleEditModalOpen} // TODO: Make it open the modal for editing testimonials
+              sx={buttonStyle}
+            >
+              Edit
+            </Button>
+          </Box>
+        )}
+
+        <Box p="1.25rem">
+          {specialization.testimonials.length > 0 ? (
+            specialization.testimonials.map((testimonial, index) => (
+              <Box key={index} pb="1.25rem">
+                <Typography
+                  variant="body1"
+                  fontSize="1.2rem"
+                  fontWeight="bold"
+                  textAlign="center"
+                >
+                  {testimonial.description}
+                </Typography>
+                <Typography
+                  variant="subtitle2"
+                  fontSize="1rem"
+                  textAlign="center"
+                  fontStyle="italic"
+                >
+                  - {testimonial.name}
+                </Typography>
+              </Box>
+            ))
+          ) : (
+            <Typography
+              variant="body1"
+              fontSize="1.2rem"
+              fontWeight="bold"
+              textAlign="center"
+            >
+              No testimonials available.
+            </Typography>
+          )}
+        </Box>
+      </Box>
+
       {/* Snack Bar */}
       <Snackbar
         open={isOpen}
