@@ -24,7 +24,7 @@ const ImpactSection: React.FC = () => {
         component="h2"
         sx={{
           fontWeight: "bold",
-          textAlign: { xs: "center", sm: "left" },
+          textAlign: "center",
         }}
       >
         Why Engineering?
