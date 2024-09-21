@@ -1,9 +1,9 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Box, Typography, Stack, CardMedia } from "@mui/material";
 
 interface ImpactSectionProps {
   header: string;
-  text: string;
+  text: ReactNode; // Change text prop to accept ReactNode
 }
 
 const ImpactSection: React.FC<ImpactSectionProps> = ({ header, text }) => {
@@ -34,7 +34,7 @@ const ImpactSection: React.FC<ImpactSectionProps> = ({ header, text }) => {
         <Box>
           <Typography
             variant="body1"
-            component="p"
+            component="div" // Change component to "div" to wrap ReactNodes properly
             gutterBottom
             sx={{
               color: "black",

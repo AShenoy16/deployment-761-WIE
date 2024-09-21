@@ -32,7 +32,16 @@ const HomePage: React.FC = () => {
   const API_URL = import.meta.env.VITE_API_BASE_URL;
   const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn); // Check if admin is logged in
   const [openModal, setOpenModal] = useState(false);
-  const [homeData, setHomeData] = useState<HomePageData | null>(null); // Update this line
+  const [homeData, setHomeData] = useState<HomePageData | null>(null);
+
+  // This function converts new lines into separate <p> tags
+  const formatTextWithParagraphs = (text: string) => {
+    return text.split("\n").map((paragraph, index) => (
+      <p key={index} style={{ marginBottom: "16px" }}>
+        {paragraph}
+      </p>
+    ));
+  };
 
   const handleSubmit = async (data: HomePageData) => {
     try {
@@ -43,8 +52,8 @@ const HomePage: React.FC = () => {
         },
         body: JSON.stringify(data),
       });
-      setHomeData(data); // Update local state
-      setOpenModal(false); // Close modal after submission
+      setHomeData(data); // Update local state with new data
+      setOpenModal(false); // Close the modal after the update
     } catch (error) {
       console.error("Error updating homepage data:", error);
     }
@@ -56,7 +65,7 @@ const HomePage: React.FC = () => {
         const response = await axios.get(`${API_URL}/homepage`);
         setHomeData(response.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching homepage data:", error);
       } finally {
         setLoading(false);
       }
@@ -66,10 +75,11 @@ const HomePage: React.FC = () => {
   }, [API_URL]);
 
   if (loading) return <CircularProgress />;
-  if (!homeData) return <div>No data available</div>; // Updated this line
+  if (!homeData) return <div>No data available</div>;
 
   return (
     <div>
+      {/* Hero Section */}
       <HeroSection
         title={homeData.heroTitle}
         subtitle={homeData.heroSubtitle}
@@ -77,6 +87,8 @@ const HomePage: React.FC = () => {
       />
 
       <Box sx={{ backgroundColor: "#009AC7", height: "20px" }} />
+
+      {/* Admin Edit Button */}
       {isAdminLoggedIn && (
         <Box display="flex" justifyContent="center" marginTop={4}>
           <Button variant="contained" onClick={() => setOpenModal(true)}>
@@ -84,21 +96,30 @@ const HomePage: React.FC = () => {
           </Button>
         </Box>
       )}
+
+      {/* Edit Homepage Modal */}
       <EditHomepageModal
         open={openModal}
         handleClose={() => setOpenModal(false)}
         initialData={homeData}
         onSubmit={handleSubmit}
       />
+
+      {/* Impact Section (Section 1) */}
       <ImpactSection
         header={homeData.section1Header}
-        text={homeData.section1Text}
+        text={formatTextWithParagraphs(homeData.section1Text)}
       />
+
+      {/* Specialisation Section (Section 2) */}
       <SpecialisationSection
         header={homeData.section2Header}
-        text={homeData.section2Text}
+        text={formatTextWithParagraphs(homeData.section2Text)}
       />
+
       <Box sx={{ backgroundColor: "#009AC7", height: "20px" }} />
+
+      {/* Card Section */}
       <CardSection resources={homeData.additionalResources} />
     </div>
   );

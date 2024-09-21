@@ -173,6 +173,9 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 fullWidth
                 margin="normal"
               />
+              <Typography variant="h6" component="h3" gutterBottom>
+                Section One
+              </Typography>
               <TextField
                 name="section1Header"
                 label="Section 1 Header"
@@ -191,6 +194,10 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 rows={4}
                 margin="normal"
               />
+              <Typography variant="h6" component="h3" gutterBottom>
+                Section Two
+              </Typography>
+
               <TextField
                 name="section2Header"
                 label="Section 2 Header"

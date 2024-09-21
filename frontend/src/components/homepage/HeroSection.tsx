@@ -85,8 +85,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
           <Box
             component="img"
-            sx={{ maxHeight: { xs: 120, md: 140 } }}
-            src={wenlogo}
+            sx={{ maxHeight: { xs: 130, md: 190 }, borderRadius: "3px" }}
+            src={
+              "https://www.auckland.ac.nz/content/auckland/en/engineering/study-with-us/women-in-engineering/_jcr_content/par/linkspagetemplategri_559213939/par2/subflexicomponentlin/image.img.480.low.jpg/1551045302558.jpg"
+            }
           />
         </Stack>
       </Box>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Box, Typography, Stack, Button, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Slideshow from "./Slideshow";
@@ -6,7 +6,7 @@ import { specialisations } from "./specialisationsData";
 
 interface SpecialisationSectionProps {
   header: string;
-  text: string;
+  text: ReactNode; // Updated to ReactNode to support multiple elements like paragraphs
 }
 
 const SpecialisationSection: React.FC<SpecialisationSectionProps> = ({
@@ -51,7 +51,7 @@ const SpecialisationSection: React.FC<SpecialisationSectionProps> = ({
         >
           <Typography
             variant="h6"
-            component="p"
+            component="div" // Change component to div to allow multiple elements (ReactNode)
             textAlign={"left"}
             sx={{
               flex: 1, // Ensures equal width
