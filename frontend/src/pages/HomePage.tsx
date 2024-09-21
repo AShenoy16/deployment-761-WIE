@@ -3,10 +3,11 @@ import axios from "axios";
 import HeroSection from "../components/homepage/HeroSection";
 import SpecialisationSection from "../components/homepage/SpecialisationSection";
 import ImpactSection from "../components/homepage/ImpactSection";
-import { Box, Button, CircularProgress } from "@mui/material";
+import { Box, Button, CircularProgress, Snackbar, Alert } from "@mui/material";
 import CardSection from "../components/homepage/CardSection";
 import EditHomepageModal from "../components/homepage/EditHomepageModal";
 import { useAuthStore } from "../stores/AuthenticationStore";
+import { useSnackbarStore } from "../stores/SnackBarStore";
 
 interface Card {
   title: string;
@@ -30,11 +31,11 @@ const HomePage: React.FC = () => {
   const [data, setData] = useState<HomePageData | null>(null);
   const [loading, setLoading] = useState(true);
   const API_URL = import.meta.env.VITE_API_BASE_URL;
-  const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn); // Check if admin is logged in
+  const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const [openModal, setOpenModal] = useState(false);
   const [homeData, setHomeData] = useState<HomePageData | null>(null);
+  const { message, isOpen, setIsOpen, setMessage } = useSnackbarStore();
 
-  // This function converts new lines into separate <p> tags
   const formatTextWithParagraphs = (text: string) => {
     return text.split("\n").map((paragraph, index) => (
       <p key={index} style={{ marginBottom: "16px" }}>
@@ -52,12 +53,22 @@ const HomePage: React.FC = () => {
         },
         body: JSON.stringify(data),
       });
-      setHomeData(data); // Update local state with new data
-      setOpenModal(false); // Close the modal after the update
+      setHomeData(data);
+      setOpenModal(false);
+      setMessage("Changes saved successfully!");
+      setIsOpen(true);
     } catch (error) {
       console.error("Error updating homepage data:", error);
+      setMessage("Error updating homepage data.");
+      setIsOpen(true);
     }
   };
+
+  const severity =
+    message === "Please fill out all required fields." ||
+    message === "Error updating homepage data."
+      ? "error"
+      : "success";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,7 +90,6 @@ const HomePage: React.FC = () => {
 
   return (
     <div>
-      {/* Hero Section */}
       <HeroSection
         title={homeData.heroTitle}
         subtitle={homeData.heroSubtitle}
@@ -88,7 +98,6 @@ const HomePage: React.FC = () => {
 
       <Box sx={{ backgroundColor: "#009AC7", height: "20px" }} />
 
-      {/* Admin Edit Button */}
       {isAdminLoggedIn && (
         <Box display="flex" justifyContent="center" marginTop={4}>
           <Button variant="contained" onClick={() => setOpenModal(true)}>
@@ -97,7 +106,6 @@ const HomePage: React.FC = () => {
         </Box>
       )}
 
-      {/* Edit Homepage Modal */}
       <EditHomepageModal
         open={openModal}
         handleClose={() => setOpenModal(false)}
@@ -105,13 +113,11 @@ const HomePage: React.FC = () => {
         onSubmit={handleSubmit}
       />
 
-      {/* Impact Section (Section 1) */}
       <ImpactSection
         header={homeData.section1Header}
         text={formatTextWithParagraphs(homeData.section1Text)}
       />
 
-      {/* Specialisation Section (Section 2) */}
       <SpecialisationSection
         header={homeData.section2Header}
         text={formatTextWithParagraphs(homeData.section2Text)}
@@ -119,8 +125,17 @@ const HomePage: React.FC = () => {
 
       <Box sx={{ backgroundColor: "#009AC7", height: "20px" }} />
 
-      {/* Card Section */}
       <CardSection resources={homeData.additionalResources} />
+
+      <Snackbar
+        open={isOpen}
+        autoHideDuration={6000}
+        onClose={() => setIsOpen(false)}
+      >
+        <Alert onClose={() => setIsOpen(false)} severity={severity}>
+          {message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

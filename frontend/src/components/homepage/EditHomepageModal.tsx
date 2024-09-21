@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import placeholder from "../../assets/placeholder.jpg";
+import { useSnackbarStore } from "../../stores/SnackBarStore";
 
 interface Card {
   title: string;
@@ -48,6 +49,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
   const [formData, setFormData] = useState<HomePageData | null>(initialData);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [cardToRemove, setCardToRemove] = useState<number | null>(null);
+  const { setMessage, setIsOpen } = useSnackbarStore();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -97,19 +99,41 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
 
   const handleSubmit = () => {
     if (formData) {
-      const updatedResources = formData.additionalResources.map((card) => ({
-        ...card,
-        image: card.image || placeholder, // Use the imported placeholder directly
-      }));
-      onSubmit({ ...formData, additionalResources: updatedResources });
-      handleClose();
-    }
-  };
+      const {
+        heroTitle,
+        heroSubtitle,
+        section1Header,
+        section1Text,
+        section2Header,
+        section2Text,
+        additionalResources,
+      } = formData;
 
-  const headerStyle = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
+      const hasEmptyFields =
+        !heroTitle ||
+        !heroSubtitle ||
+        !section1Header ||
+        !section1Text ||
+        !section2Header ||
+        !section2Text ||
+        additionalResources.some((card) => !card.title || !card.description);
+
+      if (hasEmptyFields) {
+        setMessage("Please fill out all required fields.");
+        setIsOpen(true);
+        return; // Prevent submission if there are empty fields
+      }
+
+      const updatedResources = additionalResources.map((card) => ({
+        ...card,
+        image: card.image || placeholder,
+      }));
+
+      onSubmit({ ...formData, additionalResources: updatedResources });
+      setMessage("Changes saved successfully!");
+      setIsOpen(true);
+      handleClose(); // Close modal
+    }
   };
 
   return (
@@ -124,11 +148,16 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
           marginTop: "5%",
           display: "flex",
           flexDirection: "column",
-          height: "80vh", // Set a fixed height for the modal
+          height: "80vh",
         }}
       >
-        {/* Modal header */}
-        <Box sx={headerStyle}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Typography variant="h6" component="h2">
             Edit Home Page
           </Typography>
@@ -137,11 +166,10 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
           </IconButton>
         </Box>
 
-        {/* Scrollable content */}
         <Box
           sx={{
             overflowY: "auto",
-            flexGrow: 1, // Ensures the content grows and the footer stays at the bottom
+            flexGrow: 1,
             paddingRight: 2,
             marginBottom: 2,
           }}
@@ -269,6 +297,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                     }
                     fullWidth
                     margin="normal"
+                    required
                   />
                   <Button
                     variant="outlined"
@@ -287,13 +316,11 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
           )}
         </Box>
 
-        {/* Sticky submit button */}
         <Box
           sx={{
             display: "flex",
             justifyContent: "center",
-            paddingTop: 2,
-            borderTop: "1px solid #ccc",
+            marginTop: 2,
           }}
         >
           <Button variant="contained" onClick={handleSubmit}>
@@ -301,7 +328,6 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
           </Button>
         </Box>
 
-        {/* Confirmation Dialog */}
         <Dialog
           open={confirmDialogOpen}
           onClose={() => setConfirmDialogOpen(false)}
@@ -311,11 +337,9 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
             <Typography>Are you sure you want to remove this card?</Typography>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setConfirmDialogOpen(false)} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={confirmRemoveCard} color="secondary">
-              Confirm
+            <Button onClick={() => setConfirmDialogOpen(false)}>Cancel</Button>
+            <Button onClick={confirmRemoveCard} color="error">
+              Remove
             </Button>
           </DialogActions>
         </Dialog>
