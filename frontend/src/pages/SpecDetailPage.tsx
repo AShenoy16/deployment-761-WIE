@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from "react";
 import {
-  Grid,
-  Typography,
   Box,
+  Button,
   Card,
   CardContent,
-  Button,
+  Grid,
   Snackbar,
+  Stack,
+  Typography,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
-import uoaEngBuilding from "/engineering-building.jpg"; // Fallback image if needed
-import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 import axios from "axios";
-import { useAuthStore } from "../stores/AuthenticationStore";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import highMeterIcon from "../assets/high-meter.png";
+import lowMeterIcon from "../assets/low-meter.png";
+import mediumMeterIcon from "../assets/medium-meter.png";
+import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 import EditModalSpecInfo from "../components/specinfo/EditModalSpecInfo";
+import { useAuthStore } from "../stores/AuthenticationStore";
 import { useSnackbarStore } from "../stores/SnackBarStore";
 import { Specialization } from "../types/Specialization";
+import uoaEngBuilding from "/engineering-building.jpg"; // Fallback image if needed
 
 // Button styles
 const buttonStyle = {
@@ -45,6 +49,7 @@ const SpecDetailPage: React.FC = () => {
   );
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
+  const [meterImage, setMeterImage] = useState<string>(""); // Career info Job availability meter image state
 
   const handleSaveChanges = (updatedData: Partial<Specialization>) => {
     if (specialization) {
@@ -55,6 +60,27 @@ const SpecDetailPage: React.FC = () => {
       setSpecialization(updatedSpecialization); // Update state with the new specialization data
     }
   };
+
+  // Fetch specialization details from the backend
+  useEffect(() => {
+    const setMeter = async () => {
+      switch (specialization?.jobAvailability) {
+        case "Low":
+          setMeterImage(lowMeterIcon);
+          break;
+        case "Medium":
+          setMeterImage(mediumMeterIcon);
+          break;
+        case "High":
+          setMeterImage(highMeterIcon);
+          break;
+        default:
+          setMeterImage(mediumMeterIcon);
+      }
+    };
+
+    setMeter();
+  }, [specialization]);
 
   // Fetch specialization details from the backend
   useEffect(() => {
@@ -87,6 +113,7 @@ const SpecDetailPage: React.FC = () => {
   const rightImageUrl = specialization.rightImage
     ? `${API_BASE_URL}${specialization.rightImage}`
     : uoaEngBuilding;
+  const regex = /\s*engineering\s*/gi; // 'g' for global match, 'i' for case-insensitive
 
   return (
     <Box sx={{ overflowX: "hidden" }}>
@@ -327,6 +354,178 @@ const SpecDetailPage: React.FC = () => {
         </Grid>
       </Box>
 
+      {/* Career Info Section */}
+      <Box
+        sx={{
+          padding: "20px",
+          "& li": {
+            marginBottom: "10px",
+          },
+          fontWeight: "bold",
+        }}
+      >
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            color: "#00467F",
+            fontWeight: "bold",
+            fontSize: {
+              xs: "1.5rem",
+              sm: "2rem",
+              md: "2.5rem",
+            },
+          }}
+        >
+          Career Information
+        </Typography>
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            color: "#00467F",
+            fontSize: {
+              xs: "1rem",
+              sm: "1.5rem",
+              md: "2rem",
+            },
+          }}
+        >
+          Average {specialization.name.replace(regex, "")} Engineer Career
+          Outlook
+        </Typography>
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          spacing={{ xs: 1, sm: 2, md: 4 }}
+          alignContent={"center"}
+          sx={{
+            justifyContent: "space-evenly",
+          }}
+        >
+          <Stack
+            direction="column"
+            sx={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              gutterBottom
+              sx={{
+                fontWeight: "bold",
+                color: "#00467F",
+                fontSize: {
+                  xs: "1.5rem",
+                  sm: "2rem",
+                },
+              }}
+            >
+              Job Availability
+            </Typography>
+            <Box
+              component="img"
+              sx={{
+                maxWidth: "20rem",
+              }}
+              src={meterImage}
+            />
+            <Typography
+              gutterBottom
+              sx={{
+                color: "#00467F",
+                fontSize: {
+                  xs: "1.5rem",
+                  sm: "2rem",
+                },
+              }}
+            >
+              {specialization.jobAvailability}
+            </Typography>
+          </Stack>
+          <Stack
+            sx={{
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              gutterBottom
+              sx={{
+                fontWeight: "bold",
+                color: "#00467F",
+                fontSize: {
+                  xs: "1.5rem",
+                  sm: "2rem",
+                },
+              }}
+            >
+              Average Pay
+            </Typography>
+            <Stack
+              sx={{
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  color: "#00467F",
+                  fontSize: "1.5rem",
+                }}
+              >
+                Median Salary
+              </Typography>
+              <Typography
+                sx={{
+                  fontWeight: "bold",
+                  color: "#00467F",
+                  fontSize: "1.5rem",
+                }}
+              >
+                ${specialization.medianSalary.toLocaleString()}
+              </Typography>
+              <Typography
+                sx={{
+                  color: "#00467F",
+                  fontSize: "1rem",
+                }}
+              >
+                per year
+              </Typography>
+            </Stack>
+            <Stack
+              sx={{
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  color: "#00467F",
+                  fontSize: "1.5rem",
+                }}
+              >
+                Experienced Salary
+              </Typography>
+              <Typography
+                sx={{
+                  fontWeight: "bold",
+                  color: "#00467F",
+                  fontSize: "1.5rem",
+                }}
+              >
+                ${specialization.experiencedSalary.toLocaleString()}
+              </Typography>
+              <Typography
+                sx={{
+                  color: "#00467F",
+                  fontSize: "1rem",
+                }}
+              >
+                per year
+              </Typography>
+            </Stack>
+          </Stack>
+        </Stack>
+      </Box>
+
       {/* Career Pathways Section */}
       <Box
         sx={{
@@ -344,7 +543,6 @@ const SpecDetailPage: React.FC = () => {
         <Typography
           variant="h4"
           gutterBottom
-          textAlign="center"
           sx={{
             fontWeight: "bold",
             fontSize: {
@@ -356,7 +554,7 @@ const SpecDetailPage: React.FC = () => {
         >
           Career Pathways
         </Typography>
-        <Typography variant="h6" gutterBottom textAlign="center">
+        <Typography variant="h6" gutterBottom>
           {`Potential Career options as a ${specialization.name} Graduate`}
         </Typography>
         <Grid
@@ -365,32 +563,25 @@ const SpecDetailPage: React.FC = () => {
           sx={{
             marginLeft: "10px",
             paddingTop: "20px",
-            justifyContent: "center",
           }}
         >
-          <Grid
-            item
-            xs={12}
-            md={6}
-            sx={{ display: "flex", justifyContent: "space-evenly" }}
-          >
+          <Grid item xs={12} md={6} sx={{ display: "flex" }}>
             <ul
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                gridAutoRows: "auto",
+                gridTemplateRows: "repeat(3, 1fr)", // Fixed 3 rows
+                gridAutoFlow: "column", // Fill the grid by columns first
                 rowGap: "10px",
                 columnGap: "20px",
                 padding: 0,
                 margin: 0,
                 listStylePosition: "inside",
+                maxWidth: "100%", // Ensure grid stays within the container's width
               }}
             >
-              {specialization.careerPathways
-                .slice(0, 6)
-                .map((pathway, index) => (
-                  <li key={index}>{pathway}</li>
-                ))}
+              {specialization.careerPathways.map((pathway, index) => (
+                <li key={index}>{pathway}</li>
+              ))}
             </ul>
           </Grid>
         </Grid>
