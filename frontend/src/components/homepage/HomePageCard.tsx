@@ -35,7 +35,13 @@ const HomePageCard: React.FC<HomePageCardProps> = ({
 
   return (
     <Card sx={{ maxWidth: 345 }}>
-      <CardMedia component="img" alt={title} height="160" image={image} />
+      <CardMedia
+        component="img"
+        alt={title}
+        height="160"
+        sx={{ minWidth: "350px", maxHeight: "160px" }}
+        image={image}
+      />
       <CardContent>
         <Typography gutterBottom variant="body1" component="div">
           {title}

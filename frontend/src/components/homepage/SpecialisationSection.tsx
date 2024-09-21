@@ -1,19 +1,19 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Box, Typography, Stack, Button, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import Slideshow from "./Slideshow";
+import { specialisations } from "./specialisationsData";
 
-const SpecialisationSection: React.FC = () => {
+interface SpecialisationSectionProps {
+  header: string;
+  text: ReactNode; // Updated to ReactNode to support multiple elements like paragraphs
+}
+
+const SpecialisationSection: React.FC<SpecialisationSectionProps> = ({
+  header,
+  text,
+}) => {
   const navigate = useNavigate();
-
-  const buttonStyle = {
-    textTransform: "none",
-    borderRadius: "12px",
-    marginTop: "0.7em",
-  };
-
-  const handleSpecButtonClick = () => {
-    navigate("/spec-info");
-  };
 
   const handleQuizButtonClick = () => {
     navigate("/quiz");
@@ -22,7 +22,7 @@ const SpecialisationSection: React.FC = () => {
   return (
     <Box
       sx={{
-        padding: { xs: "2em 3em", md: "2em 12em 0em 12em" },
+        padding: { xs: "2em 3em", md: "2em 12em 2em 12em", xl: "2em 20em" },
         textAlign: "center",
         color: "#00467F",
       }}
@@ -35,7 +35,7 @@ const SpecialisationSection: React.FC = () => {
           fontWeight: "bold",
         }}
       >
-        Discover the Right Engineering Path for You
+        {header}
       </Typography>
       <Stack
         direction={{ md: "column", lg: "row" }}
@@ -47,10 +47,11 @@ const SpecialisationSection: React.FC = () => {
           display={"flex"}
           flexDirection={"column"}
           alignItems={{ md: "center", lg: "flex-start" }}
+          marginBottom={{ xs: "2em", md: 0 }}
         >
           <Typography
             variant="h6"
-            component="p"
+            component="div" // Change component to div to allow multiple elements (ReactNode)
             textAlign={"left"}
             sx={{
               flex: 1, // Ensures equal width
@@ -58,11 +59,7 @@ const SpecialisationSection: React.FC = () => {
               fontSize: "1.1rem",
             }}
           >
-            Engineering is diverse, offering various career pathways depending
-            on your interests and skills. Whether you’re passionate about
-            building the cities of the future, advancing healthcare, or
-            developing cutting-edge software, there’s a specialisation for you
-            at the University of Auckland.
+            {text}
           </Typography>
           <Link
             sx={{ mt: 1, color: "#00467F", textDecoration: "underline" }}
@@ -73,18 +70,7 @@ const SpecialisationSection: React.FC = () => {
           </Link>
         </Box>
 
-        <Box
-          component="img"
-          sx={{
-            maxWidth: { xs: 300, sm: 350 },
-            flex: 1, // Ensures equal width
-            objectFit: "cover", // Ensures the image maintains aspect ratio
-            marginTop: { xs: 3, md: 0 },
-          }}
-          src={
-            "https://www.careers.govt.nz/assets/Posts/_resampled/ScaleWidthWyI3OTUiXQ/A-female-engineer-repairing-a-production-line-machine.jpg"
-          }
-        />
+        <Slideshow slides={specialisations} />
       </Stack>
       <Button
         variant="contained"

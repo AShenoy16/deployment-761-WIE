@@ -1,20 +1,23 @@
-import React from "react";
-import { Box, Typography, Stack, Button, Link, CardMedia } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import React, { ReactNode } from "react";
+import {
+  Box,
+  Typography,
+  Stack,
+  CardMedia,
+  Card,
+  CardContent,
+} from "@mui/material";
 
-const ImpactSection: React.FC = () => {
-  const navigate = useNavigate();
+interface ImpactSectionProps {
+  header: string;
+  text: ReactNode; // Change text prop to accept ReactNode
+}
 
-  const buttonStyle = {
-    textTransform: "none",
-    borderRadius: "12px",
-    marginTop: "0.7em",
-  };
-
+const ImpactSection: React.FC<ImpactSectionProps> = ({ header, text }) => {
   return (
     <Box
       sx={{
-        padding: { xs: "2em 3em", md: "2em 12em 2em 12em" },
+        padding: { xs: "2em 3em", md: "2em 12em 2em 12em", xl: "2em 20em" },
         color: "#00467F",
         alignItems: { md: "center", lg: "flex-start" },
       }}
@@ -24,10 +27,10 @@ const ImpactSection: React.FC = () => {
         component="h2"
         sx={{
           fontWeight: "bold",
-          textAlign: { xs: "center", sm: "left" },
+          textAlign: "center",
         }}
       >
-        Why Engineering?
+        {header}
       </Typography>
       <Stack
         direction={{ md: "column", lg: "row" }}
@@ -38,31 +41,13 @@ const ImpactSection: React.FC = () => {
         <Box>
           <Typography
             variant="body1"
-            component="p"
+            component="div" // Change component to "div" to wrap ReactNodes properly
             gutterBottom
             sx={{
               color: "black",
             }}
           >
-            Engineering is more than just solving problems—it’s about creating
-            solutions that impact every part of society. Engineers tackle
-            climate change, create clean energy, design sustainable cities,
-            improve healthcare, and drive technological advancements. When you
-            become an engineer, you have the power to change the world for the
-            better.
-          </Typography>
-          <Typography
-            variant="body1"
-            component="p"
-            gutterBottom
-            sx={{
-              color: "black",
-              marginTop: "1em",
-            }}
-          >
-            Imagine designing the cities of tomorrow, developing renewable
-            energy technologies, or creating medical devices that save lives.
-            Engineers make all of this possible—and so much more.
+            {text}
           </Typography>
         </Box>
         <CardMedia
@@ -73,11 +58,36 @@ const ImpactSection: React.FC = () => {
             width: "100%", // Takes up full width of container
             maxWidth: "560px", // Max width for larger screens
             aspectRatio: "16/9", // Ensures the aspect ratio is 16:9
-            borderRadius: "8px", // Optional: adds some rounded corners
-            border: "none", // Removes default iframe border
+            borderRadius: "8px",
+            border: "none",
           }}
         />
       </Stack>
+
+      {/* Horizontal Quote Card */}
+      <Card
+        sx={{
+          backgroundColor: "#f5f5f5",
+          borderLeft: "4px solid #00467F",
+          borderRadius: "8px",
+          width: "100%",
+          marginTop: "1em",
+        }}
+      >
+        <CardContent>
+          <Typography
+            variant="h6"
+            component="p"
+            sx={{ fontStyle: "italic", marginBottom: "12px" }}
+          >
+            "New Zealand needs 2,500 more engineers every year to keep up with
+            demand."
+          </Typography>
+          <Typography variant="body2" component="p" color="text.secondary">
+            - Engineering New Zealand
+          </Typography>
+        </CardContent>
+      </Card>
     </Box>
   );
 };
