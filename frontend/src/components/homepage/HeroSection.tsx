@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, Typography, Stack } from "@mui/material";
-import wenlogo from "../../assets/wen-logo.png";
 
 interface HeroSectionProps {
   title: string;

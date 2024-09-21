@@ -12,6 +12,7 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import placeholder from "../../assets/placeholder.jpg";
 
 interface Card {
   title: string;
@@ -37,8 +38,6 @@ interface EditHomepageModalProps {
   initialData: HomePageData | null;
   onSubmit: (data: HomePageData) => void;
 }
-
-const defaultImage = "https://via.placeholder.com/650"; // Default image URL
 
 const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
   open,
@@ -100,7 +99,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
     if (formData) {
       const updatedResources = formData.additionalResources.map((card) => ({
         ...card,
-        image: card.image || defaultImage, // Set default image if empty
+        image: card.image || placeholder, // Use the imported placeholder directly
       }));
       onSubmit({ ...formData, additionalResources: updatedResources });
       handleClose();
@@ -156,6 +155,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 onChange={handleInputChange}
                 fullWidth
                 margin="normal"
+                required
               />
               <TextField
                 name="heroSubtitle"
@@ -164,6 +164,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 onChange={handleInputChange}
                 fullWidth
                 margin="normal"
+                required
               />
               <TextField
                 name="heroImage"
@@ -183,6 +184,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 onChange={handleInputChange}
                 fullWidth
                 margin="normal"
+                required
               />
               <TextField
                 name="section1Text"
@@ -193,6 +195,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 fullWidth
                 rows={4}
                 margin="normal"
+                required
               />
               <Typography variant="h6" component="h3" gutterBottom>
                 Section Two
@@ -205,6 +208,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 onChange={handleInputChange}
                 fullWidth
                 margin="normal"
+                required
               />
               <TextField
                 name="section2Text"
@@ -215,6 +219,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 multiline
                 rows={4}
                 margin="normal"
+                required
               />
 
               <Typography variant="h6" component="h3" gutterBottom>
@@ -233,6 +238,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                     }
                     fullWidth
                     margin="normal"
+                    required
                   />
                   <TextField
                     label="Description"
@@ -244,6 +250,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                     fullWidth
                     rows={4}
                     margin="normal"
+                    required
                   />
                   <TextField
                     label="Image URL"

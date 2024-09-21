@@ -1,5 +1,12 @@
 import React, { ReactNode } from "react";
-import { Box, Typography, Stack, CardMedia } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Stack,
+  CardMedia,
+  Card,
+  CardContent,
+} from "@mui/material";
 
 interface ImpactSectionProps {
   header: string;
@@ -51,11 +58,36 @@ const ImpactSection: React.FC<ImpactSectionProps> = ({ header, text }) => {
             width: "100%", // Takes up full width of container
             maxWidth: "560px", // Max width for larger screens
             aspectRatio: "16/9", // Ensures the aspect ratio is 16:9
-            borderRadius: "8px", // Optional: adds some rounded corners
-            border: "none", // Removes default iframe border
+            borderRadius: "8px",
+            border: "none",
           }}
         />
       </Stack>
+
+      {/* Horizontal Quote Card */}
+      <Card
+        sx={{
+          backgroundColor: "#f5f5f5",
+          borderLeft: "4px solid #00467F",
+          borderRadius: "8px",
+          width: "100%",
+          marginTop: "1em",
+        }}
+      >
+        <CardContent>
+          <Typography
+            variant="h6"
+            component="p"
+            sx={{ fontStyle: "italic", marginBottom: "12px" }}
+          >
+            "New Zealand needs 2,500 more engineers every year to keep up with
+            demand."
+          </Typography>
+          <Typography variant="body2" component="p" color="text.secondary">
+            - Engineering New Zealand
+          </Typography>
+        </CardContent>
+      </Card>
     </Box>
   );
 };
