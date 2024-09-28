@@ -22,7 +22,7 @@ app.use("/api/quizzes", quizRoutes);
 app.use("/api/specializations", specializationRoutes);
 app.use("/api/role-models", roleModelRoutes);
 app.use(
-  "/uploads",
+  "/api/uploads",
   express.static(path.join(__dirname, "..", "public", "uploads"))
 );
 app.use("/api/homepage", homepageRoutes);

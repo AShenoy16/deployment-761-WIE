@@ -70,6 +70,10 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
   const [rightImage, setRightImage] = useState<File | null>(null);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
+  // State for storing the uploaded file names
+  const [leftImageName, setLeftImageName] = useState<string | null>(null);
+  const [rightImageName, setRightImageName] = useState<string | null>(null);
+
   const leftImageInputRef = useRef<HTMLInputElement | null>(null);
   const rightImageInputRef = useRef<HTMLInputElement | null>(null);
   const showSnackbar = useSnackBar();
@@ -82,6 +86,8 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setLeftDetail(specInfoResult.leftDetail);
       setRightDetail(specInfoResult.rightDetail);
       setTestimonials(specInfoResult.testimonials);
+      setLeftImageName(null); // Reset image names on modal open
+      setRightImageName(null); // Reset image names on modal open
     }
   }, [specInfoResult]);
 
@@ -95,6 +101,8 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setRightDetail(specInfoResult.rightDetail);
       setLeftImage(null);
       setRightImage(null);
+      setLeftImageName(null); // Reset image names on form reset
+      setRightImageName(null); // Reset image names on form reset
       setTestimonials(specInfoResult.testimonials);
     }
   };
@@ -137,10 +145,16 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
 
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    setImage: (file: File | null) => void
+    setImage: (file: File | null) => void,
+    setImageName: (fileName: string | null) => void
   ) => {
     const file = e.target.files?.[0] || null;
     setImage(file);
+    if (file) {
+      setImageName(file.name); // Update the button with the file name
+    } else {
+      setImageName(null); // Reset if no file selected
+    }
   };
 
   // Inside the EditModalSpecInfo component
@@ -178,7 +192,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
     formData.append("careerPathways", JSON.stringify(sanitizedCareerPathways));
     formData.append("leftDetail", sanitizedLeftDetail);
     formData.append("rightDetail", sanitizedRightDetail);
-    formData.append("testimonials", JSON.stringify(sanitizedTestimonials)); 
+    formData.append("testimonials", JSON.stringify(sanitizedTestimonials));
 
     if (leftImage) {
       formData.append("leftImage", leftImage);
@@ -368,14 +382,18 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
             accept="image/*"
             ref={rightImageInputRef}
             style={{ display: "none" }}
-            onChange={(e) => handleImageChange(e, setRightImage)}
+            onChange={(e) =>
+              handleImageChange(e, setRightImage, setRightImageName)
+            }
           />
           <Button
             variant="contained"
             sx={{ marginBottom: "10px" }}
             onClick={() => rightImageInputRef.current?.click()}
           >
-            Choose Right Image
+            {rightImageName
+              ? `Uploaded: ${rightImageName}`
+              : "Choose Right Image"}
           </Button>
 
           {/* Edit Right Detail */}
@@ -407,14 +425,16 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
             accept="image/*"
             ref={leftImageInputRef}
             style={{ display: "none" }}
-            onChange={(e) => handleImageChange(e, setLeftImage)}
+            onChange={(e) =>
+              handleImageChange(e, setLeftImage, setLeftImageName)
+            }
           />
           <Button
             variant="contained"
             sx={{ marginBottom: "10px" }}
             onClick={() => leftImageInputRef.current?.click()}
           >
-            Choose Left Image
+            {leftImageName ? `Uploaded: ${leftImageName}` : "Choose Left Image"}
           </Button>
 
           {/* Testimonials */}

@@ -28,7 +28,6 @@ jspm_packages/
 # IDEs and editors
 .vscode/
 .idea/
-public
 
 # Operating system files
 .DS_Store
