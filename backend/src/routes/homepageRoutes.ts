@@ -3,7 +3,7 @@ import { getHomePage, updateHomePage } from "../controllers/homepageController";
 
 const router = express.Router();
 
-router.get("/homepage", getHomePage);
+router.get("/", getHomePage);
 router.patch("/", updateHomePage);
 
 export default router;
