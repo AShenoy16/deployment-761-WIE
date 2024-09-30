@@ -14,10 +14,13 @@ import { useState } from "react";
 import { SpecSummary } from "../../types/Specialization";
 import { slugify } from "../../pages/SpecPage";
 
-const SpecCard: React.FC<SpecSummary> = ({
+type SpecCardProps = SpecSummary & { rank: number };
+
+const SpecCard: React.FC<SpecCardProps> = ({
   name,
   description,
   careerPathways,
+  rank,
 }) => {
   const [hovered, setHovered] = useState(false);
   const theme = useTheme();
@@ -27,10 +30,12 @@ const SpecCard: React.FC<SpecSummary> = ({
       alignItems="center"
       justifyContent="center"
       p={2}
-      gap={1}
+      gap={2}
       width="100%"
     >
-      <Typography variant="h5">{name}</Typography>
+      <Typography variant="h5" textAlign="center" width={450}>
+        {rank}: {name}
+      </Typography>
       <Card
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
