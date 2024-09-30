@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { HighschoolRequirement } from "../../types/HighschoolRequirements";
+import AddIcon from "@mui/icons-material/Add";
 
 type EditHighschoolModalProps = {
   open: boolean;
@@ -49,7 +50,12 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
         <Stack spacing={4} mt={2}>
           {highschoolRequirementsData.map((requirements) => (
             <Stack key={requirements.title} spacing={2}>
-              <Typography variant="h6">{requirements.title}</Typography>
+              <Stack flexDirection="row" justifyContent="space-between">
+                <Typography variant="h6">{requirements.title}</Typography>
+                <Button variant="contained" startIcon={<AddIcon />}>
+                  Requirement
+                </Button>
+              </Stack>
               <TextField
                 label="Required Score"
                 value={requirements.requiredScore}
