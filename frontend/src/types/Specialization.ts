@@ -23,4 +23,4 @@ export type Testimonial = {
 export type SpecSummary = Pick<
   Specialization,
   "name" | "description" | "careerPathways"
->;
+> & { score: number };
