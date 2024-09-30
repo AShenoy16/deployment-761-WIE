@@ -1,6 +1,9 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { useAuthStore } from "../stores/AuthenticationStore";
 import RequirementsCard from "../components/highschool_requirements/RequirementsCard";
+import EditHighschoolModal from "../components/highschool_requirements/EditHighschoolModal";
+import { HighschoolRequirement } from "../types/HighschoolRequirements";
+import { useState } from "react";
 
 const buttonStyle = {
   textTransform: "none",
@@ -8,7 +11,7 @@ const buttonStyle = {
   borderRadius: "12px",
 };
 
-const highschoolRequirementsData = [
+const highschoolRequirementsData: HighschoolRequirement[] = [
   {
     title: "NCEA",
     requiredScore: 260,
@@ -31,6 +34,8 @@ const highschoolRequirementsData = [
 
 const HighschoolRequirementsPage = () => {
   const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
+  const [open, setOpen] = useState(false);
 
   return (
     <Container>
@@ -61,11 +66,22 @@ const HighschoolRequirementsPage = () => {
         <Box
           sx={{ display: "flex", justifyContent: "center", marginBottom: 3 }}
         >
-          <Button variant="contained" color="secondary" sx={buttonStyle}>
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={buttonStyle}
+            onClick={() => setOpen(true)}
+          >
             Edit
           </Button>
         </Box>
       )}
+
+      <EditHighschoolModal
+        highschoolRequirementsData={highschoolRequirementsData}
+        open={open}
+        onClose={() => setOpen(false)}
+      />
 
       <Grid container spacing={5}>
         {highschoolRequirementsData.map((req, idx) => (
