@@ -51,7 +51,7 @@ export interface ISliderQuestion extends Document {
 }
 
 // Define the interface for the multiplier data
-export interface IMultiplierData extends Document {
+export interface IMultiplierData {
   _id: string;
   rank2Multiplier: number;
   rank3Multiplier: number;
@@ -115,4 +115,11 @@ export interface IUser extends Document {
   sessionId: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface IHighschoolRequirement {
+  _id: string;
+  title: string;
+  requiredScore: number;
+  requirements: string[];         
 }
