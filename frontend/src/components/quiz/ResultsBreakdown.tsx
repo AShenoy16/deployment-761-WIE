@@ -1,11 +1,13 @@
 import { Typography } from "@mui/material";
 import PieChart from "./PieChart";
 
-type QuizResultsProps = {
+type ResultsBreakdownProps = {
   pieChartData: { name: string; score: number }[];
 };
 
-const QuizCharts: React.FC<QuizResultsProps> = ({ pieChartData }) => {
+const ResultsBreakdown: React.FC<ResultsBreakdownProps> = ({
+  pieChartData,
+}) => {
   return (
     <>
       <Typography variant="h2">Results Breakdown</Typography>
@@ -16,4 +18,4 @@ const QuizCharts: React.FC<QuizResultsProps> = ({ pieChartData }) => {
   );
 };
 
-export default QuizCharts;
+export default ResultsBreakdown;
