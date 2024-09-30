@@ -116,3 +116,9 @@ export interface IUser extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface IHighschoolRequirement {
+  title: string;
+  requiredScore: number;
+  requirements: string[];         
+}
