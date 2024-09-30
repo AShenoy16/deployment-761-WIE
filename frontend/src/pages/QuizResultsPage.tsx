@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 import SpecCard from "../components/quiz/SpecCard";
 import { useCalculateQuizResults } from "../hooks/useQuestions";
@@ -11,6 +11,8 @@ import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
 import { useSearchParams } from "react-router-dom";
 import { SpecSummary } from "../types/Specialization";
 import LZString from "lz-string";
+import ResultsBreakdown from "../components/quiz/ResultsBreakdown";
+import QuizTopSpecs from "../components/quiz/QuizTopSpecs";
 
 const resetQuizProgress = () => {
   const resetQuiz = useQuizStore.getState().resetQuiz;
@@ -61,6 +63,7 @@ const QuizResultsPage = () => {
   const [quizSubmissionRequest, _] = useState(() => buildQuizSubmissionObj());
 
   const [searchParams, setSearchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(0);
   const existingResults = searchParams.get("results");
 
   const { quizResults, isLoading, isError } = useCalculateQuizResults(
@@ -84,25 +87,42 @@ const QuizResultsPage = () => {
     return <Box>Error loading quiz results</Box>;
   }
 
+  const pieChartData = quizResults.map((spec) => ({
+    name: spec.name,
+    score: spec.score,
+  }));
+
+  // Handler for navigating between pages
+  const handlePrev = () => setCurrentPage((prev) => Math.max(prev - 1, 0));
+  const handleNext = () => setCurrentPage((prev) => Math.min(prev + 1, 1));
+
+  const pages = [
+    <QuizTopSpecs quizResults={quizResults} />,
+    <ResultsBreakdown pieChartData={pieChartData} />,
+  ];
+
   return (
-    <Stack alignItems="center" margin="auto" gap={2}>
-      <Box>
-        <Typography variant="h2">Here's Your Top 3</Typography>
-        <Typography variant="body1" textAlign="center">
-          Click to find out more!
-        </Typography>
-      </Box>
+    <Stack alignItems="center" margin="auto" gap={2} p={2}>
+      {/* Render the current page */}
+      {pages[currentPage]}
 
-      <Stack direction="row" gap={2}>
-        {quizResults.map((spec, index) => (
-          <SpecCard key={index} {...spec} />
-        ))}
+      {/* Navigation buttons */}
+      <Stack direction="row" spacing={2} mt={2}>
+        <Button
+          variant="contained"
+          onClick={handlePrev}
+          disabled={currentPage === 0}
+        >
+          Go Back
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleNext}
+          disabled={currentPage === pages.length - 1}
+        >
+          See More
+        </Button>
       </Stack>
-
-      {
-        // todo: implement download functionality & error and success alerts
-      }
-      <Typography variant="h5">Download Results</Typography>
     </Stack>
   );
 };

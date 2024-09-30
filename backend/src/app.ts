@@ -8,6 +8,7 @@ import roleModelRoutes from "./routes/roleModelRoutes";
 import path from "path";
 import multiplierRoutes from "./routes/multiplierRoutes";
 import homepageRoutes from "./routes/homepageRoutes";
+import highSchoolRequirementRoutes from "./routes/highSchoolRequirementRoutes";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/multiplier", multiplierRoutes);
+app.use("/api/highschool-requirements", highSchoolRequirementRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/quizzes", quizRoutes);
 app.use("/api/specializations", specializationRoutes);

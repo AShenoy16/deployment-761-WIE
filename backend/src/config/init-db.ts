@@ -13,6 +13,7 @@ import MCQQuestion from "../models/MCQModel";
 import { IRankingQuestion } from "../models/interfaces";
 import MultiplierData from "../models/multiplerModel";
 import { cp } from "fs";
+import HighschoolRequirement from "../models/HighSchoolRequirements";
 
 // Hardcoded Users list for testing
 const dummyUsers = [
@@ -387,6 +388,27 @@ const dummyRoleModels = [
   },
 ];
 
+const highschoolRequirementsData = [
+  {
+    title: "NCEA",
+    requiredScore: 260,
+    requirements: [
+      "17 external Level 3 credits in Calculus",
+      "16 external Level 3 credits in Physics",
+    ],
+  },
+  {
+    title: "CIE",
+    requiredScore: 310,
+    requirements: ["Mathematics and Physics at A Levels"],
+  },
+  {
+    title: "IB",
+    requiredScore: 33,
+    requirements: ["Mathematics and Physics at HL Levels"],
+  },
+];
+
 // This is a standalone program which will populate the database with initial data.
 async function run() {
   console.log("Connecting to database...");
@@ -425,6 +447,10 @@ async function run() {
   await addRoleModels();
   console.log();
 
+  console.log("Adding HS requirements")
+  await createHighSchoolRequirements();
+  console.log()
+
   await mongoose.disconnect();
   console.log("Done!");
 }
@@ -438,6 +464,7 @@ async function clearDatabase() {
   await MCQQuestion.deleteMany({});
   await RoleModel.deleteMany({});
   await MultiplierData.deleteMany({});
+  await HighschoolRequirement.deleteMany({})
 
   console.log(`Cleared database`);
 }
@@ -667,6 +694,21 @@ const createMultiplierData = async () => {
     await multiplierData.save();
   } catch (err) {
     console.error("Error saving multiplier data:", err);
+  }
+};
+
+
+const createHighSchoolRequirements = async () => {
+  for (const data of highschoolRequirementsData) {
+    // Create a new document for each entry
+    const hsRequirement = new HighschoolRequirement({
+      title: data.title,
+      requiredScore: data.requiredScore,
+      requirements: data.requirements,
+    });
+
+    // Save to the database
+    await hsRequirement.save();
   }
 };
 
