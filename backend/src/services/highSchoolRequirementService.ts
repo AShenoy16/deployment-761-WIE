@@ -34,5 +34,31 @@ export const isValidHSRequirement = (
   return true; // Return true if all checks pass
 };
 
+export const updateAllHSRequirements = async (
+  updatedRequirements: IHighschoolRequirement[]
+) => {
+  try {
+    const updatePromises = updatedRequirements.map(async (requirement) => {
+      // For each requirement, find by ID and update the fields
+      return await HighschoolRequirement.findByIdAndUpdate(
+        requirement._id,
+        {
+          $set: {
+            title: requirement.title,
+            requiredScore: requirement.requiredScore,
+            requirements: requirement.requirements,
+          },
+        },
+        { new: true } // Return the updated document
+      );
+    });
 
+    // Wait for all the updates to complete
+    const updatedDocs = await Promise.all(updatePromises);
 
+    return updatedDocs;
+  } catch (error) {
+    console.error("Error updating multiple high school requirements:", error);
+    throw error;
+  }
+};

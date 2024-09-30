@@ -1,8 +1,8 @@
 import express from "express";
-import { getHSRequirements } from "../controllers/highSchoolRequirementController";
+import { getHSRequirements, updateHSRequirements } from "../controllers/highSchoolRequirementController";
 const router = express.Router();
 
 router.get("/", getHSRequirements);
-// router.put("/", updateHSRequirements);
+router.put("/", updateHSRequirements)
 
 export default router;
