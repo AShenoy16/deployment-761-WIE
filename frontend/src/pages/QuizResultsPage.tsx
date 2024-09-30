@@ -103,13 +103,6 @@ const QuizResultsPage = () => {
 
   return (
     <Stack alignItems="center" margin="auto" gap={2} p={2}>
-      {/* <Box>
-        <Typography variant="h2">Here's Your Top 3</Typography>
-        <Typography variant="body1" textAlign="center">
-          Click to find out more!
-        </Typography>
-      </Box> */}
-
       {/* Render the current page */}
       {pages[currentPage]}
 
@@ -120,14 +113,14 @@ const QuizResultsPage = () => {
           onClick={handlePrev}
           disabled={currentPage === 0}
         >
-          Prev
+          Go Back
         </Button>
         <Button
           variant="contained"
           onClick={handleNext}
           disabled={currentPage === pages.length - 1}
         >
-          Next
+          See More
         </Button>
       </Stack>
     </Stack>
