@@ -8,6 +8,8 @@ import {
 } from "@mui/material";
 import { IHighschoolRequirement } from "../../types/HighschoolRequirements";
 import AddIcon from "@mui/icons-material/Add";
+import { useEffect, useState } from "react";
+import { useHighschoolRequirements } from "../../hooks/useHighschoolRequirements";
 
 type EditHighschoolModalProps = {
   open: boolean;
@@ -20,11 +22,51 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
   onClose,
   highschoolRequirementsData,
 }) => {
-  const handleSave = () => {
-    console.log(
-      "Updated Highschool Requirements: ",
-      highschoolRequirementsData
+  const [localRequirements, setLocalRequirements] = useState<
+    IHighschoolRequirement[]
+  >(highschoolRequirementsData);
+
+  // Get the mutation hook to update the backend
+  const { updateMutation } = useHighschoolRequirements();
+
+  const handleScoreChange = (index: number, value: number) => {
+    setLocalRequirements((prevRequirements) =>
+      prevRequirements.map((req, i) =>
+        i === index ? { ...req, requiredScore: value } : req
+      )
     );
+  };
+
+  useEffect(() => {
+    setLocalRequirements(highschoolRequirementsData);
+  }, [open]);
+
+  const handleRequirementChange = (
+    idx: number,
+    reqIndex: number,
+    value: string
+  ) => {
+    setLocalRequirements((prevRequirements) =>
+      prevRequirements.map((req, i) =>
+        i === idx
+          ? {
+              ...req,
+              requirements: req.requirements.map((r, j) =>
+                j === reqIndex ? value : r
+              ),
+            }
+          : req
+      )
+    );
+  };
+
+  const handleSave = () => {
+    updateMutation.mutate(localRequirements);
+    onClose();
+  };
+
+  const handleCancel = () => {
+    setLocalRequirements(highschoolRequirementsData);
     onClose();
   };
 
@@ -48,7 +90,7 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
         <Typography variant="h4">Edit Highschool Requirements</Typography>
 
         <Stack spacing={4} mt={2}>
-          {highschoolRequirementsData.map((requirements) => (
+          {localRequirements.map((requirements, idx) => (
             <Stack key={requirements.title} spacing={2}>
               <Stack flexDirection="row" justifyContent="space-between">
                 <Typography variant="h6">{requirements.title}</Typography>
@@ -58,7 +100,14 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
               </Stack>
               <TextField
                 label="Required Score"
-                value={requirements.requiredScore}
+                value={
+                  isNaN(requirements.requiredScore)
+                    ? ""
+                    : requirements.requiredScore
+                }
+                onChange={(e) =>
+                  handleScoreChange(idx, parseInt(e.target.value))
+                }
               />
               {requirements.requirements.map((req, reqIndex) => (
                 <TextField
@@ -67,6 +116,9 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
                   fullWidth
                   value={req}
                   sx={{ mb: 1 }}
+                  onChange={(e) =>
+                    handleRequirementChange(idx, reqIndex, e.target.value)
+                  }
                 />
               ))}
             </Stack>
@@ -74,7 +126,7 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
         </Stack>
 
         <Stack direction="row" justifyContent="flex-end" spacing={2} mt={4}>
-          <Button variant="outlined" onClick={onClose}>
+          <Button variant="outlined" onClick={handleCancel}>
             Cancel
           </Button>
           <Button variant="contained" color="primary" onClick={handleSave}>
