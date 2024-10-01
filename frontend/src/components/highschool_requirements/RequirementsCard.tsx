@@ -56,7 +56,7 @@ const RequirementsCard: React.FC<RequirementsCardProps> = ({
           <List sx={{ listStyleType: "disc", pl: 0 }}>
             {requirements.map((req, idx) => (
               <ListItem key={idx} sx={{ display: "list-item" }}>
-                <Typography variant="h6" fontWeight="bold">
+                <Typography variant="body1" fontWeight="bold">
                   {req}
                 </Typography>
               </ListItem>

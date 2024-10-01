@@ -2,6 +2,7 @@ import {
   Alert,
   Box,
   Button,
+  IconButton,
   Modal,
   Snackbar,
   Stack,
@@ -10,6 +11,7 @@ import {
 } from "@mui/material";
 import { IHighschoolRequirement } from "../../types/HighschoolRequirements";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
 import { useHighschoolRequirements } from "../../hooks/useHighschoolRequirements";
 
@@ -59,6 +61,7 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Error states for invalid score and empty requirements
   const [scoreErrors, setScoreErrors] = useState<boolean[]>([]);
   const [requirementErrors, setRequirementErrors] = useState<boolean[][]>([]);
 
@@ -123,6 +126,44 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
     validateRequirementField(idx, reqIndex, value);
   };
 
+  // Add a new requirement to the specific list (NCEA, CIE, IE)
+  const handleAddRequirement = (idx: number) => {
+    setLocalRequirements((prevRequirements) =>
+      prevRequirements.map((req, i) =>
+        i === idx
+          ? {
+              ...req,
+              requirements: [...req.requirements, "New Requirement"], // Add new default text
+            }
+          : req
+      )
+    );
+    setRequirementErrors((prevErrors) => {
+      const updatedErrors = [...prevErrors];
+      updatedErrors[idx] = [...prevErrors[idx], false]; // Initialize no error for the new field
+      return updatedErrors;
+    });
+  };
+
+  // Delete a specific requirement from the list
+  const handleDeleteRequirement = (idx: number, reqIndex: number) => {
+    setLocalRequirements((prevRequirements) =>
+      prevRequirements.map((req, i) =>
+        i === idx
+          ? {
+              ...req,
+              requirements: req.requirements.filter((_, j) => j !== reqIndex), // Remove requirement
+            }
+          : req
+      )
+    );
+    setRequirementErrors((prevErrors) => {
+      const updatedErrors = [...prevErrors];
+      updatedErrors[idx] = updatedErrors[idx].filter((_, j) => j !== reqIndex); // Remove corresponding error
+      return updatedErrors;
+    });
+  };
+
   const handleSave = () => {
     updateMutation.mutate(localRequirements, {
       onSuccess: () => {
@@ -176,8 +217,12 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
               <Stack key={requirements.title} spacing={2}>
                 <Stack flexDirection="row" justifyContent="space-between">
                   <Typography variant="h6">{requirements.title}</Typography>
-                  <Button variant="contained" startIcon={<AddIcon />}>
-                    Requirement
+                  <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={() => handleAddRequirement(idx)} // Add requirement on click
+                  >
+                    Add Requirement
                   </Button>
                 </Stack>
                 <TextField
@@ -198,27 +243,35 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
                   }
                 />
                 {requirements.requirements.map((req, reqIndex) => (
-                  <TextField
-                    key={reqIndex}
-                    label={`Requirement ${reqIndex + 1}`}
-                    fullWidth
-                    value={req}
-                    sx={{ mb: 1 }}
-                    onChange={(e) =>
-                      handleRequirementChange(idx, reqIndex, e.target.value)
-                    }
-                    error={
-                      !!(
+                  <Stack flexDirection="row" gap={1} key={reqIndex}>
+                    <TextField
+                      label={`Requirement ${reqIndex + 1}`}
+                      fullWidth
+                      value={req}
+                      sx={{ mb: 1 }}
+                      onChange={(e) =>
+                        handleRequirementChange(idx, reqIndex, e.target.value)
+                      }
+                      error={
+                        !!(
+                          requirementErrors[idx] &&
+                          requirementErrors[idx][reqIndex]
+                        )
+                      }
+                      helperText={
                         requirementErrors[idx] &&
                         requirementErrors[idx][reqIndex]
-                      )
-                    }
-                    helperText={
-                      requirementErrors[idx] && requirementErrors[idx][reqIndex]
-                        ? "This field cannot be empty."
-                        : ""
-                    }
-                  />
+                          ? "This field cannot be empty."
+                          : ""
+                      }
+                    />
+                    <IconButton
+                      color="primary"
+                      onClick={() => handleDeleteRequirement(idx, reqIndex)} // Delete requirement on click
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Stack>
                 ))}
               </Stack>
             ))}
