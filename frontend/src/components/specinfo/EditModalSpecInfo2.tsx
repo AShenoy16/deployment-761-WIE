@@ -7,16 +7,16 @@ import {
   IconButton,
   TextField,
   TextareaAutosize,
-  FormControl,
   InputLabel,
   MenuItem,
   Select,
+  FormControl,
   Stack,
 } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 import GradientBox from "../GradientBox";
 import axios from "axios";
-import { Specialization, Testimonial } from "../../types/Specialization";
+import { Specialization } from "../../types/Specialization";
 import useSnackBar from "../../hooks/useSnackBar";
 import { useNavigate } from "react-router-dom";
 
@@ -47,13 +47,12 @@ interface EditModalSpecInfoProps {
   specInfoResult: {
     name: string;
     careerPathways: string[];
+    jobAvailability: string;
     header: string;
     leftDetail: string;
     rightDetail: string;
     leftImage: string;
     rightImage: string;
-    testimonials: Testimonial[];
-    jobAvailability: string;
     medianSalary: number;
     experiencedSalary: number;
   } | null;
@@ -76,20 +75,17 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
   const [rightDetail, setRightDetail] = useState<string>("");
   const [leftImage, setLeftImage] = useState<File | null>(null);
   const [rightImage, setRightImage] = useState<File | null>(null);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-
-  // State for storing the uploaded file names
-  const [leftImageName, setLeftImageName] = useState<string | null>(null);
-  const [rightImageName, setRightImageName] = useState<string | null>(null);
-
   const [jobAvailability, setjobAvailability] = useState<string>("");
   const [medianSalary, setMedianSalary] = useState<number>(0);
   const [experiencedSalary, setExperiencedSalary] = useState<number>(0);
+
   const leftImageInputRef = useRef<HTMLInputElement | null>(null);
   const rightImageInputRef = useRef<HTMLInputElement | null>(null);
+
   const isMedianSalaryInvalid = isNaN(medianSalary) || medianSalary < 40000;
   const isExperiencedSalaryInvalid =
     isNaN(experiencedSalary) || experiencedSalary < 40000;
+
   const showSnackbar = useSnackBar();
 
   useEffect(() => {
@@ -99,9 +95,6 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setHeader(specInfoResult.header);
       setLeftDetail(specInfoResult.leftDetail);
       setRightDetail(specInfoResult.rightDetail);
-      setTestimonials(specInfoResult.testimonials);
-      setLeftImageName(null); // Reset image names on modal open
-      setRightImageName(null); // Reset image names on modal open
       setjobAvailability(specInfoResult.jobAvailability);
       setMedianSalary(specInfoResult.medianSalary);
       setExperiencedSalary(specInfoResult.experiencedSalary);
@@ -116,14 +109,11 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setHeader(specInfoResult.header);
       setLeftDetail(specInfoResult.leftDetail);
       setRightDetail(specInfoResult.rightDetail);
-      setLeftImage(null);
-      setRightImage(null);
-      setLeftImageName(null); // Reset image names on form reset
-      setRightImageName(null); // Reset image names on form reset
-      setTestimonials(specInfoResult.testimonials);
       setjobAvailability(specInfoResult.jobAvailability);
       setMedianSalary(specInfoResult.medianSalary);
       setExperiencedSalary(specInfoResult.experiencedSalary);
+      setLeftImage(null);
+      setRightImage(null);
     }
   };
 
@@ -170,39 +160,12 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
     setCareerPathways(newCareerPathways);
   };
 
-  const handleTestimonialNameChange = (index: number, value: string) => {
-    const newTestimonial = [...testimonials];
-    newTestimonial[index].name = value;
-    setTestimonials(newTestimonial);
-  };
-
-  const handleTestimonialDescChange = (index: number, value: string) => {
-    const newTestimonial = [...testimonials];
-    newTestimonial[index].description = value;
-    setTestimonials(newTestimonial);
-  };
-
-  const handleAddTestimonial = () => {
-    setTestimonials([...testimonials, { name: "", description: "" }]);
-  };
-
-  const handleRemoveTestimonial = (index: number) => {
-    const newTestimonials = testimonials.filter((_, i) => i !== index);
-    setTestimonials(newTestimonials);
-  };
-
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    setImage: (file: File | null) => void,
-    setImageName: (fileName: string | null) => void
+    setImage: (file: File | null) => void
   ) => {
     const file = e.target.files?.[0] || null;
     setImage(file);
-    if (file) {
-      setImageName(file.name); // Update the button with the file name
-    } else {
-      setImageName(null); // Reset if no file selected
-    }
   };
 
   // Inside the EditModalSpecInfo component
@@ -228,12 +191,6 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       pathway.trim().replace(/\s+/g, " ")
     );
 
-    // Map testimonials and sanitize them
-    const sanitizedTestimonials = testimonials.map((testimonial) => ({
-      name: testimonial.name.trim().replace(/\s+/g, " "),
-      description: testimonial.description.trim().replace(/\s+/g, " "),
-    }));
-
     const formData = new FormData();
 
     formData.append("name", sanitizedTitle); // Add the title to formData
@@ -241,7 +198,6 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
     formData.append("careerPathways", JSON.stringify(sanitizedCareerPathways));
     formData.append("leftDetail", sanitizedLeftDetail);
     formData.append("rightDetail", sanitizedRightDetail);
-    formData.append("testimonials", JSON.stringify(sanitizedTestimonials));
     formData.append("jobAvailability", jobAvailability);
     formData.append("medianSalary", medianSalary.toString());
     formData.append("experiencedSalary", experiencedSalary.toString());
@@ -252,6 +208,9 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
 
     if (rightImage) {
       formData.append("rightImage", rightImage);
+    }
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
     }
 
     try {
@@ -269,9 +228,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       // Navigate to the new URL if the name has changed
       if (response.data.name !== name) {
         navigate(
-          `/specialisation/${encodeURIComponent(
-            response.data.name.replace(/\s+/g, "-").toLowerCase()
-          )}`
+          `/specialisation/${encodeURIComponent(response.data.name.replace(/\s+/g, "-").toLowerCase())}`
         );
       }
 
@@ -369,12 +326,13 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
               required
             />
           </Box>
+
           <Box sx={{ background: "white", borderRadius: 2, padding: 2 }}>
             <Typography variant="h5" gutterBottom>
               Impact Details
             </Typography>
             {/* Edit Left Detail */}
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
               Left Detail <span style={{ color: "red" }}>*</span>
             </Typography>
             <TextareaAutosize
@@ -402,18 +360,14 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
               accept="image/*"
               ref={rightImageInputRef}
               style={{ display: "none" }}
-              onChange={(e) =>
-                handleImageChange(e, setRightImage, setRightImageName)
-              }
+              onChange={(e) => handleImageChange(e, setRightImage)}
             />
             <Button
               variant="contained"
               sx={{ marginBottom: "10px" }}
               onClick={() => rightImageInputRef.current?.click()}
             >
-              {rightImageName
-                ? `Uploaded: ${rightImageName}`
-                : "Choose Right Image"}
+              Choose Right Image
             </Button>
 
             {/* Edit Right Detail */}
@@ -445,18 +399,14 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
               accept="image/*"
               ref={leftImageInputRef}
               style={{ display: "none" }}
-              onChange={(e) =>
-                handleImageChange(e, setLeftImage, setLeftImageName)
-              }
+              onChange={(e) => handleImageChange(e, setLeftImage)}
             />
             <Button
               variant="contained"
               sx={{ marginBottom: "10px" }}
               onClick={() => leftImageInputRef.current?.click()}
             >
-              {leftImageName
-                ? `Uploaded: ${leftImageName}`
-                : "Choose Left Image"}
+              Choose Left Image
             </Button>
           </Box>
 
@@ -465,7 +415,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
               Career Details
             </Typography>
             {/* Edit Job Availability */}
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
               Job Availability <span style={{ color: "red" }}>*</span>
             </Typography>
             <FormControl>
@@ -531,7 +481,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
             <Typography
               variant="h6"
               gutterBottom
-              paddingBottom={"30px"}
+              paddingBottom={"10px"}
               sx={{ mt: 4 }}
             >
               Career Pathways
@@ -569,73 +519,9 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
                 </Button>
               </Box>
             ))}
+
             <Button onClick={handleAddCareerPathway} variant="contained">
               Add Career Pathway
-            </Button>
-          </Box>
-          <Box sx={{ background: "white", borderRadius: 2, padding: 2 }}>
-            <Typography variant="h5" sx={{ mb: 5 }}>
-              Testimonials <span style={{ color: "red" }}>*</span>
-            </Typography>
-            {testimonials.map((testimonial, index) => (
-              <Box key={index} sx={{ display: "flex", mb: 2 }}>
-                <TextField
-                  fullWidth
-                  value={testimonial.name}
-                  onChange={(e) =>
-                    handleTestimonialNameChange(index, e.target.value)
-                  }
-                  label={`Testimonial ${index + 1} name`}
-                  sx={{
-                    mr: 2,
-                    mt: 1,
-                    backgroundColor: "white",
-                    borderRadius: "8px",
-                    marginBottom: "10px",
-                  }}
-                  InputLabelProps={{
-                    sx: {
-                      transform: "translate(5px, -15px) scale(0.85)",
-                      marginTop: "-10px",
-                      color: "black",
-                      fontSize: "1.25rem",
-                    },
-                  }}
-                />
-                <TextField
-                  fullWidth
-                  value={testimonial.description}
-                  onChange={(e) =>
-                    handleTestimonialDescChange(index, e.target.value)
-                  }
-                  label={`Testimonial ${index + 1} description`}
-                  sx={{
-                    mr: 2,
-                    mt: 1,
-                    backgroundColor: "white",
-                    borderRadius: "8px",
-                    marginBottom: "10px",
-                  }}
-                  InputLabelProps={{
-                    sx: {
-                      transform: "translate(5px, -15px) scale(0.85)",
-                      marginTop: "-10px",
-                      color: "black",
-                      fontSize: "1.25rem",
-                    },
-                  }}
-                />
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => handleRemoveTestimonial(index)}
-                >
-                  Remove
-                </Button>
-              </Box>
-            ))}
-            <Button onClick={handleAddTestimonial} variant="contained">
-              Add Testimonial
             </Button>
           </Box>
         </Stack>
