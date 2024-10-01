@@ -6,13 +6,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { HighschoolRequirement } from "../../types/HighschoolRequirements";
+import { IHighschoolRequirement } from "../../types/HighschoolRequirements";
 import AddIcon from "@mui/icons-material/Add";
 
 type EditHighschoolModalProps = {
   open: boolean;
   onClose: () => void;
-  highschoolRequirementsData: HighschoolRequirement[];
+  highschoolRequirementsData: IHighschoolRequirement[];
 };
 
 const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({

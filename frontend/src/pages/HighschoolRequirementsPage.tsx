@@ -2,8 +2,9 @@ import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { useAuthStore } from "../stores/AuthenticationStore";
 import RequirementsCard from "../components/highschool_requirements/RequirementsCard";
 import EditHighschoolModal from "../components/highschool_requirements/EditHighschoolModal";
-import { HighschoolRequirement } from "../types/HighschoolRequirements";
 import { useState } from "react";
+import { useHighschoolRequirements } from "../hooks/useHighschoolRequirements";
+import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 
 const buttonStyle = {
   textTransform: "none",
@@ -11,31 +12,20 @@ const buttonStyle = {
   borderRadius: "12px",
 };
 
-const highschoolRequirementsData: HighschoolRequirement[] = [
-  {
-    title: "NCEA",
-    requiredScore: 260,
-    requirements: [
-      "17 external Level 3 credits in Calculus",
-      "16 external Level 3 credits in Physics",
-    ],
-  },
-  {
-    title: "CIE",
-    requiredScore: 310,
-    requirements: ["Mathematics and Physics at A Levels"],
-  },
-  {
-    title: "IB",
-    requiredScore: 33,
-    requirements: ["Mathematics and Physics at HL Levels"],
-  },
-];
-
 const HighschoolRequirementsPage = () => {
   const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   const [open, setOpen] = useState(false);
+  const { highschoolRequirements, isLoading, isError } =
+    useHighschoolRequirements();
+
+  if (isLoading) {
+    return <LoadingSpinnerScreen />;
+  }
+
+  if (isError) {
+    return <Box>Failed to get highschool requirements</Box>;
+  }
 
   return (
     <Container>
@@ -78,13 +68,13 @@ const HighschoolRequirementsPage = () => {
       )}
 
       <EditHighschoolModal
-        highschoolRequirementsData={highschoolRequirementsData}
+        highschoolRequirementsData={highschoolRequirements}
         open={open}
         onClose={() => setOpen(false)}
       />
 
       <Grid container spacing={5}>
-        {highschoolRequirementsData.map((req, idx) => (
+        {highschoolRequirements.map((req, idx) => (
           <Grid item xs={12} sm={6} key={idx}>
             <RequirementsCard {...req} />
           </Grid>
