@@ -56,7 +56,11 @@ const RoleModelCard: React.FC<RoleModelCardProps> = ({ model, onClick }) => {
           />
 
           <CardContent
-            sx={{ flex: 1, textAlign: isSmallScreen ? "center" : "left" }}
+            sx={{
+              flex: 1,
+              textAlign: isSmallScreen ? "center" : "left",
+              textWrap: "wrap",
+            }}
           >
             <Typography variant="h6" component="div" sx={{ color: "white" }}>
               {model.name}

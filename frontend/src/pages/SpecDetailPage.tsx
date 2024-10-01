@@ -20,6 +20,9 @@ import { useAuthStore } from "../stores/AuthenticationStore";
 import { useSnackbarStore } from "../stores/SnackBarStore";
 import { Specialization } from "../types/Specialization";
 import uoaEngBuilding from "/engineering-building.jpg"; // Fallback image if needed
+import { IRoleModel } from "../types/RoleModel";
+import RoleModelModal from "../components/rolemodel/RoleModelModal";
+import HorizontalRoleModelList from "../components/rolemodel/HorizontalRoleModelList";
 
 // Button styles
 const buttonStyle = {
@@ -60,6 +63,41 @@ const SpecDetailPage: React.FC = () => {
       setSpecialization(updatedSpecialization); // Update state with the new specialization data
     }
   };
+
+  const [specRoleModels, setSpecRoleModels] = useState<IRoleModel[]>([]);
+  const [selectedRoleModel, setSelectedRoleModel] = useState<IRoleModel | null>(
+    null
+  );
+  const [isRoleModelModalOpen, setIsRoleModelModalOpen] = useState(false);
+
+  const handleRoleModelCardClick = (model: IRoleModel) => {
+    setSelectedRoleModel(model);
+    setIsRoleModelModalOpen(true);
+  };
+
+  const handleCloseRoleModelModal = () => {
+    setIsRoleModelModalOpen(false);
+  };
+
+  useEffect(() => {
+    const getSpecRoleModels = async () => {
+      try {
+        if (specialization?.name) {
+          const response = await axios.get(
+            `${API_BASE_URL}/role-models/${encodeURIComponent(specialization?.name)}`,
+            { validateStatus: (status) => status < 500 } // So empty role models 404 resp doesn't get treated as error
+          );
+          setSpecRoleModels(response.data);
+        }
+      } catch (err) {
+        console.error("Error fetching role models for specialization: ", err);
+        setError("Failed to fetch specialization role models.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    getSpecRoleModels();
+  }, [specialization]);
 
   // Fetch specialization details from the backend
   useEffect(() => {
@@ -587,7 +625,7 @@ const SpecDetailPage: React.FC = () => {
         </Grid>
       </Box>
 
-      {/* Testimonials Section */}
+      {/* Role Models Section */}
       <Box pt="1.25rem">
         <Typography
           variant="h4"
@@ -602,15 +640,16 @@ const SpecDetailPage: React.FC = () => {
             },
           }}
         >
-          Testimonials
+          See some inspiring role models who studied this specialization!
         </Typography>
 
+        {/** TODO: Move this somewhere else appropriate since testimonials will be moved later */}
         {isAdminLoggedIn && (
           <Box display="flex" justifyContent="center" padding="10px">
             <Button
               variant="contained"
               color="secondary"
-              onClick={handleEditModalOpen} // TODO: Make it open the modal for editing testimonials
+              onClick={handleEditModalOpen}
               sx={buttonStyle}
             >
               Edit
@@ -618,40 +657,17 @@ const SpecDetailPage: React.FC = () => {
           </Box>
         )}
 
-        <Box p="1.25rem">
-          {specialization.testimonials.length > 0 ? (
-            specialization.testimonials.map((testimonial, index) => (
-              <Box key={index} pb="1.25rem">
-                <Typography
-                  variant="body1"
-                  fontSize="1.2rem"
-                  fontWeight="bold"
-                  textAlign="center"
-                >
-                  {testimonial.description}
-                </Typography>
-                <Typography
-                  variant="subtitle2"
-                  fontSize="1rem"
-                  textAlign="center"
-                  fontStyle="italic"
-                >
-                  - {testimonial.name}
-                </Typography>
-              </Box>
-            ))
-          ) : (
-            <Typography
-              variant="body1"
-              fontSize="1.2rem"
-              fontWeight="bold"
-              textAlign="center"
-            >
-              No testimonials available.
-            </Typography>
-          )}
-        </Box>
+        <HorizontalRoleModelList
+          specRoleModels={specRoleModels}
+          handleRoleModelCardClick={handleRoleModelCardClick}
+        />
       </Box>
+
+      <RoleModelModal
+        open={isRoleModelModalOpen}
+        onClose={handleCloseRoleModelModal}
+        roleModel={selectedRoleModel}
+      />
 
       {/* Snack Bar */}
       <Snackbar

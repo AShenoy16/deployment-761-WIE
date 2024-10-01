@@ -2,6 +2,7 @@ export interface IRoleModel {
   _id: string;
   name: string;
   title: string;
+  specName: string;
   description: string;
   photoUrl: string;
   bio: string;
