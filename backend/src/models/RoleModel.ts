@@ -7,6 +7,7 @@ const SocialMediaLinksSchema: Schema = new Schema({
 
 const RoleModelSchema: Schema = new Schema<IRoleModel>({
   name: { type: String, required: true },
+  specName: { type: String, required: true },
   title: { type: String, required: true },
   description: { type: String, required: true },
   bio: { type: String, required: true },

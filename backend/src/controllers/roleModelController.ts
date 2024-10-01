@@ -4,6 +4,7 @@ import {
   getAllRoleModels,
   addRoleModel,
   updateRoleModel,
+  getAllSpecRoleModels,
 } from "../services/roleModelService";
 import { IRoleModel } from "../models/interfaces";
 
@@ -80,6 +81,32 @@ export const putRoleModels = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Failed to find role model" });
     }
     return res.status(200).json(updatedRoleModel);
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error });
+  }
+};
+
+/**
+ * Controller to get all role models based on spec name
+ * @param res 
+ * @returns 
+ */
+export const getSpecRoleModels = async (req: Request, res: Response) => {
+  try {
+
+    const {specName} = req.params
+
+    if(!specName || typeof(specName) !== "string"){
+      return res.status(401)
+    }
+
+    const specRoleModels = await getAllSpecRoleModels(specName)
+
+    if(!specRoleModels || specRoleModels.length === 0){
+      return res.status(404).json({message: "No Role Models in that Spec"})
+    }
+
+    return res.status(200).json(specRoleModels);
   } catch (error) {
     return res.status(500).json({ message: "Server error", error });
   }

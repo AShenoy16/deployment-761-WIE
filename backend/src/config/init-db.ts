@@ -10,7 +10,7 @@ import RoleModel from "../models/RoleModel";
 import SliderQuestion from "../models/SliderModel";
 import RankingQuestion from "../models/RankingModel";
 import MCQQuestion from "../models/MCQModel";
-import { IRankingQuestion } from "../models/interfaces";
+import { IRankingQuestion, IRoleModel } from "../models/interfaces";
 import MultiplierData from "../models/multiplerModel";
 import { cp } from "fs";
 import HighschoolRequirement from "../models/HighSchoolRequirements";
@@ -343,10 +343,11 @@ const dummySpecializations = [
   },
 ];
 
-const dummyRoleModels = [
+const dummyRoleModels: IRoleModel[]= [
   {
     name: "Alyssa Morris",
     title: "Product Manager, Intel",
+    specName:"Software Engineering",
     description:
       "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
     photoUrl:
@@ -361,30 +362,69 @@ const dummyRoleModels = [
   {
     name: "Samantha Smith",
     title: "Software Engineer, Google",
-    description:
-      "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
-    photoUrl:
-      "https://nzmanufacturer.co.nz/wp-content/uploads/2023/08/Women-In-Engineering-PIC.jpg",
+    description: "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
+    photoUrl: "https://nzmanufacturer.co.nz/wp-content/uploads/2023/08/Women-In-Engineering-PIC.jpg",
     bio: "Alyssa Morris is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
     socialMediaLinks: {
       linkedin: "https://www.linkedin.com/in/samanthasmith",
     },
     createdAt: new Date("2024-01-03T00:00:00Z"),
     updatedAt: new Date("2024-01-03T00:00:00Z"),
+    specName: "Biomedical Engineering"
   },
   {
     name: "Jane Doe",
     title: "Software Engineer, Meta",
-    description:
-      "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
-    photoUrl:
-      "https://nzmanufacturer.co.nz/wp-content/uploads/2023/08/Women-In-Engineering-PIC.jpg",
+    description: "Bio-Engineer Jane Doe is a leader in her field excelling in all aspects.",
+    photoUrl: "https://nzmanufacturer.co.nz/wp-content/uploads/2023/08/Women-In-Engineering-PIC.jpg",
     bio: "Jane Doe is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
     socialMediaLinks: {
       linkedin: "https://www.linkedin.com/in/janedoe",
     },
     createdAt: new Date("2024-01-03T00:00:00Z"),
     updatedAt: new Date("2024-01-03T00:00:00Z"),
+    specName: "Computer Systems Engineering"
+  },
+  {
+    name: "Jane Smith",
+    title: "Product Manager, Rocketlabs",
+    specName:"Structural Engineering",
+    description:
+      "Structural Engineering Jane Smith is a leader in her field excelling in all aspects.",
+    photoUrl:
+      "https://www.womeninscience.africa/wp-content/uploads/2022/11/Unsung-Black-Female-Engineers.jpg",
+    bio: "Alyssa Morris is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
+    socialMediaLinks: {
+      linkedin: "https://www.linkedin.com/in/alyssamorris",
+    },
+    createdAt: new Date("2024-01-03T00:00:00Z"),
+    updatedAt: new Date("2024-01-03T00:00:00Z"),
+  },
+  {
+    name: "Carissa Doe",
+    title: "Mechatronics Engineer, Fisher and Paykel",
+    description: "Mechatronics Engineer Carissa Smith is a leader in her field excelling in all aspects.",
+    photoUrl: "https://nzmanufacturer.co.nz/wp-content/uploads/2023/08/Women-In-Engineering-PIC.jpg",
+    bio: "Alyssa Morris is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
+    socialMediaLinks: {
+      linkedin: "https://www.linkedin.com/in/samanthasmith",
+    },
+    createdAt: new Date("2024-01-03T00:00:00Z"),
+    updatedAt: new Date("2024-01-03T00:00:00Z"),
+    specName: "Mechatronics Engineering"
+  },
+  {
+    name: "Anna Parker",
+    title: "Product Manager, Shell",
+    description: "Product Manager Anna Parker is a leader in her field excelling in all aspects.",
+    photoUrl: "https://nzmanufacturer.co.nz/wp-content/uploads/2023/08/Women-In-Engineering-PIC.jpg",
+    bio: "Jane Doe is an experienced product manager at Intel, focusing on innovation and technology in no-code platforms.",
+    socialMediaLinks: {
+      linkedin: "https://www.linkedin.com/in/janedoe",
+    },
+    createdAt: new Date("2024-01-03T00:00:00Z"),
+    updatedAt: new Date("2024-01-03T00:00:00Z"),
+    specName: "Chemical and Materials Engineering"
   },
 ];
 
