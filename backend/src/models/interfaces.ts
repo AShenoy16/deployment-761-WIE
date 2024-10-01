@@ -98,9 +98,11 @@ export interface ISocialMediaLinks {
   linkedin: string;
 }
 
-export interface IRoleModel extends Document {
+export interface IRoleModel {
   name: string;
   description: string;
+  title: string;
+  specName: string;
   bio: string;
   photoUrl: string;
   socialMediaLinks: ISocialMediaLinks;
