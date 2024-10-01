@@ -640,7 +640,8 @@ const SpecDetailPage: React.FC = () => {
             },
           }}
         >
-          See some inspiring role models who studied this specialization!
+          {specRoleModels.length > 0 &&
+            "See some inspiring role models who studied this specialization!"}
         </Typography>
 
         {/** TODO: Move this somewhere else appropriate since testimonials will be moved later */}
