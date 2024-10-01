@@ -61,7 +61,6 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Error states for invalid score and empty requirements
   const [scoreErrors, setScoreErrors] = useState<boolean[]>([]);
   const [requirementErrors, setRequirementErrors] = useState<boolean[][]>([]);
 
@@ -126,21 +125,20 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
     validateRequirementField(idx, reqIndex, value);
   };
 
-  // Add a new requirement to the specific list (NCEA, CIE, IE)
   const handleAddRequirement = (idx: number) => {
     setLocalRequirements((prevRequirements) =>
       prevRequirements.map((req, i) =>
         i === idx
           ? {
               ...req,
-              requirements: [...req.requirements, "New Requirement"], // Add new default text
+              requirements: [...req.requirements, "New Requirement"],
             }
           : req
       )
     );
     setRequirementErrors((prevErrors) => {
       const updatedErrors = [...prevErrors];
-      updatedErrors[idx] = [...prevErrors[idx], false]; // Initialize no error for the new field
+      updatedErrors[idx] = [...prevErrors[idx], false];
       return updatedErrors;
     });
   };
@@ -152,14 +150,14 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
         i === idx
           ? {
               ...req,
-              requirements: req.requirements.filter((_, j) => j !== reqIndex), // Remove requirement
+              requirements: req.requirements.filter((_, j) => j !== reqIndex),
             }
           : req
       )
     );
     setRequirementErrors((prevErrors) => {
       const updatedErrors = [...prevErrors];
-      updatedErrors[idx] = updatedErrors[idx].filter((_, j) => j !== reqIndex); // Remove corresponding error
+      updatedErrors[idx] = updatedErrors[idx].filter((_, j) => j !== reqIndex);
       return updatedErrors;
     });
   };
@@ -220,7 +218,7 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
                   <Button
                     variant="contained"
                     startIcon={<AddIcon />}
-                    onClick={() => handleAddRequirement(idx)} // Add requirement on click
+                    onClick={() => handleAddRequirement(idx)}
                   >
                     Add Requirement
                   </Button>
@@ -267,7 +265,7 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
                     />
                     <IconButton
                       color="primary"
-                      onClick={() => handleDeleteRequirement(idx, reqIndex)} // Delete requirement on click
+                      onClick={() => handleDeleteRequirement(idx, reqIndex)}
                     >
                       <DeleteIcon />
                     </IconButton>
