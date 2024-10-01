@@ -70,3 +70,18 @@ export const updateRoleModel = async (
     return null;
   }
 };
+
+export const getAllSpecRoleModels = async (specName: string) => {
+  try {
+    if (typeof specName !== "string") {
+      return null;
+    }
+
+    const specRoleModels = await RoleModel.find({
+      specName: { $regex: specName, $options: "i" },
+    });
+    return specRoleModels;
+  } catch (error) {
+    return null;
+  }
+};
