@@ -7,6 +7,10 @@ import {
   IconButton,
   TextField,
   TextareaAutosize,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 import GradientBox from "../GradientBox";
@@ -48,6 +52,9 @@ interface EditModalSpecInfoProps {
     leftImage: string;
     rightImage: string;
     testimonials: Testimonial[];
+    jobAvailability: string;
+    medianSalary: number;
+    experiencedSalary: number;
   } | null;
   name: string;
   onSave: (updatedSpecialization: Partial<Specialization>) => void;
@@ -74,8 +81,14 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
   const [leftImageName, setLeftImageName] = useState<string | null>(null);
   const [rightImageName, setRightImageName] = useState<string | null>(null);
 
+  const [jobAvailability, setjobAvailability] = useState<string>("");
+  const [medianSalary, setMedianSalary] = useState<number>(0);
+  const [experiencedSalary, setExperiencedSalary] = useState<number>(0);
   const leftImageInputRef = useRef<HTMLInputElement | null>(null);
   const rightImageInputRef = useRef<HTMLInputElement | null>(null);
+  const isMedianSalaryInvalid = isNaN(medianSalary) || medianSalary < 40000;
+  const isExperiencedSalaryInvalid =
+    isNaN(experiencedSalary) || experiencedSalary < 40000;
   const showSnackbar = useSnackBar();
 
   useEffect(() => {
@@ -88,6 +101,9 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setTestimonials(specInfoResult.testimonials);
       setLeftImageName(null); // Reset image names on modal open
       setRightImageName(null); // Reset image names on modal open
+      setjobAvailability(specInfoResult.jobAvailability);
+      setMedianSalary(specInfoResult.medianSalary);
+      setExperiencedSalary(specInfoResult.experiencedSalary);
     }
   }, [specInfoResult]);
 
@@ -104,6 +120,37 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setLeftImageName(null); // Reset image names on form reset
       setRightImageName(null); // Reset image names on form reset
       setTestimonials(specInfoResult.testimonials);
+      setjobAvailability(specInfoResult.jobAvailability);
+      setMedianSalary(specInfoResult.medianSalary);
+      setExperiencedSalary(specInfoResult.experiencedSalary);
+    }
+  };
+
+  const helperSalaryText = (salary: number) => {
+    if (isNaN(salary)) {
+      return "Please enter a number";
+    }
+    if (salary < 40000) {
+      return "Please enter a reasonable salary";
+    }
+    return "";
+  };
+
+  const handleMedianSalaryChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const newValue = e.target.value;
+    if (!isNaN(Number(newValue))) {
+      setMedianSalary(Number(newValue));
+    }
+  };
+
+  const handleExperiencedSalaryChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const newValue = e.target.value;
+    if (!isNaN(Number(newValue))) {
+      setExperiencedSalary(Number(newValue));
     }
   };
 
@@ -165,7 +212,8 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       !title.trim() ||
       !header.trim() ||
       !leftDetail.trim() ||
-      !rightDetail.trim()
+      !rightDetail.trim() ||
+      isMedianSalaryInvalid
     ) {
       showSnackbar("Please fill out all required fields.");
       return;
@@ -193,6 +241,9 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
     formData.append("leftDetail", sanitizedLeftDetail);
     formData.append("rightDetail", sanitizedRightDetail);
     formData.append("testimonials", JSON.stringify(sanitizedTestimonials));
+    formData.append("jobAvailability", jobAvailability);
+    formData.append("medianSalary", medianSalary.toString());
+    formData.append("experiencedSalary", experiencedSalary.toString());
 
     if (leftImage) {
       formData.append("leftImage", leftImage);
@@ -436,7 +487,69 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
           >
             {leftImageName ? `Uploaded: ${leftImageName}` : "Choose Left Image"}
           </Button>
+          <Typography variant="h5" gutterBottom>
+            Career Details
+          </Typography>
+          {/* Edit Job Availability */}
+          <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+            Job Availability <span style={{ color: "red" }}>*</span>
+          </Typography>
+          <FormControl>
+            <InputLabel id="demo-simple-select-label">Availability</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={jobAvailability}
+              label="Availability"
+              onChange={(e) => setjobAvailability(e.target.value)}
+            >
+              <MenuItem value={"Low"}>Low</MenuItem>
+              <MenuItem value={"Medium"}>Medium</MenuItem>
+              <MenuItem value={"High"}>High</MenuItem>
+            </Select>
+          </FormControl>
 
+          {/* Edit Median Salary */}
+          <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+            Median Salary <span style={{ color: "red" }}>*</span>
+          </Typography>
+          <TextField
+            value={medianSalary}
+            onChange={handleMedianSalaryChange}
+            error={isMedianSalaryInvalid}
+            helperText={helperSalaryText(medianSalary)}
+            style={{
+              width: "100%",
+              padding: "10px",
+              borderRadius: "8px",
+              borderColor: "#ccc",
+              overflowWrap: "break-word",
+              whiteSpace: "pre-wrap",
+              resize: "none",
+            }}
+            required
+          />
+
+          {/* Edit Experienced Salary */}
+          <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+            Experienced Salary <span style={{ color: "red" }}>*</span>
+          </Typography>
+          <TextField
+            value={experiencedSalary}
+            onChange={handleExperiencedSalaryChange}
+            error={isExperiencedSalaryInvalid}
+            helperText={helperSalaryText(experiencedSalary)}
+            style={{
+              width: "100%",
+              padding: "10px",
+              borderRadius: "8px",
+              borderColor: "#ccc",
+              overflowWrap: "break-word",
+              whiteSpace: "pre-wrap",
+              resize: "none",
+            }}
+            required
+          />
           {/* Testimonials */}
           <Typography variant="h6" marginTop={4} marginBottom={3} gutterBottom>
             Testimonials <span style={{ color: "red" }}>*</span>
