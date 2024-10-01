@@ -86,7 +86,11 @@ export const putRoleModels = async (req: Request, res: Response) => {
   }
 };
 
-
+/**
+ * Controller to get all role models based on spec name
+ * @param res 
+ * @returns 
+ */
 export const getSpecRoleModels = async (req: Request, res: Response) => {
   try {
 

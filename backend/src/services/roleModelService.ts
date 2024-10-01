@@ -71,12 +71,18 @@ export const updateRoleModel = async (
   }
 };
 
+/**
+ * Service to get all the role models part of a certain spec
+ * @param specName name of the spec to get role models for
+ * @returns list of all role models if present
+ */
 export const getAllSpecRoleModels = async (specName: string) => {
   try {
     if (typeof specName !== "string") {
       return null;
     }
 
+    // regex to match all role models with certain spec
     const specRoleModels = await RoleModel.find({
       specName: { $regex: specName, $options: "i" },
     });
