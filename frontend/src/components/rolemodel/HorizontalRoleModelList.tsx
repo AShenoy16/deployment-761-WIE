@@ -38,10 +38,19 @@ const HorizontalRoleModelList = ({
       gap={2}
       overflow="auto"
       justifyContent={isOverflowing ? "flex-start" : "center"} // Center if no overflow
+      sx={{
+        "@media (pointer: coarse)": {
+          scrollSnapType: "x mandatory",
+          "& > *": {
+            scrollSnapAlign: "center",
+            scrollSnapStop: "always",
+          },
+        },
+      }}
     >
       {specRoleModels.length > 0 &&
         specRoleModels.map((roleModel) => (
-          <Box key={roleModel._id} maxWidth="600px" flexShrink={0}>
+          <Box key={roleModel._id} maxWidth="90vw" flexShrink={0}>
             <RoleModelCard
               model={roleModel}
               onClick={handleRoleModelCardClick}
