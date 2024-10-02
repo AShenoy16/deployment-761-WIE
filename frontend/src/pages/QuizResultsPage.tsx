@@ -102,7 +102,7 @@ const QuizResultsPage = () => {
   ];
 
   return (
-    <Stack alignItems="center" margin="auto" gap={2} p={2}>
+    <Stack alignItems="center" margin="auto" gap={1} p={1}>
       {/* Render the current page */}
       {pages[currentPage]}
 

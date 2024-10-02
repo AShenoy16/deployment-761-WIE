@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
 import PieChart from "./PieChart";
 
 type ResultsBreakdownProps = {
@@ -8,13 +8,19 @@ type ResultsBreakdownProps = {
 const ResultsBreakdown: React.FC<ResultsBreakdownProps> = ({
   pieChartData,
 }) => {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // Detect small screens
+
   return (
-    <>
-      <Typography variant="h2">Results Breakdown</Typography>
+    <Box textAlign="center">
+      <Typography variant={isSmallScreen ? "h4" : "h2"} mb={2}>
+        Results Breakdown
+      </Typography>
       <PieChart data={pieChartData} />
-      {/* Implement download functionality */}
-      <Typography variant="h6">Download Results</Typography>
-    </>
+      <Typography variant={isSmallScreen ? "body1" : "h6"} mt={2}>
+        Download Results
+      </Typography>
+    </Box>
   );
 };
 
