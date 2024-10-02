@@ -29,7 +29,7 @@ const QuizTopSpecs: React.FC<QuizTopSpecsProps> = ({ quizResults }) => {
   const podiumOrder = [quizResults[1], quizResults[0], quizResults[2]];
   return (
     <>
-      <Box textAlign="center" mb={4}>
+      <Box textAlign="center" mb={2}>
         <Typography variant="h2">Here's Your Top 3</Typography>
         <Typography variant="body1">
           Click to find out more about your top specializations!
@@ -87,7 +87,7 @@ const QuizTopSpecs: React.FC<QuizTopSpecsProps> = ({ quizResults }) => {
               </Box>
               <Link
                 sx={{ color: `${theme.palette.primary.light}` }}
-                mt={1}
+                mt={2}
                 href={`/specialisation/${slugify(spec.name)}`}
               >
                 Find Out More

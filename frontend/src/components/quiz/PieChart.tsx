@@ -22,7 +22,7 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
   };
 
   return (
-    <Box width={450}>
+    <Box width={390}>
       <Pie data={chartData} />;
     </Box>
   );
