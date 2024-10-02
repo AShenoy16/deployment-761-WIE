@@ -101,6 +101,7 @@ const QuizTopSpecs: React.FC<QuizTopSpecsProps> = ({ quizResults }) => {
                 mt={1}
                 href={`/specialisation/${slugify(spec.name)}`}
                 textAlign="center"
+                width={isSmallScreen ? 100 : 150}
               >
                 Find Out More
               </Link>

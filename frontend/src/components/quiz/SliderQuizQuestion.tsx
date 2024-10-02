@@ -52,7 +52,7 @@ export const SliderQuizQuestion: React.FC<SliderQuizQuestionProps> = ({
         max={5}
         sx={{
           width: isSmallScreen ? "5%" : "80%",
-          height: isSmallScreen ? 200 : "10%",
+          height: isSmallScreen ? 300 : "10%",
         }}
       />
     </Stack>
