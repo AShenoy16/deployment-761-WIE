@@ -34,7 +34,9 @@ export const SliderQuizQuestion: React.FC<SliderQuizQuestionProps> = ({
 
   return (
     <Stack gap={4} alignItems="center" width="100%" mb={4}>
-      <Typography>{question.questionText}</Typography>
+      <Typography textAlign="center" variant="h6">
+        {question.questionText}
+      </Typography>
       <Slider
         // Change orientation based on screen size
         orientation={isSmallScreen ? "vertical" : "horizontal"}

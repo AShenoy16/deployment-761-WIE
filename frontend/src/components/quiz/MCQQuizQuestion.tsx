@@ -49,7 +49,9 @@ export const MCQQuizQuestion: React.FC<MCQQuizQuestionProps> = ({
 }) => {
   return (
     <Stack gap={4} alignItems="center" width="100%" mb={4}>
-      <Typography variant="h6">{question.questionText}</Typography>
+      <Typography variant="h6" textAlign="center">
+        {question.questionText}
+      </Typography>
       <Stack
         direction="row"
         flexWrap="wrap"
@@ -57,7 +59,6 @@ export const MCQQuizQuestion: React.FC<MCQQuizQuestionProps> = ({
         alignItems="center"
         justifyContent="center"
         width="100%"
-        mb={4}
       >
         {question.answerOptions.map((option) => (
           <MCQOption
