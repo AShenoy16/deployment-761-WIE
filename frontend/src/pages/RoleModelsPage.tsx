@@ -8,6 +8,7 @@ import EditModalRoleModel from "../components/rolemodel/EditModalRoleModel";
 import { useAuthStore } from "../stores/AuthenticationStore";
 import Snackbar from "@mui/material/Snackbar";
 import { useSnackbarStore } from "../stores/SnackBarStore";
+import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 
 const buttonStyle = {
   textTransform: "none",
@@ -41,6 +42,12 @@ const RoleModelsPage: React.FC = () => {
 
   // retrieve role model data
   const { roleModelsResult, isLoading, isError } = useGetRoleModels();
+
+  if (isLoading) {
+    return <LoadingSpinnerScreen />;
+  } else if (isError) {
+    return <div>No Role Model Data available</div>;
+  }
 
   return (
     <Container>
