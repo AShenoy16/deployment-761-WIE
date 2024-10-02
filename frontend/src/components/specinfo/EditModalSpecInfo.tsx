@@ -216,7 +216,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       !rightDetail.trim() ||
       isMedianSalaryInvalid
     ) {
-      showSnackbar("Please fill out all required fields.");
+      showSnackbar("Please fill out all required fields.", false);
       return;
     }
 
@@ -264,7 +264,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
           },
         }
       );
-      showSnackbar("Successfully saved changes.");
+      showSnackbar("Successfully saved changes.", true);
 
       // Navigate to the new URL if the name has changed
       if (response.data.name !== name) {
@@ -279,7 +279,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       resetForm(); // Reset the form on successful save
       onClose();
     } catch (error) {
-      showSnackbar("Error updating specialization, please try again.");
+      showSnackbar("Error updating specialization, please try again.", false);
       console.error("Error updating specialization:", error);
     }
   };

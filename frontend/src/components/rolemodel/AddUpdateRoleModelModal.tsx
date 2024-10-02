@@ -52,6 +52,7 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
   const [photo, setPhoto] = useState<string | ArrayBuffer | null>(null);
   const [name, setName] = useState<string>("");
   const [title, setTitle] = useState<string>("");
+  const [specName, setSpecName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [bio, setBio] = useState<string>("");
   const [linkedin, setLinkedin] = useState<string>("");
@@ -63,6 +64,7 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
       setPhoto(roleModelToEdit.photoUrl);
       setName(roleModelToEdit.name);
       setTitle(roleModelToEdit.title);
+      setSpecName(roleModelToEdit.specName);
       setDescription(roleModelToEdit.description);
       setBio(roleModelToEdit.bio);
       setLinkedin(roleModelToEdit.socialMediaLinks?.linkedin || "");
@@ -93,6 +95,7 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
     const newRoleModel: addUpdateRoleModelType = {
       name,
       title,
+      specName,
       description,
       bio,
       photoUrl: photo as string, // Store the base64 or upload to server
@@ -142,7 +145,14 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
         )}
 
         {/* Second Layer: Content with Two Columns */}
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            overflow: "scroll",
+          }}
+        >
           {/* Left Column: Image Upload */}
           <Box
             sx={{
@@ -180,7 +190,7 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
               flexDirection: "column",
               justifyContent: "center",
               flex: 1,
-              ml: 5,
+              mx: 3,
             }}
           >
             <TextField
@@ -200,6 +210,15 @@ const AddUpdateRoleModelModal: React.FC<RoleModelModalProps> = ({
               required
               sx={{ mt: 2 }}
               onChange={(e) => setTitle(e.target.value)}
+            />
+            <TextField
+              label="Specialisation"
+              variant="outlined"
+              value={specName}
+              fullWidth
+              required
+              sx={{ mt: 2 }}
+              onChange={(e) => setSpecName(e.target.value)}
             />
             <TextField
               label="Bio"

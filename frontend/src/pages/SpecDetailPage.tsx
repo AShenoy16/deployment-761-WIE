@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -45,6 +46,7 @@ const SpecDetailPage: React.FC = () => {
   const message = useSnackbarStore((state) => state.message);
   const isOpen = useSnackbarStore((state) => state.isOpen);
   const setIsOpen = useSnackbarStore((state) => state.setIsOpen);
+  const severity = useSnackbarStore((state) => state.severity);
   const handleSnackBarClose = (): void => setIsOpen(false);
 
   const [specialization, setSpecialization] = useState<Specialization | null>(
@@ -675,8 +677,11 @@ const SpecDetailPage: React.FC = () => {
         open={isOpen}
         autoHideDuration={5000}
         onClose={handleSnackBarClose}
-        message={message}
-      />
+      >
+        <Alert onClose={() => setIsOpen(false)} severity={severity}>
+          {message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

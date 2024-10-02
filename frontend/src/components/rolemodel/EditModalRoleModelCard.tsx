@@ -128,6 +128,10 @@ const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
           <Typography
             variant="body1"
             marginBottom="5px"
+          >{`Specialisation: ${roleModel.specName}`}</Typography>
+          <Typography
+            variant="body1"
+            marginBottom="5px"
           >{`Bio: ${roleModel.bio}`}</Typography>
           <Typography
             variant="body1"
