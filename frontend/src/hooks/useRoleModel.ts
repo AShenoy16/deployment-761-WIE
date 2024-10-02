@@ -47,10 +47,10 @@ export const useAddRoleModel = () => {
           return [...previousData, newRoleModel];
         }
       );
-      showSnackbar("Successfully added role model");
+      showSnackbar("Successfully added role model", true);
     },
     onError: (error) => {
-      showSnackbar("Error adding role model, please try again");
+      showSnackbar("Error adding role model, please try again", false);
       console.error("Error adding role model:", error);
     },
   });
@@ -69,11 +69,11 @@ export const useDeleteRoleModel = () => {
     onSuccess: () => {
       // Invalidate the role models query to refresh the list after deletion
       queryClient.invalidateQueries({ queryKey: ["RoleModels"] });
-      showSnackbar("Successfully deleted role model");
+      showSnackbar("Successfully deleted role model", true);
     },
     onError: (error) => {
       console.error("Error deleting role model:", error);
-      showSnackbar("Error deleting role model, please try again");
+      showSnackbar("Error deleting role model, please try again", false);
     },
   });
 
@@ -102,10 +102,10 @@ export const usePutRoleModel = () => {
           ); // Update the role model in the query cache
         }
       );
-      showSnackbar("Successfully updated role model");
+      showSnackbar("Successfully updated role model", true);
     },
     onError: (error) => {
-      showSnackbar("Error updating role model, please try again");
+      showSnackbar("Error updating role model, please try again", false);
       console.error("Error updating role model:", error);
     },
   });

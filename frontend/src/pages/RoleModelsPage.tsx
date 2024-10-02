@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Box, Typography, Container } from "@mui/material";
+import { Button, Box, Typography, Container, Alert } from "@mui/material";
 import { IRoleModel } from "../types/RoleModel";
 import RoleModelModal from "../components/rolemodel/RoleModelModal";
 import RoleModelCard from "../components/rolemodel/RoleModelCard";
@@ -25,6 +25,7 @@ const RoleModelsPage: React.FC = () => {
   const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const message = useSnackbarStore((state) => state.message);
   const isOpen = useSnackbarStore((state) => state.isOpen);
+  const severity = useSnackbarStore((state) => state.severity);
   const setIsOpen = useSnackbarStore((state) => state.setIsOpen);
 
   const handleEditModalOpen = (): void => setEditModal(true);
@@ -108,8 +109,11 @@ const RoleModelsPage: React.FC = () => {
         open={isOpen}
         autoHideDuration={5000}
         onClose={handleSnackBarClose}
-        message={message}
-      />
+      >
+        <Alert onClose={() => setIsOpen(false)} severity={severity}>
+          {message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
