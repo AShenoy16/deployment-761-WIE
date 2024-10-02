@@ -1,7 +1,7 @@
 import React from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -10,6 +10,8 @@ type PieChartProps = {
 };
 
 const PieChart: React.FC<PieChartProps> = ({ data }) => {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const chartData = {
     labels: data.map((item) => item.name),
     datasets: [
@@ -22,7 +24,7 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
   };
 
   return (
-    <Box width={390}>
+    <Box width={isSmallScreen ? "95%" : "80%"} margin="auto">
       <Pie data={chartData} />;
     </Box>
   );
