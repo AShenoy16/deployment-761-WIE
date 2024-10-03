@@ -266,6 +266,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                     }
                     fullWidth
                     margin="normal"
+                    inputProps={{ maxLength: 38 }}
                     required
                   />
                   <TextField
@@ -278,6 +279,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                     fullWidth
                     rows={4}
                     margin="normal"
+                    inputProps={{ maxLength: 125 }}
                     required
                   />
                   <TextField
