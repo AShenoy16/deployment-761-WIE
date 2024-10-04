@@ -38,7 +38,7 @@ describe("CardSection", () => {
     );
 
     // Check if the correct number of cards is rendered
-    expect(screen.getByRole("card-section-grid").children).toHaveLength(
+    expect(screen.getByRole("list").children).toHaveLength(
       mockResources.length
     );
   });

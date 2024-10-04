@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Box,
@@ -46,15 +46,43 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
   initialData,
   onSubmit,
 }) => {
-  const [formData, setFormData] = useState<HomePageData | null>(initialData);
+  const [formData, setFormData] = useState<HomePageData | null>(null); // Start with null
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [cardToRemove, setCardToRemove] = useState<number | null>(null);
+  const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
+  const [canSubmit, setCanSubmit] = useState(true);
   const { setMessage, setIsOpen } = useSnackbarStore();
+
+  // Update formData when the modal opens
+  useEffect(() => {
+    if (open && initialData) {
+      setFormData(JSON.parse(JSON.stringify(initialData)));
+      // reset errors
+      setErrors({});
+    }
+  }, [open, initialData]);
+
+  // Check if there are any empty required fields
+  useEffect(() => {
+    const hasEmptyFields =
+      !formData?.heroTitle ||
+      !formData?.heroSubtitle ||
+      !formData?.section1Header ||
+      !formData?.section1Text ||
+      !formData?.section2Header ||
+      !formData?.section2Text ||
+      formData?.additionalResources.some(
+        (card) => !card.title || !card.description || !card.link
+      );
+
+    setCanSubmit(!hasEmptyFields); // Disable button if any required field is empty
+  }, [formData]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (formData) {
       setFormData({ ...formData, [name]: value });
+      setErrors({ ...errors, [name]: !value }); // Set error if field is empty
     }
   };
 
@@ -63,16 +91,20 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
       const updatedResources = [...formData.additionalResources];
       updatedResources[index] = { ...updatedResources[index], [key]: value };
       setFormData({ ...formData, additionalResources: updatedResources });
+      // Set error if required card field is empty
+      if (key === "title" || key === "description" || key === "link") {
+        setErrors({ ...errors, [`card-${index}-${key}`]: !value });
+      }
     }
   };
 
   const handleAddCard = () => {
     if (formData) {
       const newCard: Card = {
-        title: "",
-        description: "",
+        title: "Default title",
+        description: "Default Description",
         image: "",
-        link: "",
+        link: "https://www.google.com",
       };
       setFormData({
         ...formData,
@@ -98,42 +130,42 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
   };
 
   const handleSubmit = () => {
-    if (formData) {
-      const {
-        heroTitle,
-        heroSubtitle,
-        section1Header,
-        section1Text,
-        section2Header,
-        section2Text,
-        additionalResources,
-      } = formData;
+    if (!canSubmit || !formData) return;
 
-      const hasEmptyFields =
-        !heroTitle ||
-        !heroSubtitle ||
-        !section1Header ||
-        !section1Text ||
-        !section2Header ||
-        !section2Text ||
-        additionalResources.some((card) => !card.title || !card.description);
+    const {
+      heroTitle,
+      heroSubtitle,
+      section1Header,
+      section1Text,
+      section2Header,
+      section2Text,
+      additionalResources,
+    } = formData;
 
-      if (hasEmptyFields) {
-        setMessage("Please fill out all required fields.");
-        setIsOpen(true);
-        return; // Prevent submission if there are empty fields
-      }
+    const hasEmptyFields =
+      !heroTitle ||
+      !heroSubtitle ||
+      !section1Header ||
+      !section1Text ||
+      !section2Header ||
+      !section2Text ||
+      additionalResources.some((card) => !card.title || !card.description);
 
-      const updatedResources = additionalResources.map((card) => ({
-        ...card,
-        image: card.image || placeholder,
-      }));
-
-      onSubmit({ ...formData, additionalResources: updatedResources });
-      setMessage("Changes saved successfully!");
+    if (hasEmptyFields) {
+      setMessage("Please fill out all required fields.");
       setIsOpen(true);
-      handleClose(); // Close modal
+      return; // Prevent submission if there are empty fields
     }
+
+    const updatedResources = additionalResources.map((card) => ({
+      ...card,
+      image: card.image || placeholder,
+    }));
+
+    onSubmit({ ...formData, additionalResources: updatedResources });
+    setMessage("Changes saved successfully!");
+    setIsOpen(true);
+    handleClose();
   };
 
   return (
@@ -184,6 +216,8 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 fullWidth
                 margin="normal"
                 required
+                error={!!errors.heroTitle}
+                helperText={errors.heroTitle ? "This field is required" : ""}
               />
               <TextField
                 name="heroSubtitle"
@@ -193,6 +227,8 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 fullWidth
                 margin="normal"
                 required
+                error={!!errors.heroSubtitle}
+                helperText={errors.heroSubtitle ? "This field is required" : ""}
               />
               <TextField
                 name="heroImage"
@@ -213,6 +249,10 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 fullWidth
                 margin="normal"
                 required
+                error={!!errors.section1Header}
+                helperText={
+                  errors.section1Header ? "This field is required" : ""
+                }
               />
               <TextField
                 name="section1Text"
@@ -224,6 +264,8 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 rows={4}
                 margin="normal"
                 required
+                error={!!errors.section1Text}
+                helperText={errors.section1Text ? "This field is required" : ""}
               />
               <Typography variant="h6" component="h3" gutterBottom>
                 Section Two
@@ -237,6 +279,10 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 fullWidth
                 margin="normal"
                 required
+                error={!!errors.section2Header}
+                helperText={
+                  errors.section2Header ? "This field is required" : ""
+                }
               />
               <TextField
                 name="section2Text"
@@ -248,6 +294,8 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 rows={4}
                 margin="normal"
                 required
+                error={!!errors.section2Text}
+                helperText={errors.section2Text ? "This field is required" : ""}
               />
 
               <Typography variant="h6" component="h3" gutterBottom>
@@ -267,6 +315,13 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                     fullWidth
                     margin="normal"
                     required
+                    error={!!errors[`card-${index}-title`]}
+                    helperText={
+                      errors[`card-${index}-title`]
+                        ? "This field is required"
+                        : ""
+                    }
+                    inputProps={{ maxLength: 38 }}
                   />
                   <TextField
                     label="Description"
@@ -279,6 +334,13 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                     rows={4}
                     margin="normal"
                     required
+                    error={!!errors[`card-${index}-description`]}
+                    helperText={
+                      errors[`card-${index}-description`]
+                        ? "This field is required"
+                        : ""
+                    }
+                    inputProps={{ maxLength: 125 }}
                   />
                   <TextField
                     label="Image URL"
@@ -298,6 +360,12 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                     fullWidth
                     margin="normal"
                     required
+                    error={!!errors[`card-${index}-link`]}
+                    helperText={
+                      errors[`card-${index}-link`]
+                        ? "This field is required"
+                        : ""
+                    }
                   />
                   <Button
                     variant="outlined"
@@ -323,7 +391,11 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
             marginTop: 2,
           }}
         >
-          <Button variant="contained" onClick={handleSubmit}>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={!canSubmit}
+          >
             Save Changes
           </Button>
         </Box>
