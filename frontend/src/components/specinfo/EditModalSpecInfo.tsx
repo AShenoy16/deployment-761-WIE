@@ -57,6 +57,7 @@ interface EditModalSpecInfoProps {
     jobAvailability: string;
     medianSalary: number;
     experiencedSalary: number;
+    source: string;
   } | null;
   name: string;
   onSave: (updatedSpecialization: Partial<Specialization>) => void;
@@ -77,6 +78,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
   const [leftImage, setLeftImage] = useState<File | null>(null);
   const [rightImage, setRightImage] = useState<File | null>(null);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [source, setSource] = useState<string>("");
 
   // State for storing the uploaded file names
   const [leftImageName, setLeftImageName] = useState<string | null>(null);
@@ -90,6 +92,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
   const isMedianSalaryInvalid = isNaN(medianSalary) || medianSalary < 40000;
   const isExperiencedSalaryInvalid =
     isNaN(experiencedSalary) || experiencedSalary < 40000;
+  const isSourceInvalid = source.trim().length === 0;
   const showSnackbar = useSnackBar();
 
   useEffect(() => {
@@ -105,6 +108,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setjobAvailability(specInfoResult.jobAvailability);
       setMedianSalary(specInfoResult.medianSalary);
       setExperiencedSalary(specInfoResult.experiencedSalary);
+      setSource(specInfoResult.source);
     }
   }, [specInfoResult]);
 
@@ -124,6 +128,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setjobAvailability(specInfoResult.jobAvailability);
       setMedianSalary(specInfoResult.medianSalary);
       setExperiencedSalary(specInfoResult.experiencedSalary);
+      setSource(specInfoResult.source);
     }
   };
 
@@ -133,6 +138,13 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
     }
     if (salary < 40000) {
       return "Please enter a reasonable salary";
+    }
+    return "";
+  };
+
+  const helperSourceText = (newSource: string) => {
+    if (newSource.trim().length === 0) {
+      return "Please enter a valid source";
     }
     return "";
   };
@@ -168,6 +180,10 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
   const handleRemoveCareerPathway = (index: number) => {
     const newCareerPathways = careerPathways.filter((_, i) => i !== index);
     setCareerPathways(newCareerPathways);
+  };
+
+  const handleSourceChange = (newSource: string) => {
+    setSource(newSource);
   };
 
   const handleTestimonialNameChange = (index: number, value: string) => {
@@ -214,9 +230,16 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       !header.trim() ||
       !leftDetail.trim() ||
       !rightDetail.trim() ||
-      isMedianSalaryInvalid
+      isMedianSalaryInvalid ||
+      isExperiencedSalaryInvalid || 
+      isSourceInvalid
     ) {
       showSnackbar("Please fill out all required fields.", false);
+      return;
+    }
+
+    if(medianSalary >= experiencedSalary){
+      showSnackbar("Median Salary must be less than experienced.", false);
       return;
     }
 
@@ -245,6 +268,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
     formData.append("jobAvailability", jobAvailability);
     formData.append("medianSalary", medianSalary.toString());
     formData.append("experiencedSalary", experiencedSalary.toString());
+    formData.append("source", source);
 
     if (leftImage) {
       formData.append("leftImage", leftImage);
@@ -516,6 +540,27 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
               onChange={handleExperiencedSalaryChange}
               error={isExperiencedSalaryInvalid}
               helperText={helperSalaryText(experiencedSalary)}
+              style={{
+                width: "100%",
+                padding: "10px",
+                borderRadius: "8px",
+                borderColor: "#ccc",
+                overflowWrap: "break-word",
+                whiteSpace: "pre-wrap",
+                resize: "none",
+              }}
+              required
+            />
+
+            {/* Edit Source */}
+
+            <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+              Source <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <TextField
+              value={source}
+              helperText={helperSourceText(source)}
+              onChange={(e) => handleSourceChange(e.target.value)}
               style={{
                 width: "100%",
                 padding: "10px",

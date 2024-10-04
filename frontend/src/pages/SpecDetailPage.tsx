@@ -434,6 +434,7 @@ const SpecDetailPage: React.FC = () => {
           Average {specialization.name.replace(regex, "")} Engineer Career
           Outlook
         </Typography>
+
         <Stack
           direction={{ xs: "column", sm: "row" }}
           spacing={{ xs: 1, sm: 2, md: 4 }}
@@ -564,6 +565,16 @@ const SpecDetailPage: React.FC = () => {
             </Stack>
           </Stack>
         </Stack>
+        <Typography
+          sx={{
+            color: "#00467F",
+            fontSize: "1rem",
+            textAlign: "right",
+            fontStyle: "italic",
+          }}
+        >
+          Source: {specialization.source}
+        </Typography>
       </Box>
 
       {/* Career Pathways Section */}

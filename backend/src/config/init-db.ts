@@ -10,7 +10,7 @@ import RoleModel from "../models/RoleModel";
 import SliderQuestion from "../models/SliderModel";
 import RankingQuestion from "../models/RankingModel";
 import MCQQuestion from "../models/MCQModel";
-import { IRankingQuestion, IRoleModel } from "../models/interfaces";
+import { IRankingQuestion, IRoleModel, ISpecialization } from "../models/interfaces";
 import MultiplierData from "../models/multiplerModel";
 import { cp } from "fs";
 import HighschoolRequirement from "../models/HighSchoolRequirements";
@@ -63,7 +63,7 @@ const dummyTestimonials = [
 ];
 
 // specs
-const dummySpecializations = [
+const dummySpecializations= [
   {
     name: "Software Engineering",
     description: "Focus on software development and engineering principles.",
@@ -89,6 +89,7 @@ const dummySpecializations = [
       "As a software engineer, you have the opportunity to make a significant impact by creating solutions that improve people's lives and businesses.",
     rightImage: "/engineering-building.jpg",
     leftImage: "/engineering-building.jpg",
+    source: "careers.govt.nz and StatsNZ",
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -116,6 +117,7 @@ const dummySpecializations = [
       "Biomedical engineers work to advance the field of healthcare by developing cutting-edge devices, prosthetics, and diagnostic equipment.",
     rightImage: "/engineering-building.jpg",
     leftImage: "/engineering-building.jpg",
+    source: "NZ Census",
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -144,6 +146,7 @@ const dummySpecializations = [
       "These engineers develop and refine materials and chemical processes that make new products and improve existing technologies.",
     rightImage: "/engineering-building.jpg",
     leftImage: "/engineering-building.jpg",
+    source: "NZ Census",
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -171,6 +174,7 @@ const dummySpecializations = [
       "These engineers ensure that our cities and infrastructure are built to last and meet the needs of growing populations.",
     rightImage: "/engineering-building.jpg",
     leftImage: "/engineering-building.jpg",
+    source: "NZ Census",
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -199,6 +203,7 @@ const dummySpecializations = [
       "These engineers work to ensure that the devices and systems we rely on daily operate smoothly and efficiently.",
     rightImage: "/engineering-building.jpg",
     leftImage: "/engineering-building.jpg",
+    source: "NZ Census",
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -226,6 +231,7 @@ const dummySpecializations = [
       "These engineers play a key role in industries like telecommunications, power, and electronics, advancing technology and efficiency.",
     rightImage: "/engineering-building.jpg",
     leftImage: "/engineering-building.jpg",
+    source: "Stuff.co.nz",
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -254,6 +260,7 @@ const dummySpecializations = [
       "Engineering scientists are often at the forefront of innovation, helping to develop new technologies and solutions.",
     rightImage: "/engineering-building.jpg",
     leftImage: "/engineering-building.jpg",
+    source: "Stuff.co.nz",
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -282,6 +289,7 @@ const dummySpecializations = [
       "Mechanical engineers play a critical role in improving efficiency, safety, and sustainability in a variety of industries.",
     rightImage: "/engineering-building.jpg",
     leftImage: "/engineering-building.jpg",
+    source: "Stuff.co.nz",
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -310,6 +318,7 @@ const dummySpecializations = [
       "Mechatronics engineers play a crucial role in creating new technologies that automate and improve processes across industries.",
     rightImage: "/engineering-building.jpg",
     leftImage: "/engineering-building.jpg",
+    source: "Stuff.co.nz",
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -337,6 +346,7 @@ const dummySpecializations = [
     rightDetail:
       "Structural engineers play a key role in ensuring that the infrastructure and buildings we use daily are safe and durable.",
     rightImage: "/engineering-building.jpg",
+    source: "Stuff.co.nz",
     leftImage: "/engineering-building.jpg",
     createdAt: new Date(),
     updatedAt: new Date(),

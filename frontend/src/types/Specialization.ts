@@ -13,6 +13,7 @@ export type Specialization = {
   rightDetail: string;
   leftImage: string;
   rightImage: string;
+  source: string
 };
 
 export type Testimonial = {

@@ -19,6 +19,7 @@ const SpecializationSchema = new Schema<ISpecialization>({
   leftImage: { type: String, required: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
+  source: {type: String, required: false},
 });
 
 const Specialization = mongoose.model<ISpecialization>(
