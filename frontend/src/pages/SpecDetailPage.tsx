@@ -24,6 +24,7 @@ import uoaEngBuilding from "/engineering-building.jpg"; // Fallback image if nee
 import { IRoleModel } from "../types/RoleModel";
 import RoleModelModal from "../components/rolemodel/RoleModelModal";
 import HorizontalRoleModelList from "../components/rolemodel/HorizontalRoleModelList";
+import { API_BASE_URL } from "../util/common";
 
 // Button styles
 const buttonStyle = {
@@ -38,7 +39,6 @@ const buttonStyle = {
 const SpecDetailPage: React.FC = () => {
   const { name } = useParams<{ name: string }>(); // Get specialization name from route params
   const formattedName = name?.replace(/-/g, " ") || ""; // Format name by replacing hyphens with spaces
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Get the API base URL from environment variables
   const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn); // Check if admin is logged in
   const [openEditModal, setEditModal] = useState<boolean>(false); // State for edit modal
   const handleEditModalOpen = (): void => setEditModal(true); // Open edit modal

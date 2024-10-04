@@ -265,6 +265,7 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
                     />
                     <IconButton
                       color="primary"
+                      role="delete-btn"
                       onClick={() => handleDeleteRequirement(idx, reqIndex)}
                     >
                       <DeleteIcon />

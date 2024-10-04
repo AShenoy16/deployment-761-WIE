@@ -12,8 +12,7 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { API_BASE_URL } from "../util/common";
 
 const LoginPage: React.FC = () => {
   const { isLoggedIn, setIsLoggedIn } = useAuthStore();
@@ -99,7 +98,7 @@ const LoginPage: React.FC = () => {
             justifyContent: "center",
             alignItems: "center",
             flex: 1,
-            gap: 30
+            gap: 30,
           }}
         >
           <Typography variant={isSmallScreen ? "h4" : "h2"} textAlign="center">

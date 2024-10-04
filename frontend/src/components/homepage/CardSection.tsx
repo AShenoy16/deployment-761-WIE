@@ -52,8 +52,8 @@ const CardSection: React.FC<CardSectionProps> = ({ resources }) => {
       >
         Additional Resources
       </Typography>
-
       <Stack
+        role="list"
         ref={stackRef}
         p="1.25rem"
         direction="row"
@@ -62,7 +62,6 @@ const CardSection: React.FC<CardSectionProps> = ({ resources }) => {
         justifyContent={isOverflowing ? "flex-start" : "center"} // Center if no overflow
         sx={{
           scrollBehavior: "smooth",
-
           "@media (pointer: coarse)": {
             scrollSnapType: "x mandatory", // Enable scroll snapping for touch devices
             "& > *": {

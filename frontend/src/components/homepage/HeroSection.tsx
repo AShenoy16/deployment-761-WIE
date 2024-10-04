@@ -4,16 +4,12 @@ import { Box, Typography, Stack } from "@mui/material";
 interface HeroSectionProps {
   title: string;
   subtitle: string;
-  image: string;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({
-  title,
-  subtitle,
-  image,
-}) => {
+const HeroSection: React.FC<HeroSectionProps> = ({ title, subtitle }) => {
   return (
     <Box
+      role="banner"
       sx={{
         position: "relative",
         backgroundImage: `url(/engineering-building.jpg)`,

@@ -1,8 +1,7 @@
 import axios from "axios";
 import { IRoleModel } from "../types/RoleModel";
 import { addUpdateRoleModelType } from "../components/rolemodel/AddUpdateRoleModelModal";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { API_BASE_URL } from "../util/common";
 
 /**
  * Service to send a get request for all role models
