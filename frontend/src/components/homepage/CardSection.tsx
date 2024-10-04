@@ -40,6 +40,7 @@ const CardSection: React.FC<CardSectionProps> = ({ resources }) => {
         alignItems={"center"}
         spacing={4}
         justifyContent="center"
+        role="card-section-grid"
       >
         {resources.map((card, index) => (
           <Grid
