@@ -62,9 +62,7 @@ const CardSection: React.FC<CardSectionProps> = ({ resources }) => {
         justifyContent={isOverflowing ? "flex-start" : "center"} // Center if no overflow
         sx={{
           scrollBehavior: "smooth",
-          "&::-webkit-scrollbar": {
-            display: "none",
-          },
+
           "@media (pointer: coarse)": {
             scrollSnapType: "x mandatory", // Enable scroll snapping for touch devices
             "& > *": {
