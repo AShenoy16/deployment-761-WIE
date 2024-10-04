@@ -1,6 +1,5 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
-import SpecCard from "../components/quiz/SpecCard";
 import { useCalculateQuizResults } from "../hooks/useQuestions";
 import { useState, useEffect } from "react";
 import { QuizSubmissionRequest } from "../types/Question";
