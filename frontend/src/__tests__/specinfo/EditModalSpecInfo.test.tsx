@@ -25,6 +25,7 @@ const mockSpecInfoResult = {
   jobAvailability: "High",
   medianSalary: 80000,
   experiencedSalary: 120000,
+  source: "careers.govt.nz and StatsNZ"
 };
 
 // Mock API request
@@ -66,6 +67,7 @@ describe("EditModalSpecInfo", () => {
     expect(screen.getByDisplayValue("Jane")).toBeInTheDocument();
     expect(screen.getByDisplayValue("80000")).toBeInTheDocument();
     expect(screen.getByDisplayValue("120000")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("careers.govt.nz and StatsNZ")).toBeInTheDocument();
   });
 
   it("updates input fields correctly when changed", () => {
