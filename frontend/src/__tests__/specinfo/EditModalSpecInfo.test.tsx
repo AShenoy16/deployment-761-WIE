@@ -1,7 +1,7 @@
+import "@testing-library/jest-dom";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import EditModalSpecInfo from "../../components/specinfo/EditModalSpecInfo";
 import { MemoryRouter } from "react-router-dom";
-import "@testing-library/jest-dom";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 
