@@ -573,7 +573,7 @@ const SpecDetailPage: React.FC = () => {
             fontStyle: "italic",
           }}
         >
-          Source: careers.govt.nz and StatsNZ
+          Source: {specialization.source}
         </Typography>
       </Box>
 
