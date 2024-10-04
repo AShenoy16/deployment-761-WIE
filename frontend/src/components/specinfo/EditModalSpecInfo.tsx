@@ -57,6 +57,7 @@ interface EditModalSpecInfoProps {
     jobAvailability: string;
     medianSalary: number;
     experiencedSalary: number;
+    source: string;
   } | null;
   name: string;
   onSave: (updatedSpecialization: Partial<Specialization>) => void;
@@ -77,6 +78,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
   const [leftImage, setLeftImage] = useState<File | null>(null);
   const [rightImage, setRightImage] = useState<File | null>(null);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [source, setSource] = useState<string>("");
 
   // State for storing the uploaded file names
   const [leftImageName, setLeftImageName] = useState<string | null>(null);
@@ -105,6 +107,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setjobAvailability(specInfoResult.jobAvailability);
       setMedianSalary(specInfoResult.medianSalary);
       setExperiencedSalary(specInfoResult.experiencedSalary);
+      setSource(specInfoResult.source)
     }
   }, [specInfoResult]);
 
@@ -124,6 +127,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setjobAvailability(specInfoResult.jobAvailability);
       setMedianSalary(specInfoResult.medianSalary);
       setExperiencedSalary(specInfoResult.experiencedSalary);
+      setSource(specInfoResult.source)
     }
   };
 
@@ -169,6 +173,10 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
     const newCareerPathways = careerPathways.filter((_, i) => i !== index);
     setCareerPathways(newCareerPathways);
   };
+
+  const handleSourceChange = (newSource: string) => {
+    setSource(newSource)
+  }
 
   const handleTestimonialNameChange = (index: number, value: string) => {
     const newTestimonial = [...testimonials];
@@ -245,6 +253,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
     formData.append("jobAvailability", jobAvailability);
     formData.append("medianSalary", medianSalary.toString());
     formData.append("experiencedSalary", experiencedSalary.toString());
+    formData.append("source", source)
 
     if (leftImage) {
       formData.append("leftImage", leftImage);
@@ -527,6 +536,28 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
               }}
               required
             />
+
+            {/* Edit Source */}
+
+            <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+              Source <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <TextField
+              value={source}
+              onChange={(e) => handleSourceChange(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "10px",
+                borderRadius: "8px",
+                borderColor: "#ccc",
+                overflowWrap: "break-word",
+                whiteSpace: "pre-wrap",
+                resize: "none",
+              }}
+              required
+            />
+
+
 
             {/* Edit Career Pathways */}
             <Typography

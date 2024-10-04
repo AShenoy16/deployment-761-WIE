@@ -59,6 +59,7 @@ export const updateSpecByName = async (req: Request, res: Response) => {
 			jobAvailability,
 			medianSalary,
 			experiencedSalary,
+			source
 		} = req.body;
 
 		// Update fields in the specialization object
@@ -71,6 +72,7 @@ export const updateSpecByName = async (req: Request, res: Response) => {
 		specialization.jobAvailability = jobAvailability || specialization.jobAvailability;
 		specialization.medianSalary = medianSalary || specialization.medianSalary;
 		specialization.experiencedSalary = experiencedSalary || specialization.experiencedSalary;
+		specialization.source = source || specialization.source
 
 		// Handle image uploads
 		const files = req.files as { [fieldname: string]: MulterFile[] };
