@@ -22,27 +22,33 @@ const HomePageCard: React.FC<HomePageCardProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  // Function to handle button click
   const handleLearnMoreClick = () => {
     if (link.startsWith("http")) {
-      // External link: open in a new tab
       window.open(link, "_blank", "noopener noreferrer");
     } else {
-      // Internal link: use React Router to navigate
       navigate(link);
     }
   };
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card
+      sx={{
+        maxWidth: 345,
+        minHeight: 325,
+        display: "flex",
+        flexDirection: "column", // Ensure the content and actions are stacked vertically
+        justifyContent: "space-between", // Spread content and align button at the bottom
+      }}
+    >
       <CardMedia
         component="img"
         alt={title}
         height="160"
-        sx={{ minWidth: "350px", maxHeight: "160px" }}
+        sx={{ minWidth: "350px", maxHeight: "200px" }}
         image={image}
       />
-      <CardContent>
+      <CardContent sx={{ flexGrow: 1 }}>
+        {/* Ensure content grows to fill space */}
         <Typography gutterBottom variant="body1" component="div">
           {title}
         </Typography>
@@ -54,7 +60,7 @@ const HomePageCard: React.FC<HomePageCardProps> = ({
         <Button
           sx={{ marginLeft: "0.5em" }}
           size="small"
-          onClick={handleLearnMoreClick} // Call the function on click
+          onClick={handleLearnMoreClick}
         >
           Learn More
         </Button>
