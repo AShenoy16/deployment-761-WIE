@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import { Box, Typography, Stack, Button, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Slideshow from "./Slideshow";
-import { specialisations } from "./specialisationsData";
+import { specialisations } from "../../util/specialisationsData";
 
 interface SpecialisationSectionProps {
   header: string;
