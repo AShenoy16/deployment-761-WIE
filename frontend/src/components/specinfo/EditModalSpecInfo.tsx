@@ -302,6 +302,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
           }}
         >
           <IconButton
+            role="back-btn"
             edge="start"
             color="inherit"
             onClick={() => {
