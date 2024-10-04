@@ -46,12 +46,21 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
   initialData,
   onSubmit,
 }) => {
-  const [formData, setFormData] = useState<HomePageData | null>(initialData);
+  const [formData, setFormData] = useState<HomePageData | null>(null); // Start with null
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [cardToRemove, setCardToRemove] = useState<number | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
   const [canSubmit, setCanSubmit] = useState(true);
   const { setMessage, setIsOpen } = useSnackbarStore();
+
+  // Update formData when the modal opens
+  useEffect(() => {
+    if (open && initialData) {
+      setFormData(JSON.parse(JSON.stringify(initialData)));
+      // reset errors
+      setErrors({});
+    }
+  }, [open, initialData]);
 
   // Check if there are any empty required fields
   useEffect(() => {
