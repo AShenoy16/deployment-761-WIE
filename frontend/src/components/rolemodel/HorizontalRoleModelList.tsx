@@ -32,6 +32,7 @@ const HorizontalRoleModelList = ({
 
   return (
     <Stack
+      role="list"
       ref={stackRef}
       p="1.25rem"
       direction="row"

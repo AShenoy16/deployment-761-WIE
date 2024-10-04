@@ -91,6 +91,7 @@ const RoleModelModal: React.FC<RoleModelModalProps> = ({
               <Box marginTop={4}>
                 {roleModel.socialMediaLinks?.linkedin && (
                   <IconButton
+                    role="link"
                     component="a"
                     href={roleModel.socialMediaLinks.linkedin}
                     target="_blank"
