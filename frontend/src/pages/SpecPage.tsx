@@ -9,13 +9,12 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_BASE_URL } from "../util/common";
 
 interface Specialisation {
   _id: string;
   name: string;
 }
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Make sure to set this in your environment variables
 
 // Utility function to slugify specialisation names
 export const slugify = (name: string) => {

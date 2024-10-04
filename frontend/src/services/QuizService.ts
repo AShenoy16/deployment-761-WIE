@@ -5,8 +5,7 @@ import {
   QuizSubmissionRequest,
 } from "../types/Question";
 import { SpecSummary } from "../types/Specialization";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { API_BASE_URL } from "../util/common";
 
 export const getAllQuizQuestions = async (): Promise<IQuestion[]> => {
   const response = await axios.get(`${API_BASE_URL}/quizzes`);

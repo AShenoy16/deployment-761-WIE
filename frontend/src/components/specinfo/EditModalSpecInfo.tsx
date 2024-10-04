@@ -19,6 +19,7 @@ import axios from "axios";
 import { Specialization, Testimonial } from "../../types/Specialization";
 import useSnackBar from "../../hooks/useSnackBar";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../../util/common";
 
 const modalStyle = {
   position: "absolute" as const,
@@ -68,7 +69,6 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
   name,
   onSave,
 }) => {
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [title, setTitle] = useState<string>(""); // New state for the title
   const [careerPathways, setCareerPathways] = useState<string[]>([]);
   const [header, setHeader] = useState<string>("");
