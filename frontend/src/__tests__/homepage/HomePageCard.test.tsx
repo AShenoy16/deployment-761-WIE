@@ -1,45 +1,98 @@
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
-import HeroSection from "../../components/homepage/HeroSection";
+import { render, screen, fireEvent } from "@testing-library/react";
+import HomePageCard from "../../components/homepage/HomePageCard";
+import { MemoryRouter } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-describe("HeroSection", () => {
+// Mock the `useNavigate` hook from react-router-dom
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useNavigate: jest.fn(),
+}));
+
+describe("HomePageCard", () => {
+  const mockNavigate = jest.fn();
   const mockProps = {
-    title: "Welcome to the Future of Engineering",
-    subtitle: "Empowering the next generation of engineers",
-    image:
-      "https://www.auckland.ac.nz/content/auckland/en/engineering/study-with-us/women-in-engineering/_jcr_content/par/linkspagetemplategri_559213939/par2/subflexicomponentlin/image.img.480.low.jpg/1551045302558.jpg",
+    title: "Card Title",
+    description: "Card description goes here.",
+    image: "https://via.placeholder.com/150",
+    link: "/internal-link",
   };
 
-  it("renders the HeroSection with the correct title and subtitle", () => {
-    render(<HeroSection {...mockProps} />);
-
-    // Check if the title is rendered correctly
-    expect(
-      screen.getByText("Welcome to the Future of Engineering")
-    ).toBeInTheDocument();
-
-    // Check if the subtitle is rendered correctly
-    expect(
-      screen.getByText("Empowering the next generation of engineers")
-    ).toBeInTheDocument();
+  beforeEach(() => {
+    // Ensure the navigate function is reset between tests
+    (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
   });
 
-  it("renders the hero image correctly", () => {
-    render(<HeroSection {...mockProps} />);
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-    // Check if the image is rendered and has the correct src attribute
+  it("renders the HomePageCard with the correct title, description, and image", () => {
+    render(
+      <MemoryRouter>
+        <HomePageCard {...mockProps} />
+      </MemoryRouter>
+    );
+
+    // Check if the title is rendered correctly
+    expect(screen.getByText("Card Title")).toBeInTheDocument();
+
+    // Check if the description is rendered correctly
+    expect(screen.getByText("Card description goes here.")).toBeInTheDocument();
+
+    // Check if the image is rendered with the correct src
     const imgElement = screen.getByRole("img");
     expect(imgElement).toBeInTheDocument();
     expect(imgElement).toHaveAttribute("src", mockProps.image);
+    expect(imgElement).toHaveAttribute("alt", mockProps.title);
   });
 
-  it("applies the correct background image style", () => {
-    render(<HeroSection {...mockProps} />);
-
-    // Check if the component has the correct background image style
-    const backgroundElement = screen.getByRole("banner"); // You can add a role="banner" to the Box for testing
-    expect(backgroundElement).toHaveStyle(
-      `background-image: url(/engineering-building.jpg)`
+  it("navigates to an internal link when 'Learn More' button is clicked", () => {
+    render(
+      <MemoryRouter>
+        <HomePageCard {...mockProps} />
+      </MemoryRouter>
     );
+
+    // Simulate the button click
+    const learnMoreButton = screen.getByText("Learn More");
+    fireEvent.click(learnMoreButton);
+
+    // Ensure that the navigate function is called with the internal link
+    expect(mockNavigate).toHaveBeenCalledWith(mockProps.link);
+  });
+
+  it("opens an external link in a new tab when 'Learn More' button is clicked", () => {
+    // Modify the props to use an external link
+    const externalLinkProps = {
+      ...mockProps,
+      link: "https://external-link.com",
+    };
+
+    // Spy on window.open
+    const windowOpenSpy = jest
+      .spyOn(window, "open")
+      .mockImplementation(() => null);
+
+    render(
+      <MemoryRouter>
+        <HomePageCard {...externalLinkProps} />
+      </MemoryRouter>
+    );
+
+    // Simulate the button click
+    const learnMoreButton = screen.getByText("Learn More");
+    fireEvent.click(learnMoreButton);
+
+    // Ensure that window.open is called with the external link
+    expect(windowOpenSpy).toHaveBeenCalledWith(
+      externalLinkProps.link,
+      "_blank",
+      "noopener noreferrer"
+    );
+
+    // Cleanup the spy after test
+    windowOpenSpy.mockRestore();
   });
 });
