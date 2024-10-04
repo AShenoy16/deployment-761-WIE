@@ -92,6 +92,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
   const isMedianSalaryInvalid = isNaN(medianSalary) || medianSalary < 40000;
   const isExperiencedSalaryInvalid =
     isNaN(experiencedSalary) || experiencedSalary < 40000;
+  const isSourceInvalid = source.trim().length === 0;
   const showSnackbar = useSnackBar();
 
   useEffect(() => {
@@ -107,7 +108,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setjobAvailability(specInfoResult.jobAvailability);
       setMedianSalary(specInfoResult.medianSalary);
       setExperiencedSalary(specInfoResult.experiencedSalary);
-      setSource(specInfoResult.source)
+      setSource(specInfoResult.source);
     }
   }, [specInfoResult]);
 
@@ -127,7 +128,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setjobAvailability(specInfoResult.jobAvailability);
       setMedianSalary(specInfoResult.medianSalary);
       setExperiencedSalary(specInfoResult.experiencedSalary);
-      setSource(specInfoResult.source)
+      setSource(specInfoResult.source);
     }
   };
 
@@ -137,6 +138,13 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
     }
     if (salary < 40000) {
       return "Please enter a reasonable salary";
+    }
+    return "";
+  };
+
+  const helperSourceText = (newSource: string) => {
+    if (newSource.trim().length === 0) {
+      return "Please enter a valid source";
     }
     return "";
   };
@@ -175,8 +183,8 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
   };
 
   const handleSourceChange = (newSource: string) => {
-    setSource(newSource)
-  }
+    setSource(newSource);
+  };
 
   const handleTestimonialNameChange = (index: number, value: string) => {
     const newTestimonial = [...testimonials];
@@ -222,9 +230,16 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       !header.trim() ||
       !leftDetail.trim() ||
       !rightDetail.trim() ||
-      isMedianSalaryInvalid
+      isMedianSalaryInvalid ||
+      isExperiencedSalaryInvalid || 
+      isSourceInvalid
     ) {
       showSnackbar("Please fill out all required fields.", false);
+      return;
+    }
+
+    if(medianSalary >= experiencedSalary){
+      showSnackbar("Median Salary must be less than experienced.", false);
       return;
     }
 
@@ -253,7 +268,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
     formData.append("jobAvailability", jobAvailability);
     formData.append("medianSalary", medianSalary.toString());
     formData.append("experiencedSalary", experiencedSalary.toString());
-    formData.append("source", source)
+    formData.append("source", source);
 
     if (leftImage) {
       formData.append("leftImage", leftImage);
@@ -544,6 +559,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
             </Typography>
             <TextField
               value={source}
+              helperText={helperSourceText(source)}
               onChange={(e) => handleSourceChange(e.target.value)}
               style={{
                 width: "100%",
@@ -556,8 +572,6 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
               }}
               required
             />
-
-
 
             {/* Edit Career Pathways */}
             <Typography
