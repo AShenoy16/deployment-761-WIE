@@ -9,10 +9,9 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import LanguageIcon from "@mui/icons-material/Language";
 import EmailIcon from "@mui/icons-material/Email";
-import wenLogo from "../assets/wen-logo.png";
+import wenLogo from "../assets/whiteWieLogo.svg";
 import { useAuthStore } from "../stores/AuthenticationStore";
 
 // MUI doesn't have its own tiktok icon
@@ -45,7 +44,6 @@ const Footer: React.FC = () => {
     >
       <Box display="flex" alignItems="center">
         <Box
-          bgcolor="white"
           borderRadius="1rem"
           display="flex"
           alignItems="center"
@@ -53,47 +51,37 @@ const Footer: React.FC = () => {
           height="4rem"
           src={wenLogo}
           alt="WEN logo"
-          mr={6}
+          mr={3}
         />
         <Typography variant="body1" color="white">
           Contact us:
         </Typography>
 
-        <Box display="flex" ml={2}>
+        <Box display="flex" ml={1}>
           <IconButton
             component={MuiLink}
-            href="https://www.instagram.com"
+            href="https://www.instagram.com/wenforschools/?hl=en"
             target="_blank"
+            sx={{ color: "white" }}
           >
             <InstagramIcon />
           </IconButton>
+
           <IconButton
             component={MuiLink}
-            href="https://www.facebook.com"
+            href="mailto:wie@auckland.ac.nz"
             target="_blank"
-          >
-            <FacebookIcon />
-          </IconButton>
-          <IconButton
-            component={MuiLink}
-            href="https://www.tiktok.com"
-            target="_blank"
-          >
-            <TikTokIcon />
-          </IconButton>
-          <IconButton
-            component={MuiLink}
-            href="https://www.linkedin.com"
-            target="_blank"
-          >
-            <LinkedInIcon />
-          </IconButton>
-          <IconButton
-            component={MuiLink}
-            href="mailto:someone@example.com"
-            target="_blank"
+            sx={{ color: "white" }}
           >
             <EmailIcon />
+          </IconButton>
+          <IconButton
+            component={MuiLink}
+            href="https://womeninengineering.auckland.ac.nz/"
+            target="_blank"
+            sx={{ color: "white" }}
+          >
+            <LanguageIcon />
           </IconButton>
         </Box>
       </Box>
