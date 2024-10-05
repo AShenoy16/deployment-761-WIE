@@ -34,7 +34,7 @@ const HomePageCard: React.FC<HomePageCardProps> = ({
     <Card
       sx={{
         maxWidth: 345,
-        minHeight: 325,
+        height: 325,
         display: "flex",
         flexDirection: "column", // Ensure the content and actions are stacked vertically
         justifyContent: "space-between", // Spread content and align button at the bottom
@@ -52,7 +52,17 @@ const HomePageCard: React.FC<HomePageCardProps> = ({
         <Typography gutterBottom variant="body1" component="div">
           {title}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            overflow: "hidden",
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 3, // Limit to 3 lines before adding "..."
+            textOverflow: "ellipsis",
+          }}
+        >
           {description}
         </Typography>
       </CardContent>
