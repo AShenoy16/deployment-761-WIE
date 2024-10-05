@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  Stack,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import placeholder from "../../assets/placeholder.jpg";
@@ -278,14 +279,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 error={!!errors.heroSubtitle}
                 helperText={errors.heroSubtitle ? "This field is required" : ""}
               />
-              {/* <TextField
-                name="heroImage"
-                label="Hero Image URL"
-                value={formData.heroImage}
-                onChange={handleInputChange}
-                fullWidth
-                margin="normal"
-              /> */}
+
               <input
                 type="file"
                 accept="image/*"
@@ -293,21 +287,45 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 style={{ display: "none" }}
                 onChange={(e) => handleImageChange(e)}
               />
-              <Button
-                variant="contained"
-                sx={{ marginBottom: "10px" }}
-                onClick={() => heroImageInputRef.current?.click()}
+              <Stack
+                sx={{
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  mb: 5,
+                }}
               >
-                {heroImage ? `Uploaded Image:` : "Choose hero Image"}
-              </Button>
-              {heroImage && (
-                <Box
-                  component="img"
-                  sx={{ maxHeight: { xs: 130, md: 190 }, borderRadius: "3px" }}
-                  src={URL.createObjectURL(heroImage)} // Generate object URL for the image
-                  alt="Hero" // Add an alt attribute for accessibility
-                />
-              )}
+                <Button
+                  sx={{ mt: 2 }}
+                  variant="contained"
+                  onClick={() => heroImageInputRef.current?.click()}
+                >
+                  {heroImage ? `Uploaded Image:` : "Choose Image"}
+                </Button>
+
+                {/* Move the image display here, below the button */}
+                {(formData.heroImage || heroImage) && (
+                  <Box
+                    component="img"
+                    sx={{
+                      maxHeight: { xs: 130, md: 190 },
+                      borderRadius: "3px",
+                      boxShadow: 2, // Add some shadow for depth
+                      marginTop: "10px", // Space between button and image
+                      transition: "transform 0.2s", // Smooth scaling transition
+                      "&:hover": {
+                        transform: "scale(1.05)", // Slightly enlarge image on hover
+                      },
+                    }}
+                    src={
+                      heroImage
+                        ? URL.createObjectURL(heroImage)
+                        : `${API_BASE_URL}${formData.heroImage}`
+                    } // Generate object URL for the image
+                    onClick={() => heroImageInputRef.current?.click()}
+                    alt="Hero" // Add an alt attribute for accessibility
+                  />
+                )}
+              </Stack>
 
               <Typography variant="h6" component="h3" gutterBottom>
                 Section One
