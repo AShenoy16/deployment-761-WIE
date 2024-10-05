@@ -28,7 +28,7 @@ const buttonStyle = {
   textTransform: "none",
   borderRadius: "8px",
   padding: "0.5rem 1.5rem", // Consistent padding
-  fontSize: "1rem", // Modern font size
+  fontSize: "1rem", //
 };
 
 interface EditModalRoleModelProps {
@@ -62,12 +62,14 @@ const EditModalRoleModel: React.FC<EditModalRoleModelProps> = ({
             marginBottom: "1.5rem", // Adjust spacing
           }}
         >
-          <IconButton edge="start" color="inherit" onClick={onClose}>
-            <CloseIcon sx={{ color: "gray" }} />
-          </IconButton>
-          <Typography variant="h5" component="h2" sx={{ color: "black" }}>
-            Edit Role Models
-          </Typography>
+          <Box display={"flex"} flexDirection={"row"} alignItems={"center"}>
+            <IconButton edge="start" color="inherit" onClick={onClose}>
+              <CloseIcon sx={{ color: "gray" }} />
+            </IconButton>
+            <Typography variant="h5" component="h2" sx={{ color: "black" }}>
+              Edit Role Models
+            </Typography>
+          </Box>
           <Box display="flex" justifyContent="center" alignItems="center">
             {/* Button to open the form modal */}
             <Button
@@ -103,13 +105,8 @@ const EditModalRoleModel: React.FC<EditModalRoleModelProps> = ({
 
         {/* Footer Section */}
         <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={onClose}
-            sx={buttonStyle}
-          >
-            Save
+          <Button variant="contained" onClick={onClose}>
+            Save Changes
           </Button>
         </Box>
       </Box>

@@ -657,7 +657,6 @@ const SpecDetailPage: React.FC = () => {
             "See some inspiring role models who studied this specialization!"}
         </Typography>
 
-        {/** TODO: Move this somewhere else appropriate since testimonials will be moved later */}
         {isAdminLoggedIn && (
           <Box display="flex" justifyContent="center" padding="10px">
             <Button
