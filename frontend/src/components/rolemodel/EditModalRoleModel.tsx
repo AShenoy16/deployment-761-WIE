@@ -1,10 +1,9 @@
 import EditModalRoleModels from "./EditModalRoleModelCard";
 import AddRoleModelModal from "./AddUpdateRoleModelModal";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CloseIcon from "@mui/icons-material/Close";
 import { Button, Modal, Box, Typography, IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { IRoleModel } from "../../types/RoleModel";
-import GradientBox from "../GradientBox";
 import { useState } from "react";
 
 // Define modal styles
@@ -16,17 +15,20 @@ const modalStyle = {
   width: "85%",
   maxWidth: "800px",
   maxHeight: "90vh",
-  boxShadow: 24,
-  p: 4,
+  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+  backgroundColor: "white",
+  padding: "2rem",
   display: "flex",
   flexDirection: "column",
-  borderRadius: 5,
+  borderRadius: "12px", // Softer border radius
+  overflow: "hidden", // Handle overflow
 };
 
 const buttonStyle = {
   textTransform: "none",
-  textDecorationLine: "underline",
-  borderRadius: "12px",
+  borderRadius: "8px",
+  padding: "0.5rem 1.5rem", // Consistent padding
+  fontSize: "1rem", // Modern font size
 };
 
 interface EditModalRoleModelProps {
@@ -50,24 +52,20 @@ const EditModalRoleModel: React.FC<EditModalRoleModelProps> = ({
 
   return (
     <Modal open={open} onClose={onClose}>
-      <GradientBox sx={modalStyle}>
+      <Box sx={modalStyle}>
         {/* Header Section */}
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            mb: 2,
+            marginBottom: "1.5rem", // Adjust spacing
           }}
         >
           <IconButton edge="start" color="inherit" onClick={onClose}>
-            <ArrowBackIcon sx={{ color: "white" }} />
+            <CloseIcon sx={{ color: "gray" }} />
           </IconButton>
-          <Typography
-            variant="h5"
-            component="h2"
-            sx={{ color: "white", flex: 1 }}
-          >
+          <Typography variant="h5" component="h2" sx={{ color: "black" }}>
             Edit Role Models
           </Typography>
           <Box display="flex" justifyContent="center" alignItems="center">
@@ -77,11 +75,7 @@ const EditModalRoleModel: React.FC<EditModalRoleModelProps> = ({
               color="primary"
               onClick={openAddEditModal}
               startIcon={<AddIcon />}
-              sx={{
-                textTransform: "none",
-                textDecorationLine: "underline",
-                borderRadius: "12px",
-              }}
+              sx={buttonStyle}
             >
               Add New Role Model
             </Button>
@@ -91,12 +85,13 @@ const EditModalRoleModel: React.FC<EditModalRoleModelProps> = ({
             />
           </Box>
         </Box>
+
         {/* Role models data display */}
         <Box
           sx={{
             overflowY: "auto", // Enable vertical scrolling if content overflows
-            paddingRight: "16px",
-            marginBottom: "16px",
+            paddingRight: "1rem",
+            marginBottom: "1.5rem", // Adjust margin for clarity
             flexGrow: 1,
           }}
         >
@@ -105,6 +100,8 @@ const EditModalRoleModel: React.FC<EditModalRoleModelProps> = ({
               <EditModalRoleModels key={roleModel._id} {...roleModel} />
             ))}
         </Box>
+
+        {/* Footer Section */}
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Button
             variant="contained"
@@ -112,10 +109,10 @@ const EditModalRoleModel: React.FC<EditModalRoleModelProps> = ({
             onClick={onClose}
             sx={buttonStyle}
           >
-            Finish
+            Save
           </Button>
         </Box>
-      </GradientBox>
+      </Box>
     </Modal>
   );
 };
