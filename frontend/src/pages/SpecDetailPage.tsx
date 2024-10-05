@@ -31,9 +31,9 @@ const buttonStyle = {
   textTransform: "none",
   textDecorationLine: "underline",
   borderRadius: "12px",
-  fontSize: "1.25rem",
+  fontSize: "1rem",
   padding: "12px 24px",
-  height: "48px",
+  height: "40px",
 };
 
 const SpecDetailPage: React.FC = () => {
@@ -271,16 +271,10 @@ const SpecDetailPage: React.FC = () => {
               >
                 <Typography
                   variant="h4"
-                  gutterBottom
+                  component="h2"
                   sx={{
                     color: "#00467F",
                     fontWeight: "bold",
-                    marginBottom: "30px",
-                    fontSize: {
-                      xs: "1.5rem",
-                      sm: "2rem",
-                      md: "2.5rem",
-                    },
                   }}
                 >
                   Impact
@@ -404,43 +398,43 @@ const SpecDetailPage: React.FC = () => {
           fontWeight: "bold",
         }}
       >
-        <Typography
-          variant="h4"
-          gutterBottom
-          sx={{
-            color: "#00467F",
-            fontWeight: "bold",
-            fontSize: {
-              xs: "1.5rem",
-              sm: "2rem",
-              md: "2.5rem",
-            },
-          }}
+        <Box
+          display={"flex"}
+          flexDirection={"column"}
+          alignItems={"center"}
+          mt={1}
         >
-          Career Information
-        </Typography>
-        <Typography
-          variant="h4"
-          gutterBottom
-          sx={{
-            color: "#00467F",
-            fontSize: {
-              xs: "1rem",
-              sm: "1.5rem",
-              md: "2rem",
-            },
-          }}
-        >
-          Average {specialization.name.replace(regex, "")} Engineer Career
-          Outlook
-        </Typography>
-
+          <Typography
+            variant="h4"
+            component="h2"
+            sx={{ color: "#00467F", fontWeight: "bold", textAlign: "center" }}
+          >
+            Career Information
+          </Typography>
+          <Typography
+            variant="h6"
+            gutterBottom
+            sx={{
+              color: "black",
+              fontSize: {
+                xs: "1rem",
+                sm: "1.2rem",
+                md: "1.4rem",
+              },
+            }}
+          >
+            Average {specialization.name.replace(regex, "")} Engineer Career
+            Outlook
+          </Typography>
+        </Box>
         <Stack
           direction={{ xs: "column", sm: "row" }}
           spacing={{ xs: 1, sm: 2, md: 4 }}
           alignContent={"center"}
+          alignItems={"center"}
           sx={{
             justifyContent: "space-evenly",
+            marginTop: 2,
           }}
         >
           <Stack
@@ -456,8 +450,8 @@ const SpecDetailPage: React.FC = () => {
                 fontWeight: "bold",
                 color: "#00467F",
                 fontSize: {
-                  xs: "1.5rem",
-                  sm: "2rem",
+                  xs: "1.2rem",
+                  sm: "1.5rem",
                 },
               }}
             >
@@ -473,10 +467,9 @@ const SpecDetailPage: React.FC = () => {
             <Typography
               gutterBottom
               sx={{
-                color: "#00467F",
                 fontSize: {
-                  xs: "1.5rem",
-                  sm: "2rem",
+                  xs: "1.2rem",
+                  sm: "1.5rem",
                 },
               }}
             >
@@ -488,19 +481,6 @@ const SpecDetailPage: React.FC = () => {
               alignItems: "center",
             }}
           >
-            <Typography
-              gutterBottom
-              sx={{
-                fontWeight: "bold",
-                color: "#00467F",
-                fontSize: {
-                  xs: "1.5rem",
-                  sm: "2rem",
-                },
-              }}
-            >
-              Average Pay
-            </Typography>
             <Stack
               sx={{
                 alignItems: "center",
@@ -517,7 +497,6 @@ const SpecDetailPage: React.FC = () => {
               <Typography
                 sx={{
                   fontWeight: "bold",
-                  color: "#00467F",
                   fontSize: "1.5rem",
                 }}
               >
@@ -525,7 +504,6 @@ const SpecDetailPage: React.FC = () => {
               </Typography>
               <Typography
                 sx={{
-                  color: "#00467F",
                   fontSize: "1rem",
                 }}
               >
@@ -548,7 +526,6 @@ const SpecDetailPage: React.FC = () => {
               <Typography
                 sx={{
                   fontWeight: "bold",
-                  color: "#00467F",
                   fontSize: "1.5rem",
                 }}
               >
@@ -556,7 +533,6 @@ const SpecDetailPage: React.FC = () => {
               </Typography>
               <Typography
                 sx={{
-                  color: "#00467F",
                   fontSize: "1rem",
                 }}
               >
@@ -577,31 +553,21 @@ const SpecDetailPage: React.FC = () => {
         </Typography>
       </Box>
 
-      {/* Career Pathways Section */}
       <Box
         sx={{
           backgroundColor: "#00467F",
           color: "white",
-          padding: "20px",
+          py: 7,
           display: "flex",
           flexDirection: "column",
-          "& li": {
-            marginBottom: "10px",
-          },
           fontWeight: "bold",
+          alignItems: "center",
         }}
       >
         <Typography
           variant="h4"
-          gutterBottom
-          sx={{
-            fontWeight: "bold",
-            fontSize: {
-              xs: "1.5rem",
-              sm: "2rem",
-              md: "2.5rem",
-            },
-          }}
+          component="h2"
+          sx={{ fontWeight: "bold", textAlign: "center" }}
         >
           Career Pathways
         </Typography>
@@ -612,11 +578,12 @@ const SpecDetailPage: React.FC = () => {
           container
           spacing={2}
           sx={{
-            marginLeft: "10px",
             paddingTop: "20px",
+            justifyContent: "center", // Center items horizontally
+            textAlign: "center", // Center text in the grid items if needed
           }}
         >
-          <Grid item xs={12} md={6} sx={{ display: "flex" }}>
+          <Grid item xs={12} md={6}>
             <ul
               style={{
                 display: "grid",
@@ -639,22 +606,13 @@ const SpecDetailPage: React.FC = () => {
       </Box>
 
       {/* Role Models Section */}
-      <Box pt="1.25rem">
+      <Box pt="1.25rem" mt={1}>
         <Typography
           variant="h4"
-          fontWeight="bold"
-          textAlign="center"
-          gutterBottom
-          sx={{
-            fontSize: {
-              xs: "1.5rem",
-              sm: "2rem",
-              md: "2.5rem",
-            },
-          }}
+          component="h2"
+          sx={{ color: "#00467F", fontWeight: "bold", textAlign: "center" }}
         >
-          {specRoleModels.length > 0 &&
-            "See some inspiring role models who studied this specialization!"}
+          See some inspiring role models who studied this specialization!
         </Typography>
 
         {isAdminLoggedIn && (

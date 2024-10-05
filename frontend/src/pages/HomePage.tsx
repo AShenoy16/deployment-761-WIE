@@ -127,7 +127,7 @@ const HomePage: React.FC = () => {
         header={homeData.section1Header}
         text={formatTextWithParagraphs(homeData.section1Text)}
       />
-
+ 
       <SpecialisationSection
         header={homeData.section2Header}
         text={formatTextWithParagraphs(homeData.section2Text)}
