@@ -302,28 +302,53 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                   {heroImage ? `Uploaded Image:` : "Choose Image"}
                 </Button>
 
-                {/* Move the image display here, below the button */}
                 {(formData.heroImage || heroImage) && (
                   <Box
-                    component="img"
                     sx={{
+                      position: "relative", // Position relative to enable text overlay
                       maxHeight: { xs: 130, md: 190 },
-                      borderRadius: "3px",
-                      boxShadow: 2, // Add some shadow for depth
-                      marginTop: "10px", // Space between button and image
-                      transition: "transform 0.2s", // Smooth scaling transition
-                      "&:hover": {
-                        transform: "scale(1.05)", // Slightly enlarge image on hover
+                      marginTop: 1,
+                      overflow: "hidden",
+                      "&:hover .overlay": {
+                        opacity: 1,
+                      },
+                      "&:hover img": {
+                        filter: "brightness(50%)",
                       },
                     }}
-                    src={
-                      heroImage
-                        ? URL.createObjectURL(heroImage)
-                        : `${API_BASE_URL}${formData.heroImage}`
-                    } // Generate object URL for the image
                     onClick={() => heroImageInputRef.current?.click()}
-                    alt="Hero" // Add an alt attribute for accessibility
-                  />
+                  >
+                    {/* Image Element */}
+                    <Box
+                      component="img"
+                      sx={{
+                        maxHeight: { xs: 130, md: 190 },
+                      }}
+                      src={
+                        heroImage
+                          ? URL.createObjectURL(heroImage)
+                          : `${API_BASE_URL}${formData.heroImage}`
+                      }
+                      alt="Hero"
+                    />
+
+                    {/* Text Overlay */}
+                    <Box
+                      className="overlay"
+                      sx={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        color: "white",
+                        textAlign: "center",
+                        opacity: 0, // Hidden by default
+                        pointerEvents: "none",
+                      }}
+                    >
+                      Replace Image
+                    </Box>
+                  </Box>
                 )}
               </Stack>
 
