@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import HomePage from "../models/HomepageModel";
 import { MulterFile } from "../types/MulterFile";
+import fs from "fs";
+import path from "path";
 
 // Get the home page data
 export const getHomePage = async (req: Request, res: Response) => {
@@ -40,9 +42,23 @@ export const updateHomePage = async (req: Request, res: Response) => {
 
 		if (files?.heroImage) {
 			const heroImage = files["heroImage"][0];
+
+			// Remove the old image if it exists
+			if (homePage.heroImage) {
+				const oldImagePath = path.join(__dirname, "../../public", homePage.heroImage);
+				fs.unlink(oldImagePath, (err) => {
+					if (err) {
+						console.error("Error deleting old image:", err);
+					} else {
+						console.log("Old image deleted successfully");
+					}
+				});
+			}
+
+			// Update the homepage with the new image path
 			homePage.heroImage = `/uploads/${heroImage.filename}`;
 		}
-		console.log(homePage.heroImage);
+
 		await homePage.save();
 		return res.status(200).json(homePage);
 	} catch (error) {
