@@ -88,6 +88,11 @@ const HomePage: React.FC = () => {
   if (loading) return <CircularProgress />;
   if (!homeData) return <div>No data available</div>;
 
+  const buttonStyle = {
+    textTransform: "none",
+    borderRadius: "12px",
+  };
+
   return (
     <div>
       <HeroSection
@@ -100,8 +105,13 @@ const HomePage: React.FC = () => {
 
       {isAdminLoggedIn && (
         <Box display="flex" justifyContent="center" marginTop={4}>
-          <Button variant="contained" onClick={() => setOpenModal(true)}>
-            Edit Home Page
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={buttonStyle}
+            onClick={() => setOpenModal(true)}
+          >
+            Edit
           </Button>
         </Box>
       )}

@@ -10,7 +10,6 @@ import {
   Button,
 } from "@mui/material";
 import { IRoleModel } from "../../types/RoleModel";
-import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
