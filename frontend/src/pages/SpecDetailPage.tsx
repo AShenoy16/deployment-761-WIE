@@ -171,7 +171,7 @@ const SpecDetailPage: React.FC = () => {
           },
           display: "flex",
           alignItems: "center",
-          minHeight: "100vh",
+          minHeight: "65vh",
         }}
       >
         {/* Overlay */}

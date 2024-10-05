@@ -63,7 +63,7 @@ const SpecPage: React.FC = () => {
         component="h1"
         align="center"
         gutterBottom
-        paddingTop={2}
+        mt={4}
         paddingBottom={2}
         sx={{ color: "#00467F" }}
       >
