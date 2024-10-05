@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import HeroSection from "../components/homepage/HeroSection";
 import SpecialisationSection from "../components/homepage/SpecialisationSection";
@@ -8,6 +8,7 @@ import CardSection from "../components/homepage/CardSection";
 import EditHomepageModal from "../components/homepage/EditHomepageModal";
 import { useAuthStore } from "../stores/AuthenticationStore";
 import { useSnackbarStore } from "../stores/SnackBarStore";
+import { API_BASE_URL } from "../util/common";
 
 interface Card {
   title: string;
@@ -44,16 +45,45 @@ const HomePage: React.FC = () => {
     ));
   };
 
+  const handleSaveChanges = (updatedData: HomePageData) => {
+    setHomeData(updatedData); // Update state with the new data
+  };
+
   const handleSubmit = async (data: HomePageData) => {
+    const formData = new FormData();
+
+    // Append fields to formData, including the file
+    formData.append("heroTitle", data.heroTitle);
+    formData.append("heroSubtitle", data.heroSubtitle);
+
+    // If heroImage is a File, append it to FormData
+    if (data.heroImage) {
+      formData.append("heroImage", data.heroImage); // heroImage is a file
+    }
+
+    formData.append("section1Header", data.section1Header);
+    formData.append("section1Text", data.section1Text);
+    formData.append("section2Header", data.section2Header);
+    formData.append("section2Text", data.section2Text);
+
+    // Convert additionalResources to JSON and append it
+    formData.append(
+      "additionalResources",
+      JSON.stringify(data.additionalResources)
+    );
+
     try {
-      await fetch(`${API_URL}/homepage`, {
+      const response = await fetch(`${API_URL}/homepage`, {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        // Don't set Content-Type manually when using FormData
+        body: formData,
       });
-      setHomeData(data);
+
+      if (!response.ok) {
+        throw new Error("Error updating homepage data");
+      }
+
+      setHomeData(data); // Update state with the new data
       setOpenModal(false);
       setMessage("Changes saved successfully!");
       setIsOpen(true);
@@ -93,7 +123,7 @@ const HomePage: React.FC = () => {
       <HeroSection
         title={homeData.heroTitle}
         subtitle={homeData.heroSubtitle}
-        image={homeData.heroImage}
+        image={`${API_BASE_URL}${homeData.heroImage}`}
       />
 
       <Box sx={{ backgroundColor: "#009AC7", height: "20px" }} />
@@ -110,7 +140,7 @@ const HomePage: React.FC = () => {
         open={openModal}
         handleClose={() => setOpenModal(false)}
         initialData={homeData}
-        onSubmit={handleSubmit}
+        onSubmit={handleSaveChanges}
       />
 
       <ImpactSection

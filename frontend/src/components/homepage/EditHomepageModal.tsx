@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Modal,
   Box,
@@ -14,6 +14,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import placeholder from "../../assets/placeholder.jpg";
 import { useSnackbarStore } from "../../stores/SnackBarStore";
+import { API_BASE_URL } from "../../util/common";
+import axios from "axios";
 
 interface Card {
   title: string;
@@ -52,6 +54,8 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
   const [canSubmit, setCanSubmit] = useState(true);
   const { setMessage, setIsOpen } = useSnackbarStore();
+  const [heroImage, setHeroImage] = useState<File | null>(null);
+  const heroImageInputRef = useRef<HTMLInputElement | null>(null);
 
   // Update formData when the modal opens
   useEffect(() => {
@@ -129,7 +133,14 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
     }
   };
 
-  const handleSubmit = () => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (formData) {
+      const file = e.target.files?.[0] || null;
+      setHeroImage(file);
+    }
+  };
+
+  const handleSubmit = async () => {
     if (!canSubmit || !formData) return;
 
     const {
@@ -162,8 +173,45 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
       image: card.image || placeholder,
     }));
 
-    onSubmit({ ...formData, additionalResources: updatedResources });
-    setMessage("Changes saved successfully!");
+    const formDataBack = new FormData();
+
+    // Append fields to formData, including the file
+    formDataBack.append("heroTitle", heroTitle);
+    formDataBack.append("heroSubtitle", heroSubtitle);
+
+    // If heroImage is a File, append it to FormData
+    if (heroImage) {
+      formDataBack.append("heroImage", heroImage); // heroImage is a file
+    }
+
+    formDataBack.append("section1Header", section1Header);
+    formDataBack.append("section1Text", section1Text);
+    formDataBack.append("section2Header", section2Header);
+    formDataBack.append("section2Text", section2Text);
+
+    // Convert additionalResources to JSON and append it
+    formDataBack.append(
+      "additionalResources",
+      JSON.stringify(updatedResources)
+    );
+
+    try {
+      const response = await axios.patch(
+        `${API_BASE_URL}/homepage`,
+        formDataBack,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      onSubmit(response.data);
+      setMessage("Changes saved successfully!");
+    } catch (error) {
+      console.error("Error updating homepage data:", error);
+      setMessage("Error updating homepage data.");
+    }
     setIsOpen(true);
     handleClose();
   };
@@ -230,14 +278,37 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
                 error={!!errors.heroSubtitle}
                 helperText={errors.heroSubtitle ? "This field is required" : ""}
               />
-              <TextField
+              {/* <TextField
                 name="heroImage"
                 label="Hero Image URL"
                 value={formData.heroImage}
                 onChange={handleInputChange}
                 fullWidth
                 margin="normal"
+              /> */}
+              <input
+                type="file"
+                accept="image/*"
+                ref={heroImageInputRef}
+                style={{ display: "none" }}
+                onChange={(e) => handleImageChange(e)}
               />
+              <Button
+                variant="contained"
+                sx={{ marginBottom: "10px" }}
+                onClick={() => heroImageInputRef.current?.click()}
+              >
+                {heroImage ? `Uploaded Image:` : "Choose hero Image"}
+              </Button>
+              {heroImage && (
+                <Box
+                  component="img"
+                  sx={{ maxHeight: { xs: 130, md: 190 }, borderRadius: "3px" }}
+                  src={URL.createObjectURL(heroImage)} // Generate object URL for the image
+                  alt="Hero" // Add an alt attribute for accessibility
+                />
+              )}
+
               <Typography variant="h6" component="h3" gutterBottom>
                 Section One
               </Typography>
