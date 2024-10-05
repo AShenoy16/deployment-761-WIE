@@ -1,4 +1,4 @@
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Button,
   Modal,
@@ -14,27 +14,12 @@ import {
   Stack,
 } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
-import GradientBox from "../GradientBox";
 import axios from "axios";
 import { Specialization, Testimonial } from "../../types/Specialization";
 import useSnackBar from "../../hooks/useSnackBar";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../util/common";
-
-const modalStyle = {
-  position: "absolute" as const,
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "85%",
-  maxWidth: "800px",
-  maxHeight: "90vh",
-  boxShadow: 24,
-  p: 4,
-  display: "flex",
-  flexDirection: "column",
-  borderRadius: 5,
-};
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const buttonStyle = {
   textTransform: "none",
@@ -131,6 +116,26 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setSource(specInfoResult.source);
     }
   };
+
+  // Define modal styles
+  const modalStyle = {
+    position: "absolute" as const,
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "85%",
+    maxWidth: "800px",
+    maxHeight: "90vh",
+    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+    backgroundColor: "white",
+    padding: "2rem",
+    display: "flex",
+    flexDirection: "column",
+    borderRadius: "12px", // Softer border radius
+    overflow: "hidden", // Handle overflow
+  };
+
+  const lightGrey = "#f5f5f5";
 
   const helperSalaryText = (salary: number) => {
     if (isNaN(salary)) {
@@ -231,14 +236,14 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       !leftDetail.trim() ||
       !rightDetail.trim() ||
       isMedianSalaryInvalid ||
-      isExperiencedSalaryInvalid || 
+      isExperiencedSalaryInvalid ||
       isSourceInvalid
     ) {
       showSnackbar("Please fill out all required fields.", false);
       return;
     }
 
-    if(medianSalary >= experiencedSalary){
+    if (medianSalary >= experiencedSalary) {
       showSnackbar("Median Salary must be less than experienced.", false);
       return;
     }
@@ -316,7 +321,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
         onClose();
       }}
     >
-      <GradientBox sx={modalStyle}>
+      <Box sx={modalStyle}>
         <Box
           sx={{
             display: "flex",
@@ -325,6 +330,9 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
             mb: 2,
           }}
         >
+          <Typography variant="h5" component="h2">
+            Edit Specialisation Info
+          </Typography>
           <IconButton
             role="back-btn"
             edge="start"
@@ -334,15 +342,8 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
               onClose();
             }}
           >
-            <ArrowBackIcon sx={{ color: "white" }} />
+            <CloseIcon />
           </IconButton>
-          <Typography
-            variant="h5"
-            component="h2"
-            sx={{ color: "white", flex: 1 }}
-          >
-            Edit Spec Info
-          </Typography>
         </Box>
 
         <Stack
@@ -354,7 +355,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
             gap: 3,
           }}
         >
-          <Box sx={{ background: "white", borderRadius: 2, padding: 2 }}>
+          <Box sx={{ background: lightGrey, borderRadius: 2, padding: 2 }}>
             <Typography variant="h5" gutterBottom>
               Landing Space
             </Typography>
@@ -394,7 +395,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
               required
             />
           </Box>
-          <Box sx={{ background: "white", borderRadius: 2, padding: 2 }}>
+          <Box sx={{ background: lightGrey, borderRadius: 2, padding: 2 }}>
             <Typography variant="h5" gutterBottom>
               Impact Details
             </Typography>
@@ -485,7 +486,7 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
             </Button>
           </Box>
 
-          <Box sx={{ background: "white", borderRadius: 2, padding: 2 }}>
+          <Box sx={{ background: lightGrey, borderRadius: 2, padding: 2 }}>
             <Typography variant="h5" gutterBottom>
               Career Details
             </Typography>
@@ -606,20 +607,19 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
                     },
                   }}
                 />
-                <Button
-                  variant="contained"
-                  color="secondary"
+                <IconButton
+                  sx={{ color: "#b92d19" }}
                   onClick={() => handleRemoveCareerPathway(index)}
                 >
-                  Remove
-                </Button>
+                  <DeleteIcon />
+                </IconButton>
               </Box>
             ))}
             <Button onClick={handleAddCareerPathway} variant="contained">
               Add Career Pathway
             </Button>
           </Box>
-          <Box sx={{ background: "white", borderRadius: 2, padding: 2 }}>
+          <Box sx={{ background: lightGrey, borderRadius: 2, padding: 2 }}>
             <Typography variant="h5" sx={{ mb: 5 }}>
               Testimonials <span style={{ color: "red" }}>*</span>
             </Typography>
@@ -671,13 +671,12 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
                     },
                   }}
                 />
-                <Button
-                  variant="contained"
-                  color="secondary"
+                <IconButton
+                  sx={{ color: "#b92d19" }}
                   onClick={() => handleRemoveTestimonial(index)}
                 >
-                  Remove
-                </Button>
+                  <DeleteIcon />
+                </IconButton>
               </Box>
             ))}
             <Button onClick={handleAddTestimonial} variant="contained">
@@ -692,12 +691,11 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
             variant="contained"
             color="primary"
             onClick={handleSaveChanges}
-            sx={buttonStyle}
           >
             Save Changes
           </Button>
         </Box>
-      </GradientBox>
+      </Box>
     </Modal>
   );
 };

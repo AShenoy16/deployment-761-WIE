@@ -1,4 +1,3 @@
-// RoleModelCard.tsx
 import React from "react";
 import {
   Card,
@@ -10,7 +9,6 @@ import {
   useTheme,
 } from "@mui/material";
 import { IRoleModel } from "../../types/RoleModel";
-import GradientBox from "../GradientBox";
 
 interface RoleModelCardProps {
   model: IRoleModel;
@@ -22,59 +20,70 @@ const RoleModelCard: React.FC<RoleModelCardProps> = ({ model, onClick }) => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <GradientBox sx={{ borderRadius: 4 }}>
-      <Card
+    <Card
+      sx={{
+        display: "flex",
+        flexDirection: isSmallScreen ? "column" : "row",
+        alignItems: "center",
+        borderRadius: 4,
+        backgroundColor: "white", // White background for a clean look
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)", // Light shadow for modern feel
+        transition: "0.3s", // Smooth transition for hover effects
+        "&:hover": {
+          boxShadow: "0px 6px 16px rgba(0, 0, 0, 0.15)", // Elevate shadow on hover
+        },
+      }}
+    >
+      <CardActionArea
         sx={{
           display: "flex",
-          borderRadius: 4,
-          alignItems: "center",
           flexDirection: isSmallScreen ? "column" : "row",
-          background: "transparent",
-          color: "white", // Ensure text is readable over the gradient
+          alignItems: "center",
+          padding: 2, // Add padding for spacing
         }}
+        onClick={() => onClick(model)}
       >
-        <CardActionArea
+        {/* Use photoUrl for the image */}
+        <CardMedia
+          component="img"
           sx={{
-            display: "flex",
-            flexDirection: isSmallScreen ? "column" : "row",
-            alignItems: "center",
+            width: 150,
+            height: 150,
+            borderRadius: "50%",
+            objectFit: "cover",
+            marginRight: isSmallScreen ? 0 : 2,
+            marginBottom: isSmallScreen ? 2 : 0,
           }}
-          onClick={() => onClick(model)}
-        >
-          {/* Updated to use photoUrl */}
-          <CardMedia
-            component="img"
-            sx={{
-              width: 150,
-              height: 150,
-              borderRadius: "50%",
-              objectFit: "cover",
-              margin: 2,
-            }}
-            image={model.photoUrl}
-            alt={model.name}
-          />
+          image={model.photoUrl}
+          alt={model.name}
+        />
 
-          <CardContent
-            sx={{
-              flex: 1,
-              textAlign: isSmallScreen ? "center" : "left",
-              textWrap: "wrap",
-            }}
+        <CardContent
+          sx={{
+            flex: 1,
+            textAlign: isSmallScreen ? "center" : "left",
+          }}
+        >
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ color: theme.palette.primary.main }} // Purple color for the name
           >
-            <Typography variant="h6" component="div" sx={{ color: "white" }}>
-              {model.name}
-            </Typography>
-            <Typography variant="body2" sx={{ color: "white" }}>
-              {model.description}
-            </Typography>
-            <Typography variant="subtitle1" sx={{ color: "white" }}>
-              {model.title}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    </GradientBox>
+            {model.name}
+          </Typography>
+          <Typography variant="body2" sx={{ color: "black" }}>
+            {" "}
+            {/* Black text for description */}
+            {model.description}
+          </Typography>
+          <Typography variant="subtitle1" sx={{ color: "black", marginTop: 1 }}>
+            {" "}
+            {/* Black text for title */}
+            {model.title}
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
   );
 };
 

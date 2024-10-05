@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import uoaLogo from "../assets/uoa-logo.png";
+import wieLogo from "../assets/whiteWieLogo.svg";
 import {
   AppBar,
   Toolbar,
@@ -60,7 +61,7 @@ const Navbar: React.FC = () => {
             display="flex"
             alignItems="center"
             component="img"
-            src={uoaLogo}
+            src={wieLogo}
             alt="UoA logo"
             sx={{
               height: {

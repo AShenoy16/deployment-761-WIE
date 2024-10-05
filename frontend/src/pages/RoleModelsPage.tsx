@@ -60,7 +60,7 @@ const RoleModelsPage: React.FC = () => {
         marginY={4}
         sx={{ color: "#00467F" }}
       >
-        Discover Women Leading in Engineering
+        Discover Professionals Leading in their Fields
       </Typography>
 
       {/* Edit Button */}

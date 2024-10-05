@@ -10,7 +10,7 @@ import {
   Button,
 } from "@mui/material";
 import { IRoleModel } from "../../types/RoleModel";
-import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { useDeleteRoleModel } from "../../hooks/useRoleModel";
@@ -45,24 +45,28 @@ const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        marginBottom: 5,
-        bgcolor: "secondary.main",
-        padding: 1,
-        borderRadius: 5,
+        marginBottom: 3,
+        backgroundColor: "#f5f5f5", // Light gray background
+        padding: "16px", // Add consistent padding
+        borderRadius: "8px", // Softer border radius for a modern feel
+        boxShadow: "0 1px 4px rgba(0, 0, 0, 0.1)", // Subtle shadow for elevation
       }}
     >
-      {/* First Row Layer */}
+      {/* First Row - Action Icons */}
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          justifyContent: "flex-end",
+          marginBottom: "8px",
         }}
       >
-        <IconButton sx={{ color: "red" }} onClick={handleClickDeleteRoleModel}>
-          <CloseIcon />
+        <IconButton
+          sx={{ color: "#b92d19" }}
+          onClick={handleClickDeleteRoleModel}
+        >
+          <DeleteIcon />
         </IconButton>
-        <IconButton onClick={openAddEditModal} sx={{ color: "gray" }}>
+        <IconButton onClick={openAddEditModal} sx={{ color: "#6e6e6e" }}>
           <EditNoteIcon />
         </IconButton>
         <AddUpdateRoleModelModal
@@ -71,84 +75,81 @@ const EditModalRoleModels: React.FC<IRoleModel> = (roleModel: IRoleModel) => {
           roleModelToEdit={roleModel}
         />
       </Box>
-      {/* Dialog for deleting role model */}
+
+      {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
         <DialogTitle>{`Delete role model: ${roleModel.name}?`}</DialogTitle>
-        <DialogContent>This cannot be undone</DialogContent>
+        <DialogContent>This action cannot be undone.</DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDeleteDialog}>Cancel</Button>
-          <Button onClick={deleteRoleModel}>Delete</Button>
+          <Button onClick={deleteRoleModel} color="error">
+            Delete
+          </Button>
         </DialogActions>
       </Dialog>
 
-      {/* Second Row Layer */}
+      {/* Second Row - Content Section */}
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
-          padding: 3,
-          paddingTop: 0,
+          paddingX: 2,
         }}
       >
-        {/* Left Column */}
+        {/* Left Column - Avatar */}
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
+            marginRight: "16px",
           }}
         >
           <Avatar
             alt={roleModel.name}
             src={roleModel.photoUrl}
-            sx={{ width: 150, height: 150 }}
+            sx={{ width: 120, height: 120 }} // Slightly smaller avatar for modern look
           />
         </Box>
 
-        {/* Right Column */}
+        {/* Right Column - Details */}
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "start",
             flex: 1,
-            ml: 7,
-            color: "white",
+            color: "#333", // Darker text color for readability
           }}
         >
-          <Typography
-            variant="body1"
-            marginBottom="5px"
-          >{`Name: ${roleModel.name}`}</Typography>
-          <Typography
-            variant="body1"
-            marginBottom="5px"
-          >{`Title: ${roleModel.title}`}</Typography>
-          <Typography
-            variant="body1"
-            marginBottom="5px"
-          >{`Specialisation: ${roleModel.specName}`}</Typography>
-          <Typography
-            variant="body1"
-            marginBottom="5px"
-          >{`Bio: ${roleModel.bio}`}</Typography>
-          <Typography
-            variant="body1"
-            marginBottom="5px"
-          >{`Description: ${roleModel.description}`}</Typography>
+          <Typography variant="h6" sx={{ marginBottom: "8px" }}>
+            {roleModel.name}
+          </Typography>
+          <Typography variant="body2" sx={{ marginBottom: "8px" }}>
+            <strong>Title:</strong> {roleModel.title}
+          </Typography>
+          <Typography variant="body2" sx={{ marginBottom: "8px" }}>
+            <strong>Specialization:</strong> {roleModel.specName}
+          </Typography>
+          <Typography variant="body2" sx={{ marginBottom: "8px" }}>
+            <strong>Bio:</strong> {roleModel.bio}
+          </Typography>
+          <Typography variant="body2" sx={{ marginBottom: "8px" }}>
+            <strong>Description:</strong> {roleModel.description}
+          </Typography>
 
           {/* Social Media Links */}
-          <Box display="flex" alignItems="center" marginLeft={-1}>
-            <IconButton
-              component="a"
-              href={roleModel.socialMediaLinks?.linkedin}
-              target="_blank"
-              sx={{ color: "white" }}
+          {roleModel.socialMediaLinks?.linkedin && (
+            <Box
+              sx={{ display: "flex", alignItems: "center", marginTop: "8px" }}
             >
-              <LinkedInIcon />
-            </IconButton>
-          </Box>
+              <IconButton
+                component="a"
+                href={roleModel.socialMediaLinks.linkedin}
+                target="_blank"
+                sx={{ color: "#0072b1" }} // LinkedIn blue color for brand consistency
+              >
+                <LinkedInIcon />
+              </IconButton>
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>

@@ -190,7 +190,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
             alignItems: "center",
           }}
         >
-          <Typography variant="h6" component="h2">
+          <Typography variant="h5" component="h2">
             Edit Home Page
           </Typography>
           <IconButton onClick={handleClose} aria-label="close">
