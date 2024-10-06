@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import HomePageCard from "./HomePageCard";
+import AnimatedContainer from "../AnimatedContainer";
 
 interface Card {
   title: string;
@@ -35,54 +36,56 @@ const CardSection: React.FC<CardSectionProps> = ({ resources }) => {
   }, [resources]);
 
   return (
-    <Box
-      sx={{
-        padding: "2em",
-        color: "#00467F",
-        width: "100%", // Ensure it takes full width of container
-      }}
-    >
-      <Typography
-        variant="h4"
-        component="h2"
+    <AnimatedContainer>
+      <Box
         sx={{
-          fontWeight: "bold",
-          textAlign: "center",
+          padding: "2em",
+          color: "#00467F",
+          width: "100%", // Ensure it takes full width of container
         }}
       >
-        Additional Resources
-      </Typography>
-      <Stack
-        role="list"
-        ref={stackRef}
-        p="1.25rem"
-        direction="row"
-        gap={4}
-        overflow="auto"
-        justifyContent={isOverflowing ? "flex-start" : "center"} // Center if no overflow
-        sx={{
-          scrollBehavior: "smooth",
-          "@media (pointer: coarse)": {
-            scrollSnapType: "x mandatory", // Enable scroll snapping for touch devices
-            "& > *": {
-              scrollSnapAlign: "center",
-              scrollSnapStop: "always",
+        <Typography
+          variant="h4"
+          component="h2"
+          sx={{
+            fontWeight: "bold",
+            textAlign: "center",
+          }}
+        >
+          Additional Resources
+        </Typography>
+        <Stack
+          role="list"
+          ref={stackRef}
+          p="1.25rem"
+          direction="row"
+          gap={4}
+          overflow="auto"
+          justifyContent={isOverflowing ? "flex-start" : "center"} // Center if no overflow
+          sx={{
+            scrollBehavior: "smooth",
+            "@media (pointer: coarse)": {
+              scrollSnapType: "x mandatory", // Enable scroll snapping for touch devices
+              "& > *": {
+                scrollSnapAlign: "center",
+                scrollSnapStop: "always",
+              },
             },
-          },
-        }}
-      >
-        {resources.map((card, index) => (
-          <Box key={index} flexShrink={0}>
-            <HomePageCard
-              title={card.title}
-              description={card.description}
-              image={card.image}
-              link={card.link}
-            />
-          </Box>
-        ))}
-      </Stack>
-    </Box>
+          }}
+        >
+          {resources.map((card, index) => (
+            <Box key={index} flexShrink={0}>
+              <HomePageCard
+                title={card.title}
+                description={card.description}
+                image={card.image}
+                link={card.link}
+              />
+            </Box>
+          ))}
+        </Stack>
+      </Box>
+    </AnimatedContainer>
   );
 };
 

@@ -9,6 +9,7 @@ import SpecialisationSection from "../components/homepage/SpecialisationSection"
 import { useAuthStore } from "../stores/AuthenticationStore";
 import { useSnackbarStore } from "../stores/SnackBarStore";
 import { API_BASE_URL } from "../util/common";
+import AnimatedContainer from "../components/AnimatedContainer";
 
 interface Card {
   title: string;
@@ -78,7 +79,7 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div>
+    <Box>
       <HeroSection
         title={homeData.heroTitle}
         subtitle={homeData.heroSubtitle}
@@ -111,12 +112,11 @@ const HomePage: React.FC = () => {
         header={homeData.section1Header}
         text={formatTextWithParagraphs(homeData.section1Text)}
       />
- 
+
       <SpecialisationSection
         header={homeData.section2Header}
         text={formatTextWithParagraphs(homeData.section2Text)}
       />
-
       <Box sx={{ backgroundColor: "#009AC7", height: "20px" }} />
 
       <CardSection resources={homeData.additionalResources} />
@@ -130,7 +130,7 @@ const HomePage: React.FC = () => {
           {message}
         </Alert>
       </Snackbar>
-    </div>
+    </Box>
   );
 };
 
