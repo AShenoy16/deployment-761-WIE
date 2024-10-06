@@ -25,7 +25,7 @@ const mockSpecInfoResult = {
   jobAvailability: "High",
   medianSalary: 80000,
   experiencedSalary: 120000,
-  source: "careers.govt.nz and StatsNZ"
+  source: "careers.govt.nz and StatsNZ",
 };
 
 // Mock API request
@@ -50,7 +50,7 @@ describe("EditModalSpecInfo", () => {
     );
 
     // Check for modal title and inputs
-    expect(screen.getByText("Edit Spec Info")).toBeInTheDocument();
+    expect(screen.getByText("Edit Specialisation Info")).toBeInTheDocument();
     expect(
       screen.getByDisplayValue("Software Engineering")
     ).toBeInTheDocument();
@@ -67,7 +67,9 @@ describe("EditModalSpecInfo", () => {
     expect(screen.getByDisplayValue("Jane")).toBeInTheDocument();
     expect(screen.getByDisplayValue("80000")).toBeInTheDocument();
     expect(screen.getByDisplayValue("120000")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("careers.govt.nz and StatsNZ")).toBeInTheDocument();
+    expect(
+      screen.getByDisplayValue("careers.govt.nz and StatsNZ")
+    ).toBeInTheDocument();
   });
 
   it("updates input fields correctly when changed", () => {

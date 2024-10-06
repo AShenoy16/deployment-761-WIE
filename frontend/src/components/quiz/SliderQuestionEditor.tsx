@@ -9,6 +9,7 @@ import {
   IconButton,
   Modal,
   Autocomplete,
+  Paper,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -183,7 +184,7 @@ const SpecialisationOption: React.FC<SpecialisationOptionProps> = ({
 
   return (
     <>
-      <Stack direction="row" alignItems="center" spacing={3} width="90%">
+      <Stack direction="row" alignItems="center" spacing={3}>
         <Stack
           direction="row"
           alignItems="center"
@@ -291,29 +292,36 @@ const SliderQuestionEditor: React.FC = () => {
           width: "100%",
         }}
       />
+      <Paper sx={{ padding: 2, borderRadius: "1rem", width: "100%" }}>
+        <Stack direction="row" justifyContent="space-between">
+          <Button
+            startIcon={<AddIcon />}
+            variant="outlined"
+            onClick={handleAddSpec}
+          >
+            Spec
+          </Button>
 
-      <Stack direction="row" width="90%" justifyContent="space-between">
-        <Button
-          startIcon={<AddIcon />}
-          variant="outlined"
-          onClick={handleAddSpec}
-        >
-          Spec
-        </Button>
+          <Typography>Weighting</Typography>
+        </Stack>
 
-        <Typography>Weighting</Typography>
-      </Stack>
-
-      {/* Render specialisation options or show no specs error */}
-      {specOptions.length > 0 ? (
-        specOptions.map(([spec, weighting], index) => (
-          <SpecialisationOption key={index} spec={spec} weighting={weighting} />
-        ))
-      ) : (
-        <Typography textAlign="center" color="error">
-          No specs available! Please add at least one spec.
-        </Typography>
-      )}
+        {/* Render specialisation options or show no specs error */}
+        <Stack spacing={2} mt={2}>
+          {specOptions.length > 0 ? (
+            specOptions.map(([spec, weighting], index) => (
+              <SpecialisationOption
+                key={index}
+                spec={spec}
+                weighting={weighting}
+              />
+            ))
+          ) : (
+            <Typography textAlign="center" color="error">
+              No specs available! Please add at least one spec.
+            </Typography>
+          )}
+        </Stack>
+      </Paper>
     </Stack>
   );
 };
