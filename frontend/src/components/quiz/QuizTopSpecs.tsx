@@ -66,11 +66,11 @@ const QuizTopSpecs: React.FC<QuizTopSpecsProps> = ({ quizResults }) => {
       >
         {podiumOrder.slice(0, 3).map((spec, index) => {
           const podiumStyle = getPodiumStyles(index, isSmallScreen); // Get the podium style based on index and screen size
-
+          const delayOrder = [0.75, 1.25, 0.5];
           return (
             <AnimatedContainer
               key={index}
-              delay={0.5 * index}
+              delay={delayOrder[index]}
               animationType="fade"
             >
               <Stack key={index} alignItems="center">
