@@ -303,24 +303,6 @@ const SpecDetailPage: React.FC = () => {
             </Card>
           </Grid>
 
-          {/* Left Image */}
-          <Grid item xs={12} md={6}>
-            <Box
-              sx={{
-                height: "100%",
-                backgroundImage: `url(${leftImageUrl})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            />
-          </Grid>
-        </Grid>
-
-        {/* Right Detail */}
-        <Grid container>
           {/* Right Image */}
           <Grid
             item
@@ -337,6 +319,23 @@ const SpecDetailPage: React.FC = () => {
               sx={{
                 height: "100%",
                 backgroundImage: `url(${rightImageUrl})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            />
+          </Grid>
+        </Grid>
+
+        {/* Right Detail */}
+        <Grid container>
+          <Grid item xs={12} md={6}>
+            <Box
+              sx={{
+                height: "100%",
+                backgroundImage: `url(${leftImageUrl})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 display: "flex",
