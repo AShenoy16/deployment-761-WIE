@@ -1,4 +1,4 @@
-import { Alert, Box, Button, CircularProgress, Snackbar } from "@mui/material";
+import { Alert, Box, Button, Snackbar } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import CardSection from "../components/homepage/CardSection";
@@ -6,11 +6,10 @@ import EditHomepageModal from "../components/homepage/EditHomepageModal";
 import HeroSection from "../components/homepage/HeroSection";
 import ImpactSection from "../components/homepage/ImpactSection";
 import SpecialisationSection from "../components/homepage/SpecialisationSection";
+import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 import { useAuthStore } from "../stores/AuthenticationStore";
 import { useSnackbarStore } from "../stores/SnackBarStore";
 import { API_BASE_URL } from "../util/common";
-import AnimatedContainer from "../components/AnimatedContainer";
-import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 
 export interface HomePageCard {
   title: string;
