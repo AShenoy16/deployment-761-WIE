@@ -5,6 +5,7 @@ import EditHighschoolModal from "../components/highschool_requirements/EditHighs
 import { useState } from "react";
 import { useHighschoolRequirements } from "../hooks/useHighschoolRequirements";
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
+import AnimatedContainer from "../components/AnimatedContainer";
 
 const buttonStyle = {
   textTransform: "none",
@@ -28,66 +29,65 @@ const HighschoolRequirementsPage = () => {
   }
 
   return (
-    <Container>
-      <Typography
-        variant="h4"
-        component="h1"
-        gutterBottom
-        marginY={4}
-        fontWeight="bold"
-        sx={{ color: "#00467F" }}
-      >
-        Highschool Entry Requirements
-      </Typography>
-      <Typography
-        variant="h5"
-        component="h1"
-        mb={4}
-        gutterBottom
-        fontWeight="bold"
-        sx={{ color: "#00467F" }}
-      >
-        You are guaranteed entry to the Engineering programme if you meet these
-        requirements:
-      </Typography>
-
-      {/* Edit Button */}
-      {isAdminLoggedIn && (
-        <Box
-          sx={{ display: "flex", justifyContent: "center", marginBottom: 3 }}
+    <AnimatedContainer delay={0.15}>
+      <Container>
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          marginY={4}
+          fontWeight="bold"
+          sx={{ color: "#00467F" }}
         >
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={buttonStyle}
-            onClick={() => setOpen(true)}
-          >
-            Edit
-          </Button>
-        </Box>
-      )}
+          Highschool Entry Requirements
+        </Typography>
+        <Typography
+          variant="h5"
+          mb={4}
+          gutterBottom
+          fontWeight="bold"
+          sx={{ color: "#00467F" }}
+        >
+          You are guaranteed entry to the Engineering programme if you meet
+          these requirements:
+        </Typography>
 
-      <EditHighschoolModal
-        highschoolRequirementsData={highschoolRequirements}
-        open={open}
-        onClose={() => setOpen(false)}
-      />
+        {/* Edit Button */}
+        {isAdminLoggedIn && (
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={buttonStyle}
+              onClick={() => setOpen(true)}
+            >
+              Edit
+            </Button>
+          </Box>
+        )}
 
-      <Grid container spacing={5}>
-        {highschoolRequirements.map((req, idx) => (
-          <Grid item xs={12} sm={6} key={idx}>
-            <RequirementsCard {...req} />
-          </Grid>
-        ))}
+        <EditHighschoolModal
+          highschoolRequirementsData={highschoolRequirements}
+          open={open}
+          onClose={() => setOpen(false)}
+        />
 
-        <Grid item xs={12} sm={6}>
-          <Typography
-            color="#00467F"
-            fontStyle="italic"
-            fontWeight="bold"
-            textAlign="center"
-          >
-            {`If your rank score is slightly lower than the guaranteed score, we
+        <Grid container spacing={4} mt={1}>
+          {highschoolRequirements.map((req, idx) => (
+            <Grid item xs={12} sm={6} key={idx}>
+              <RequirementsCard {...req} />
+            </Grid>
+          ))}
+
+          <Grid item xs={12} sm={6}>
+            <Typography
+              color="#00467F"
+              fontStyle="italic"
+              fontWeight="bold"
+              textAlign="center"
+              variant="subtitle2"
+            >
+              {`If your rank score is slightly lower than the guaranteed score, we
         encourage you to still apply. We will consider your application if
         places are available. If you don't meet the requirement. For Cambridge
         International students, AS Mathematics and Physics may be accepted based
@@ -95,10 +95,11 @@ const HighschoolRequirementsPage = () => {
         Mathematics “Analysis and Approaches” may be accepted based on the level
         of grade achieved. SL Mathematics “ Applications and interpretation”
         will not be accepted.`}
-          </Typography>
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </AnimatedContainer>
   );
 };
 

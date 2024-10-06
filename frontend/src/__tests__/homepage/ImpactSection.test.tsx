@@ -1,6 +1,12 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import ImpactSection from "../../components/homepage/ImpactSection";
+import { mockIntersectionObserver } from "../../util/mockIntersectionObserver";
+
+// Mock IntersectionObserver before all tests
+beforeAll(() => {
+  mockIntersectionObserver();
+});
 
 describe("ImpactSection", () => {
   const mockProps = {

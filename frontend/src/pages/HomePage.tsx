@@ -9,6 +9,8 @@ import SpecialisationSection from "../components/homepage/SpecialisationSection"
 import { useAuthStore } from "../stores/AuthenticationStore";
 import { useSnackbarStore } from "../stores/SnackBarStore";
 import { API_BASE_URL } from "../util/common";
+import AnimatedContainer from "../components/AnimatedContainer";
+import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 
 interface Card {
   title: string;
@@ -69,7 +71,7 @@ const HomePage: React.FC = () => {
     fetchData();
   }, [API_URL]);
 
-  if (loading) return <CircularProgress />;
+  if (loading) return <LoadingSpinnerScreen />;
   if (!homeData) return <div>No data available</div>;
 
   const buttonStyle = {
@@ -78,7 +80,7 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div>
+    <Box>
       <HeroSection
         title={homeData.heroTitle}
         subtitle={homeData.heroSubtitle}
@@ -111,12 +113,11 @@ const HomePage: React.FC = () => {
         header={homeData.section1Header}
         text={formatTextWithParagraphs(homeData.section1Text)}
       />
- 
+
       <SpecialisationSection
         header={homeData.section2Header}
         text={formatTextWithParagraphs(homeData.section2Text)}
       />
-
       <Box sx={{ backgroundColor: "#009AC7", height: "20px" }} />
 
       <CardSection resources={homeData.additionalResources} />
@@ -130,7 +131,7 @@ const HomePage: React.FC = () => {
           {message}
         </Alert>
       </Snackbar>
-    </div>
+    </Box>
   );
 };
 
