@@ -9,6 +9,7 @@ import { useAuthStore } from "../stores/AuthenticationStore";
 import Snackbar from "@mui/material/Snackbar";
 import { useSnackbarStore } from "../stores/SnackBarStore";
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
+import AnimatedCard from "../components/AnimatedCard";
 
 const buttonStyle = {
   textTransform: "none",
@@ -88,12 +89,14 @@ const RoleModelsPage: React.FC = () => {
 
       {/* Column layout for the role model cards */}
       <Box display="flex" flexDirection="column" gap={3} marginBottom={5}>
-        {roleModelsResult.map((model) => (
-          <RoleModelCard
-            key={model._id}
-            model={model}
-            onClick={handleCardClick}
-          />
+        {roleModelsResult.map((model, index) => (
+          <AnimatedCard key={model._id} delay={index * 0.05}>
+            <RoleModelCard
+              key={model._id}
+              model={model}
+              onClick={handleCardClick}
+            />
+          </AnimatedCard>
         ))}
       </Box>
 

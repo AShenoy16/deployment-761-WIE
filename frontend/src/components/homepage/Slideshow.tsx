@@ -22,6 +22,10 @@ const customCarouselStyle = css`
   .carousel .control-dots .dot.active {
     background-color: #00467f; /* Lighter blue color for the active dot */
   }
+
+  .carousel {
+    border-radius: 8px;
+  }
 `;
 
 const Slideshow: React.FC<SlideshowProps> = ({ slides }) => {
@@ -46,6 +50,7 @@ const Slideshow: React.FC<SlideshowProps> = ({ slides }) => {
               mb: "2em", // Add margin-bottom to prevent overlap
               height: { xs: 200, sm: 250 }, // Set a fixed height for the container
               overflow: "hidden", // Hide overflow to prevent any extra image parts from showing
+              borderRadius: "8px",
             }}
           >
             <img
