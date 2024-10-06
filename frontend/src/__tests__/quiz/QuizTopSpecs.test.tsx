@@ -4,10 +4,15 @@ import QuizTopSpecs from "../../components/quiz/QuizTopSpecs";
 import { SpecSummary } from "../../types/Specialization";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { slugify } from "../../pages/SpecPage";
+import { mockIntersectionObserver } from "../../util/mockIntersectionObserver";
 
 jest.mock("../../util/common", () => ({
   API_BASE_URL: "mockApi.com",
 }));
+
+beforeAll(() => {
+  mockIntersectionObserver();
+});
 
 const quizResults: SpecSummary[] = [
   {
