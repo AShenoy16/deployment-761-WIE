@@ -15,26 +15,9 @@ import {
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import placeholder from "../../assets/img-placeholder.jpg";
+import { HomePageCard, HomePageData } from "../../pages/HomePage";
 import { useSnackbarStore } from "../../stores/SnackBarStore";
 import { API_BASE_URL } from "../../util/common";
-
-interface Card {
-  title: string;
-  description: string;
-  image: string;
-  link: string;
-}
-
-interface HomePageData {
-  heroTitle: string;
-  heroSubtitle: string;
-  heroImage: string;
-  section1Header: string;
-  section1Text: string;
-  section2Header: string;
-  section2Text: string;
-  additionalResources: Card[];
-}
 
 interface EditHomepageModalProps {
   open: boolean;
@@ -91,7 +74,11 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
     }
   };
 
-  const handleCardChange = (index: number, key: keyof Card, value: string) => {
+  const handleCardChange = (
+    index: number,
+    key: keyof HomePageCard,
+    value: string
+  ) => {
     if (formData) {
       const updatedResources = [...formData.additionalResources];
       updatedResources[index] = { ...updatedResources[index], [key]: value };
@@ -105,7 +92,7 @@ const EditHomepageModal: React.FC<EditHomepageModalProps> = ({
 
   const handleAddCard = () => {
     if (formData) {
-      const newCard: Card = {
+      const newCard: HomePageCard = {
         title: "Default title",
         description: "Default Description",
         image: "",

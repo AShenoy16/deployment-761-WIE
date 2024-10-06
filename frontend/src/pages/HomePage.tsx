@@ -12,14 +12,14 @@ import { API_BASE_URL } from "../util/common";
 import AnimatedContainer from "../components/AnimatedContainer";
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 
-interface Card {
+export interface HomePageCard {
   title: string;
   description: string;
   image: string;
   link: string;
 }
 
-interface HomePageData {
+export interface HomePageData {
   heroTitle: string;
   heroSubtitle: string;
   heroImage: string;
@@ -27,7 +27,7 @@ interface HomePageData {
   section1Text: string;
   section2Header: string;
   section2Text: string;
-  additionalResources: Card[];
+  additionalResources: HomePageCard[];
 }
 
 const HomePage: React.FC = () => {
