@@ -6,11 +6,13 @@ import {
   Card,
   CardContent,
   CardActionArea,
+  CircularProgress,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../util/common";
 import AnimatedContainer from "../components/AnimatedContainer";
+import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 
 interface Specialisation {
   _id: string;
@@ -50,7 +52,7 @@ const SpecPage: React.FC = () => {
   };
 
   if (loading) {
-    return <Typography>Loading...</Typography>;
+    return <LoadingSpinnerScreen />;
   }
 
   if (error) {
