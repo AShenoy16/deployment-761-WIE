@@ -1,9 +1,9 @@
 import request from "supertest";
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
-import app from "../app"; // Assuming you have an Express app exported from app.ts
-import { User } from "../models/userModel"; // Assuming the user model is in userModel.ts
-import * as authService from "../services/authentication"; // Mock the login service
+import app from "../app"; 
+import { User } from "../models/userModel"; 
+import * as authService from "../services/authentication"; 
 
 let mongoServer: MongoMemoryServer;
 
@@ -12,7 +12,7 @@ beforeAll(async () => {
   const uri = mongoServer.getUri();
   await mongoose.connect(uri);
 
-  // Insert mock data for users
+  // Mock data for users
   await User.create({
     email: "admin@example.com",
     passwordHash: "hashedpassword123",
@@ -28,7 +28,7 @@ afterAll(async () => {
 
 describe("User API", () => {
   it("should return a message when fetching users", async () => {
-    const res = await request(app).get("/api/users"); // Check the route
+    const res = await request(app).get("/api/users"); 
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("message", "create user endpoints");
   });
