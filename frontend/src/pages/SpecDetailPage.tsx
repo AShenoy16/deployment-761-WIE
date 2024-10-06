@@ -14,9 +14,9 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import highMeterIcon from "../assets/high-meter.png";
-import lowMeterIcon from "../assets/low-meter.png";
-import mediumMeterIcon from "../assets/medium-meter.png";
+import highMeterIcon from "../assets/img-high-meter.png";
+import lowMeterIcon from "../assets/img-low-meter.png";
+import mediumMeterIcon from "../assets/img-medium-meter.png";
 import LoadingSpinnerScreen from "../components/LoadingSpinnerScreen";
 import EditModalSpecInfo from "../components/specinfo/EditModalSpecInfo";
 import { useAuthStore } from "../stores/AuthenticationStore";

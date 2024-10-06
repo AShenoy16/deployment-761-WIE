@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import placeholder from "../../assets/placeholder.jpg";
+import placeholder from "../../assets/img-placeholder.jpg";
 import { useSnackbarStore } from "../../stores/SnackBarStore";
 import { API_BASE_URL } from "../../util/common";
 

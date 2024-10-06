@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LanguageIcon from "@mui/icons-material/Language";
 import EmailIcon from "@mui/icons-material/Email";
-import wenLogo from "../assets/whiteWieLogo.svg";
+import wenLogo from "../assets/img-white-wie-logo.svg";
 import { useAuthStore } from "../stores/AuthenticationStore";
 
 const Footer: React.FC = () => {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import uoaLogo from "../assets/uoa-logo.png";
-import wieLogo from "../assets/whiteWieLogo.svg";
+import uoaLogo from "../img-assets/uoa-logo.png";
+import wieLogo from "../assets/img-white-wie-logo.svg";
 import {
   AppBar,
   Toolbar,
