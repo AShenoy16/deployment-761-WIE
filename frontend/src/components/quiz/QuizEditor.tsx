@@ -436,13 +436,27 @@ const EditableQuestion = ({
         },
       })}
     >
-      <Typography variant="body1">
-        {`Question ${questionNumber}`}
-        <Typography variant="body1" component="span" color="grey">
-          {` ~ ${question.questionType === "MCQ" ? "Multi-Choice" : question.questionType}`}
+      <Box maxWidth="85%">
+        <Typography
+          variant="body1"
+          whiteSpace="nowrap"
+          overflow="hidden"
+          textOverflow="ellipsis"
+        >
+          {`Question ${questionNumber} - ${question.questionText}`}
         </Typography>
-      </Typography>
-      <Box>
+        <Typography variant="body2" color="text.secondary" mt={0.25}>
+          {question.questionType === "MCQ"
+            ? "Multi-Choice"
+            : question.questionType}
+        </Typography>
+      </Box>
+      <Box
+        display="flex"
+        sx={{
+          flexDirection: { xs: "column", sm: "row" },
+        }}
+      >
         <IconButton
           color="primary"
           onClick={() => onClickEditQuestion(question)}
