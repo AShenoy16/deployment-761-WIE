@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../util/common";
+import AnimatedContainer from "../components/AnimatedContainer";
 
 interface Specialisation {
   _id: string;
@@ -58,43 +59,47 @@ const SpecPage: React.FC = () => {
 
   return (
     <Container>
-      <Typography
-        variant="h4"
-        component="h1"
-        align="center"
-        gutterBottom
-        mt={4}
-        paddingBottom={2}
-        sx={{ color: "#00467F" }}
-      >
-        Specialisations
-      </Typography>
+      <AnimatedContainer delay={0.15}>
+        <Typography
+          variant="h4"
+          component="h1"
+          align="center"
+          gutterBottom
+          mt={4}
+          paddingBottom={2}
+          sx={{ color: "#00467F" }}
+        >
+          Specialisations
+        </Typography>
+      </AnimatedContainer>
 
-      <Grid container spacing={3} paddingTop={3}>
-        {specialisations.map((spec) => (
-          <Grid item xs={12} sm={6} md={4} key={spec._id}>
-            <Card
-              sx={{
-                backgroundColor: "#00467F",
-                color: "white",
-                borderRadius: 4,
-              }}
-            >
-              <CardActionArea onClick={() => handleCardClick(spec.name)}>
-                <CardContent
-                  sx={{
-                    textAlign: "center",
-                  }}
-                >
-                  <Typography variant="h6" component="h2">
-                    {spec.name}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      <AnimatedContainer delay={0.3}>
+        <Grid container spacing={3} paddingTop={3}>
+          {specialisations.map((spec) => (
+            <Grid item xs={12} sm={6} md={4} key={spec._id}>
+              <Card
+                sx={{
+                  backgroundColor: "#00467F",
+                  color: "white",
+                  borderRadius: 4,
+                }}
+              >
+                <CardActionArea onClick={() => handleCardClick(spec.name)}>
+                  <CardContent
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    <Typography variant="h6" component="h2">
+                      {spec.name}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </AnimatedContainer>
     </Container>
   );
 };

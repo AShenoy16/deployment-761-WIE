@@ -25,6 +25,7 @@ import { IRoleModel } from "../types/RoleModel";
 import RoleModelModal from "../components/rolemodel/RoleModelModal";
 import HorizontalRoleModelList from "../components/rolemodel/HorizontalRoleModelList";
 import { API_BASE_URL } from "../util/common";
+import AnimatedContainer from "../components/AnimatedContainer";
 
 // Button styles
 const buttonStyle = {
@@ -186,55 +187,443 @@ const SpecDetailPage: React.FC = () => {
           }}
         />
         {/* Content */}
+        <AnimatedContainer delay={0.15}>
+          <Box
+            sx={{
+              position: "relative",
+              zIndex: 1,
+              textAlign: "left",
+              marginLeft: {
+                xs: "20px",
+                sm: "50px",
+              },
+              maxWidth: {
+                xs: "calc(100% - 40px)",
+                sm: "600px",
+                md: "50%",
+              },
+            }}
+          >
+            <Typography
+              variant="h3"
+              component="h1"
+              gutterBottom
+              sx={{
+                fontWeight: "bold",
+                fontSize: {
+                  xs: "2.5rem",
+                  sm: "3rem",
+                  md: "5rem",
+                },
+                paddingBottom: "20px",
+              }}
+            >
+              {specialization.name}
+            </Typography>
+            <Typography
+              variant="h6"
+              component="p"
+              sx={{
+                fontWeight: "bold",
+                fontSize: {
+                  xs: "1.2rem",
+                  sm: "1.5rem",
+                  md: "2rem",
+                },
+              }}
+            >
+              {specialization.header}
+            </Typography>
+            {/* Edit Button */}
+            {isAdminLoggedIn && (
+              <Box mt={"3rem"}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleEditModalOpen}
+                  sx={buttonStyle}
+                >
+                  Edit
+                </Button>
+              </Box>
+            )}
+          </Box>
+        </AnimatedContainer>
+      </Box>
+
+      {/* Impact Section */}
+      <AnimatedContainer delay={0.4} animationType="slideUp">
+        <Box sx={{ minHeight: "100vh" }}>
+          <Grid container>
+            {/* Left Detail */}
+            <Grid item xs={12} md={6}>
+              <Card sx={{ minHeight: "50vh", alignContent: "center" }}>
+                <CardContent
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    marginLeft: {
+                      xs: "20px",
+                      sm: "50px",
+                    },
+                    width: {
+                      xs: "calc(100% - 40px)",
+                      sm: "80%",
+                    },
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    component="h2"
+                    sx={{
+                      color: "#00467F",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Impact
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    paragraph
+                    sx={{
+                      color: "#00467F",
+                      fontWeight: "bold",
+                      fontSize: "1.2rem",
+                    }}
+                  >
+                    {specialization.leftDetail}
+                  </Typography>
+
+                  {/* Edit Modal */}
+                  <EditModalSpecInfo
+                    open={openEditModal}
+                    onClose={handleEditModalClose}
+                    specInfoResult={specialization}
+                    name={formattedName}
+                    onSave={handleSaveChanges}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Right Image */}
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{
+                display: {
+                  xs: "none",
+                  md: "block",
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  height: "100%",
+                  backgroundImage: `url(${rightImageUrl})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+            </Grid>
+          </Grid>
+
+          {/* Right Detail */}
+          <Grid container>
+            <Grid item xs={12} md={6}>
+              <Box
+                sx={{
+                  height: "100%",
+                  backgroundImage: `url(${leftImageUrl})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+            </Grid>
+
+            {/* Right Detail */}
+            <Grid item xs={12} md={6}>
+              <Card
+                sx={{
+                  minHeight: "50vh",
+                  borderRadius: "0",
+                  alignContent: "center",
+                }}
+              >
+                <CardContent
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: {
+                      xs: "calc(100% - 40px)",
+                      sm: "80%",
+                    },
+                    marginLeft: {
+                      xs: "20px",
+                      sm: "50px",
+                    },
+                  }}
+                >
+                  <Typography
+                    variant="body1"
+                    paragraph
+                    sx={{
+                      color: "#00467F",
+                      fontWeight: "bold",
+                      fontSize: "1.2rem",
+                    }}
+                  >
+                    {specialization.rightDetail}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Box>
+      </AnimatedContainer>
+
+      {/* Career Info Section */}
+      <AnimatedContainer delay={0.25}>
         <Box
           sx={{
-            position: "relative",
-            zIndex: 1,
-            textAlign: "left",
-            marginLeft: {
-              xs: "20px",
-              sm: "50px",
+            padding: "20px",
+            "& li": {
+              marginBottom: "10px",
             },
-            maxWidth: {
-              xs: "calc(100% - 40px)",
-              sm: "600px",
-              md: "50%",
-            },
+            fontWeight: "bold",
+          }}
+        >
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"center"}
+            mt={1}
+          >
+            <Typography
+              variant="h4"
+              component="h2"
+              sx={{ color: "#00467F", fontWeight: "bold", textAlign: "center" }}
+            >
+              Career Information
+            </Typography>
+            <Typography
+              variant="h6"
+              gutterBottom
+              sx={{
+                color: "black",
+                fontSize: {
+                  xs: "1rem",
+                  sm: "1.2rem",
+                  md: "1.4rem",
+                },
+              }}
+            >
+              Average {specialization.name.replace(regex, "")} Engineer Career
+              Outlook
+            </Typography>
+          </Box>
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={{ xs: 1, sm: 2, md: 4 }}
+            alignContent={"center"}
+            alignItems={"center"}
+            sx={{
+              justifyContent: "space-evenly",
+              marginTop: 2,
+            }}
+          >
+            <Stack
+              direction="column"
+              sx={{
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                gutterBottom
+                sx={{
+                  fontWeight: "bold",
+                  color: "#00467F",
+                  fontSize: {
+                    xs: "1.2rem",
+                    sm: "1.5rem",
+                  },
+                }}
+              >
+                Job Availability
+              </Typography>
+              <Box
+                component="img"
+                sx={{
+                  maxWidth: "20rem",
+                }}
+                src={meterImage}
+              />
+              <Typography
+                gutterBottom
+                sx={{
+                  fontSize: {
+                    xs: "1.2rem",
+                    sm: "1.5rem",
+                  },
+                }}
+              >
+                {specialization.jobAvailability}
+              </Typography>
+            </Stack>
+            <Stack
+              sx={{
+                alignItems: "center",
+              }}
+            >
+              <Stack
+                sx={{
+                  alignItems: "center",
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: "#00467F",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  Median Salary
+                </Typography>
+                <Typography
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  ${specialization.medianSalary.toLocaleString()}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "1rem",
+                  }}
+                >
+                  per year
+                </Typography>
+              </Stack>
+              <Stack
+                sx={{
+                  alignItems: "center",
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: "#00467F",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  Experienced Salary
+                </Typography>
+                <Typography
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  ${specialization.experiencedSalary.toLocaleString()}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "1rem",
+                  }}
+                >
+                  per year
+                </Typography>
+              </Stack>
+            </Stack>
+          </Stack>
+          <Typography
+            sx={{
+              color: "#00467F",
+              fontSize: "1rem",
+              textAlign: "right",
+              fontStyle: "italic",
+            }}
+          >
+            Source: {specialization.source}
+          </Typography>
+        </Box>
+
+        <Box
+          sx={{
+            backgroundColor: "#00467F",
+            color: "white",
+            py: 7,
+            display: "flex",
+            flexDirection: "column",
+            fontWeight: "bold",
+            alignItems: "center",
           }}
         >
           <Typography
-            variant="h3"
-            component="h1"
-            gutterBottom
+            variant="h4"
+            component="h2"
+            sx={{ fontWeight: "bold", textAlign: "center" }}
+          >
+            Career Pathways
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            {`Potential Career options as a ${specialization.name} Graduate`}
+          </Typography>
+          <Grid
+            container
+            spacing={2}
             sx={{
-              fontWeight: "bold",
-              fontSize: {
-                xs: "2.5rem",
-                sm: "3rem",
-                md: "5rem",
-              },
-              paddingBottom: "20px",
+              paddingTop: "20px",
+              justifyContent: "center", // Center items horizontally
+              textAlign: "center", // Center text in the grid items if needed
             }}
           >
-            {specialization.name}
-          </Typography>
+            <Grid item xs={12} md={6}>
+              <ul
+                style={{
+                  display: "grid",
+                  gridTemplateRows: "repeat(3, 1fr)", // Fixed 3 rows
+                  gridAutoFlow: "column", // Fill the grid by columns first
+                  rowGap: "10px",
+                  columnGap: "20px",
+                  padding: 0,
+                  margin: 0,
+                  listStylePosition: "inside",
+                  maxWidth: "100%", // Ensure grid stays within the container's width
+                }}
+              >
+                {specialization.careerPathways.map((pathway, index) => (
+                  <li key={index}>{pathway}</li>
+                ))}
+              </ul>
+            </Grid>
+          </Grid>
+        </Box>
+      </AnimatedContainer>
+
+      {/* Role Models Section */}
+      <AnimatedContainer animationType="zoomIn" delay={0.25}>
+        <Box pt="1.25rem" mt={1}>
           <Typography
-            variant="h6"
-            component="p"
-            sx={{
-              fontWeight: "bold",
-              fontSize: {
-                xs: "1.2rem",
-                sm: "1.5rem",
-                md: "2rem",
-              },
-            }}
+            variant="h4"
+            component="h2"
+            sx={{ color: "#00467F", fontWeight: "bold", textAlign: "center" }}
           >
-            {specialization.header}
+            See some inspiring role models who studied this specialization!
           </Typography>
-          {/* Edit Button */}
+
           {isAdminLoggedIn && (
-            <Box mt={"3rem"}>
+            <Box display="flex" justifyContent="center" padding="10px">
               <Button
                 variant="contained"
                 color="secondary"
@@ -245,394 +634,13 @@ const SpecDetailPage: React.FC = () => {
               </Button>
             </Box>
           )}
+
+          <HorizontalRoleModelList
+            specRoleModels={specRoleModels}
+            handleRoleModelCardClick={handleRoleModelCardClick}
+          />
         </Box>
-      </Box>
-
-      {/* Impact Section */}
-      <Box sx={{ minHeight: "100vh" }}>
-        <Grid container>
-          {/* Left Detail */}
-          <Grid item xs={12} md={6}>
-            <Card sx={{ minHeight: "50vh", alignContent: "center" }}>
-              <CardContent
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  marginLeft: {
-                    xs: "20px",
-                    sm: "50px",
-                  },
-                  width: {
-                    xs: "calc(100% - 40px)",
-                    sm: "80%",
-                  },
-                }}
-              >
-                <Typography
-                  variant="h4"
-                  component="h2"
-                  sx={{
-                    color: "#00467F",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Impact
-                </Typography>
-                <Typography
-                  variant="body1"
-                  paragraph
-                  sx={{
-                    color: "#00467F",
-                    fontWeight: "bold",
-                    fontSize: "1.2rem",
-                  }}
-                >
-                  {specialization.leftDetail}
-                </Typography>
-
-                {/* Edit Modal */}
-                <EditModalSpecInfo
-                  open={openEditModal}
-                  onClose={handleEditModalClose}
-                  specInfoResult={specialization}
-                  name={formattedName}
-                  onSave={handleSaveChanges}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* Right Image */}
-          <Grid
-            item
-            xs={12}
-            md={6}
-            sx={{
-              display: {
-                xs: "none",
-                md: "block",
-              },
-            }}
-          >
-            <Box
-              sx={{
-                height: "100%",
-                backgroundImage: `url(${rightImageUrl})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            />
-          </Grid>
-        </Grid>
-
-        {/* Right Detail */}
-        <Grid container>
-          <Grid item xs={12} md={6}>
-            <Box
-              sx={{
-                height: "100%",
-                backgroundImage: `url(${leftImageUrl})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            />
-          </Grid>
-
-          {/* Right Detail */}
-          <Grid item xs={12} md={6}>
-            <Card
-              sx={{
-                minHeight: "50vh",
-                borderRadius: "0",
-                alignContent: "center",
-              }}
-            >
-              <CardContent
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: {
-                    xs: "calc(100% - 40px)",
-                    sm: "80%",
-                  },
-                  marginLeft: {
-                    xs: "20px",
-                    sm: "50px",
-                  },
-                }}
-              >
-                <Typography
-                  variant="body1"
-                  paragraph
-                  sx={{
-                    color: "#00467F",
-                    fontWeight: "bold",
-                    fontSize: "1.2rem",
-                  }}
-                >
-                  {specialization.rightDetail}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
-
-      {/* Career Info Section */}
-      <Box
-        sx={{
-          padding: "20px",
-          "& li": {
-            marginBottom: "10px",
-          },
-          fontWeight: "bold",
-        }}
-      >
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          alignItems={"center"}
-          mt={1}
-        >
-          <Typography
-            variant="h4"
-            component="h2"
-            sx={{ color: "#00467F", fontWeight: "bold", textAlign: "center" }}
-          >
-            Career Information
-          </Typography>
-          <Typography
-            variant="h6"
-            gutterBottom
-            sx={{
-              color: "black",
-              fontSize: {
-                xs: "1rem",
-                sm: "1.2rem",
-                md: "1.4rem",
-              },
-            }}
-          >
-            Average {specialization.name.replace(regex, "")} Engineer Career
-            Outlook
-          </Typography>
-        </Box>
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={{ xs: 1, sm: 2, md: 4 }}
-          alignContent={"center"}
-          alignItems={"center"}
-          sx={{
-            justifyContent: "space-evenly",
-            marginTop: 2,
-          }}
-        >
-          <Stack
-            direction="column"
-            sx={{
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography
-              gutterBottom
-              sx={{
-                fontWeight: "bold",
-                color: "#00467F",
-                fontSize: {
-                  xs: "1.2rem",
-                  sm: "1.5rem",
-                },
-              }}
-            >
-              Job Availability
-            </Typography>
-            <Box
-              component="img"
-              sx={{
-                maxWidth: "20rem",
-              }}
-              src={meterImage}
-            />
-            <Typography
-              gutterBottom
-              sx={{
-                fontSize: {
-                  xs: "1.2rem",
-                  sm: "1.5rem",
-                },
-              }}
-            >
-              {specialization.jobAvailability}
-            </Typography>
-          </Stack>
-          <Stack
-            sx={{
-              alignItems: "center",
-            }}
-          >
-            <Stack
-              sx={{
-                alignItems: "center",
-              }}
-            >
-              <Typography
-                sx={{
-                  color: "#00467F",
-                  fontSize: "1.5rem",
-                }}
-              >
-                Median Salary
-              </Typography>
-              <Typography
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: "1.5rem",
-                }}
-              >
-                ${specialization.medianSalary.toLocaleString()}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1rem",
-                }}
-              >
-                per year
-              </Typography>
-            </Stack>
-            <Stack
-              sx={{
-                alignItems: "center",
-              }}
-            >
-              <Typography
-                sx={{
-                  color: "#00467F",
-                  fontSize: "1.5rem",
-                }}
-              >
-                Experienced Salary
-              </Typography>
-              <Typography
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: "1.5rem",
-                }}
-              >
-                ${specialization.experiencedSalary.toLocaleString()}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1rem",
-                }}
-              >
-                per year
-              </Typography>
-            </Stack>
-          </Stack>
-        </Stack>
-        <Typography
-          sx={{
-            color: "#00467F",
-            fontSize: "1rem",
-            textAlign: "right",
-            fontStyle: "italic",
-          }}
-        >
-          Source: {specialization.source}
-        </Typography>
-      </Box>
-
-      <Box
-        sx={{
-          backgroundColor: "#00467F",
-          color: "white",
-          py: 7,
-          display: "flex",
-          flexDirection: "column",
-          fontWeight: "bold",
-          alignItems: "center",
-        }}
-      >
-        <Typography
-          variant="h4"
-          component="h2"
-          sx={{ fontWeight: "bold", textAlign: "center" }}
-        >
-          Career Pathways
-        </Typography>
-        <Typography variant="h6" gutterBottom>
-          {`Potential Career options as a ${specialization.name} Graduate`}
-        </Typography>
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            paddingTop: "20px",
-            justifyContent: "center", // Center items horizontally
-            textAlign: "center", // Center text in the grid items if needed
-          }}
-        >
-          <Grid item xs={12} md={6}>
-            <ul
-              style={{
-                display: "grid",
-                gridTemplateRows: "repeat(3, 1fr)", // Fixed 3 rows
-                gridAutoFlow: "column", // Fill the grid by columns first
-                rowGap: "10px",
-                columnGap: "20px",
-                padding: 0,
-                margin: 0,
-                listStylePosition: "inside",
-                maxWidth: "100%", // Ensure grid stays within the container's width
-              }}
-            >
-              {specialization.careerPathways.map((pathway, index) => (
-                <li key={index}>{pathway}</li>
-              ))}
-            </ul>
-          </Grid>
-        </Grid>
-      </Box>
-
-      {/* Role Models Section */}
-      <Box pt="1.25rem" mt={1}>
-        <Typography
-          variant="h4"
-          component="h2"
-          sx={{ color: "#00467F", fontWeight: "bold", textAlign: "center" }}
-        >
-          See some inspiring role models who studied this specialization!
-        </Typography>
-
-        {isAdminLoggedIn && (
-          <Box display="flex" justifyContent="center" padding="10px">
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleEditModalOpen}
-              sx={buttonStyle}
-            >
-              Edit
-            </Button>
-          </Box>
-        )}
-
-        <HorizontalRoleModelList
-          specRoleModels={specRoleModels}
-          handleRoleModelCardClick={handleRoleModelCardClick}
-        />
-      </Box>
-
+      </AnimatedContainer>
       <RoleModelModal
         open={isRoleModelModalOpen}
         onClose={handleCloseRoleModelModal}
