@@ -24,8 +24,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         padding: { xs: "40px 20px", sm: "40px 0px 40px 20px" },
         display: "flex",
         alignItems: "center",
-        height: "40em",
-        justifyContent: { sm: "center", md: "center", lg: "flex-end" },
+        height: {
+          xs: "calc(100vh - 4.5rem - 20px)",
+          sm: "calc(100vh - 5rem - 20px)",
+          md: "calc(100vh - 5.5rem - 20px)",
+        },
+        justifyContent: { xs: "center", sm: "center", md: "center", lg: "flex-end" },
       }}
     >
       {/* Overlay */}
