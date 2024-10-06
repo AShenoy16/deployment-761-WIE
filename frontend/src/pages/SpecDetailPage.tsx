@@ -8,6 +8,8 @@ import {
   Snackbar,
   Stack,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -38,6 +40,7 @@ const buttonStyle = {
 };
 
 const SpecDetailPage: React.FC = () => {
+  const theme = useTheme();
   const { name } = useParams<{ name: string }>(); // Get specialization name from route params
   const formattedName = name?.replace(/-/g, " ") || ""; // Format name by replacing hyphens with spaces
   const isAdminLoggedIn = useAuthStore((state) => state.isLoggedIn); // Check if admin is logged in
@@ -49,6 +52,7 @@ const SpecDetailPage: React.FC = () => {
   const setIsOpen = useSnackbarStore((state) => state.setIsOpen);
   const severity = useSnackbarStore((state) => state.severity);
   const handleSnackBarClose = (): void => setIsOpen(false);
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const [specialization, setSpecialization] = useState<Specialization | null>(
     null
@@ -171,6 +175,8 @@ const SpecDetailPage: React.FC = () => {
             sm: "60px 20px",
           },
           display: "flex",
+          flexDirection: isSmallScreen ? "column" : "row",
+          justifyContent: "space-between",
           alignItems: "center",
           minHeight: "65vh",
         }}
@@ -187,23 +193,23 @@ const SpecDetailPage: React.FC = () => {
           }}
         />
         {/* Content */}
-        <AnimatedContainer delay={0.15}>
-          <Box
-            sx={{
-              position: "relative",
-              zIndex: 1,
-              textAlign: "left",
-              marginLeft: {
-                xs: "20px",
-                sm: "50px",
-              },
-              maxWidth: {
-                xs: "calc(100% - 40px)",
-                sm: "600px",
-                md: "50%",
-              },
-            }}
-          >
+        <Box
+          sx={{
+            position: "relative",
+            zIndex: 1,
+            textAlign: "left",
+            marginLeft: {
+              xs: "20px",
+              sm: "50px",
+            },
+            maxWidth: {
+              xs: "calc(100% - 40px)",
+              sm: "600px",
+              md: "50%",
+            },
+          }}
+        >
+          <AnimatedContainer>
             <Typography
               variant="h3"
               component="h1"
@@ -213,7 +219,7 @@ const SpecDetailPage: React.FC = () => {
                 fontSize: {
                   xs: "2.5rem",
                   sm: "3rem",
-                  md: "5rem",
+                  md: "4.5rem",
                 },
                 paddingBottom: "20px",
               }}
@@ -236,7 +242,7 @@ const SpecDetailPage: React.FC = () => {
             </Typography>
             {/* Edit Button */}
             {isAdminLoggedIn && (
-              <Box mt={"3rem"}>
+              <Box my={"3rem"}>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -247,8 +253,60 @@ const SpecDetailPage: React.FC = () => {
                 </Button>
               </Box>
             )}
-          </Box>
-        </AnimatedContainer>
+          </AnimatedContainer>
+        </Box>
+        <Box
+          sx={{
+            position: "relative",
+            marginRight: {
+              xs: "20px",
+              sm: "50px",
+            },
+            maxWidth: {
+              xs: "calc(100% - 40px)",
+              sm: "600px",
+              md: "50%",
+            },
+          }}
+        >
+          <AnimatedContainer animationType="zoomIn" delay={0.15}>
+            {specialization.testimonials.length > 0 &&
+              specialization.testimonials.map((testimonial, index) => (
+                <Box key={index} pb="1.25rem">
+                  <Typography
+                    variant="body1"
+                    fontSize="1.2rem"
+                    fontWeight="bold"
+                    textAlign="center"
+                  >
+                    <Typography
+                      component="span"
+                      fontSize="inherit"
+                      fontWeight="200"
+                    >
+                      {`" `}
+                    </Typography>
+                    {testimonial.description}
+                    <Typography
+                      component="span"
+                      fontSize="inherit"
+                      fontWeight="200"
+                    >
+                      {` "`}
+                    </Typography>
+                  </Typography>
+                  <Typography
+                    variant="subtitle2"
+                    fontSize="1rem"
+                    textAlign="center"
+                    fontStyle="italic"
+                  >
+                    - {testimonial.name}
+                  </Typography>
+                </Box>
+              ))}
+          </AnimatedContainer>
+        </Box>
       </Box>
 
       {/* Impact Section */}
