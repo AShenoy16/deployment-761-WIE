@@ -3,6 +3,8 @@ import Specialization from "../models/SpecializationModel";
 import { MulterFile } from "../types/MulterFile";
 import { getSpecializationByName, isTestimonial } from "../services/specializationService";
 import { ITestimonial } from "../models/interfaces";
+import fs from "fs";
+import path from "path";
 
 // Get all specializations
 export const getSpecs = async (req: Request, res: Response) => {
@@ -59,7 +61,7 @@ export const updateSpecByName = async (req: Request, res: Response) => {
 			jobAvailability,
 			medianSalary,
 			experiencedSalary,
-			source
+			source,
 		} = req.body;
 
 		// Update fields in the specialization object
@@ -72,17 +74,42 @@ export const updateSpecByName = async (req: Request, res: Response) => {
 		specialization.jobAvailability = jobAvailability || specialization.jobAvailability;
 		specialization.medianSalary = medianSalary || specialization.medianSalary;
 		specialization.experiencedSalary = experiencedSalary || specialization.experiencedSalary;
-		specialization.source = source || specialization.source
+		specialization.source = source || specialization.source;
 
 		// Handle image uploads
 		const files = req.files as { [fieldname: string]: MulterFile[] };
 
+		// Update the spec page with the new image paths
 		if (files?.leftImage) {
+			// Remove the old image if it exists
+			if (specialization.leftImage) {
+				const oldLeftImagePath = path.join(__dirname, "../../public", specialization.leftImage);
+				fs.unlink(oldLeftImagePath, (err) => {
+					if (err) {
+						console.error("Error deleting old left image:", err);
+					} else {
+						console.log("Old left image deleted successfully");
+					}
+				});
+			}
+
 			const leftImage = files["leftImage"][0];
 			specialization.leftImage = `/uploads/${leftImage.filename}`;
 		}
 
 		if (files?.rightImage) {
+			// Remove the old image if it exists
+			if (specialization.rightImage) {
+				const oldRightImagePath = path.join(__dirname, "../../public", specialization.rightImage);
+				fs.unlink(oldRightImagePath, (err) => {
+					if (err) {
+						console.error("Error deleting old right image:", err);
+					} else {
+						console.log("Old right image deleted successfully");
+					}
+				});
+			}
+
 			const rightImage = files["rightImage"][0];
 			specialization.rightImage = `/uploads/${rightImage.filename}`;
 		}
