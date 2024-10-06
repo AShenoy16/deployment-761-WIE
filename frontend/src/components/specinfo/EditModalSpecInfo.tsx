@@ -20,6 +20,7 @@ import useSnackBar from "../../hooks/useSnackBar";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../util/common";
 import DeleteIcon from "@mui/icons-material/Delete";
+import uoaEngBuilding from "/engineering-building.jpg"; // Fallback image if needed
 
 const buttonStyle = {
   textTransform: "none",
@@ -88,8 +89,10 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
       setLeftDetail(specInfoResult.leftDetail);
       setRightDetail(specInfoResult.rightDetail);
       setTestimonials(specInfoResult.testimonials);
-      setLeftImageName(null); // Reset image names on modal open
-      setRightImageName(null); // Reset image names on modal open
+      setLeftImage(null);
+      setRightImage(null);
+      setLeftImageName(null); // Reset image names on form reset
+      setRightImageName(null); // Reset image names on form reset
       setjobAvailability(specInfoResult.jobAvailability);
       setMedianSalary(specInfoResult.medianSalary);
       setExperiencedSalary(specInfoResult.experiencedSalary);
@@ -432,16 +435,73 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
                 handleImageChange(e, setRightImage, setRightImageName)
               }
             />
-            <Button
-              variant="contained"
-              sx={{ marginBottom: "10px" }}
-              onClick={() => rightImageInputRef.current?.click()}
+            <Stack
+              sx={{
+                flexDirection: "column",
+                alignItems: "flex-start",
+                mb: 5,
+              }}
             >
-              {rightImageName
-                ? `Uploaded: ${rightImageName}`
-                : "Choose Right Image"}
-            </Button>
+              <Button
+                variant="contained"
+                sx={{ marginBottom: "10px" }}
+                onClick={() => rightImageInputRef.current?.click()}
+              >
+                {rightImageName
+                  ? `Uploaded: ${rightImageName}`
+                  : "Choose Right Image"}
+              </Button>
+              {
+                <Box
+                  sx={{
+                    position: "relative", // Position relative to enable text overlay
+                    maxHeight: { xs: 130, md: 190 },
+                    marginTop: 1,
+                    overflow: "hidden",
+                    "&:hover .overlay": {
+                      opacity: 1,
+                    },
+                    "&:hover img": {
+                      filter: "brightness(50%)",
+                    },
+                  }}
+                  onClick={() => rightImageInputRef.current?.click()}
+                >
+                  {/* Image Element */}
+                  <Box
+                    component="img"
+                    sx={{
+                      maxHeight: { xs: 130, md: 190 },
+                    }}
+                    src={
+                      rightImage
+                        ? URL.createObjectURL(rightImage)
+                        : specInfoResult?.rightImage
+                          ? `${API_BASE_URL}${specInfoResult?.rightImage}`
+                          : uoaEngBuilding
+                    }
+                    alt="Right Image"
+                  />
 
+                  {/* Text Overlay */}
+                  <Box
+                    className="overlay"
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      color: "white",
+                      textAlign: "center",
+                      opacity: 0, // Hidden by default
+                      pointerEvents: "none",
+                    }}
+                  >
+                    Replace Image
+                  </Box>
+                </Box>
+              }
+            </Stack>
             {/* Edit Right Detail */}
             <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
               Right Detail <span style={{ color: "red" }}>*</span>
@@ -475,15 +535,73 @@ const EditModalSpecInfo: React.FC<EditModalSpecInfoProps> = ({
                 handleImageChange(e, setLeftImage, setLeftImageName)
               }
             />
-            <Button
-              variant="contained"
-              sx={{ marginBottom: "10px" }}
-              onClick={() => leftImageInputRef.current?.click()}
+            <Stack
+              sx={{
+                flexDirection: "column",
+                alignItems: "flex-start",
+                mb: 5,
+              }}
             >
-              {leftImageName
-                ? `Uploaded: ${leftImageName}`
-                : "Choose Left Image"}
-            </Button>
+              <Button
+                variant="contained"
+                sx={{ marginBottom: "10px" }}
+                onClick={() => leftImageInputRef.current?.click()}
+              >
+                {leftImageName
+                  ? `Uploaded: ${leftImageName}`
+                  : "Choose Left Image"}
+              </Button>
+              {
+                <Box
+                  sx={{
+                    position: "relative", // Position relative to enable text overlay
+                    maxHeight: { xs: 130, md: 190 },
+                    marginTop: 1,
+                    overflow: "hidden",
+                    "&:hover .overlay": {
+                      opacity: 1,
+                    },
+                    "&:hover img": {
+                      filter: "brightness(50%)",
+                    },
+                  }}
+                  onClick={() => leftImageInputRef.current?.click()}
+                >
+                  {/* Image Element */}
+                  <Box
+                    component="img"
+                    sx={{
+                      maxHeight: { xs: 130, md: 190 },
+                    }}
+                    src={
+                      leftImage
+                        ? URL.createObjectURL(leftImage)
+                        : specInfoResult?.leftImage
+                          ? `${API_BASE_URL}${specInfoResult?.leftImage}`
+                          : uoaEngBuilding
+                    }
+                    alt="Left image"
+                  />
+
+                  {/* Text Overlay */}
+                  <Box
+                    className="overlay"
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      color: "white",
+                      textAlign: "center",
+                      opacity: 0, // Hidden by default
+                      pointerEvents: "none",
+                    }}
+                  >
+                    Replace Image
+                  </Box>
+                </Box>
+              }
+            </Stack>
           </Box>
 
           <Box sx={{ background: lightGrey, borderRadius: 2, padding: 2 }}>
