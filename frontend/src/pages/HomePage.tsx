@@ -11,7 +11,7 @@ import { useAuthStore } from "../stores/AuthenticationStore";
 import { useSnackbarStore } from "../stores/SnackBarStore";
 import { API_BASE_URL } from "../util/common";
 
-export interface HomePageCard {
+export interface Card {
   title: string;
   description: string;
   image: string;
@@ -26,7 +26,7 @@ export interface HomePageData {
   section1Text: string;
   section2Header: string;
   section2Text: string;
-  additionalResources: HomePageCard[];
+  additionalResources: Card[];
 }
 
 const HomePage: React.FC = () => {
