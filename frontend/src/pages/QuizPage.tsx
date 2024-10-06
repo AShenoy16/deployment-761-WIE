@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
+  Fade,
   Stack,
   Typography,
   useMediaQuery,
@@ -19,6 +20,8 @@ import { useNavigate } from "react-router-dom";
 import { MCQQuizQuestion } from "../components/quiz/MCQQuizQuestion";
 import { useMCQQuestionStore } from "../stores/MCQQuestionStore";
 import { useAuthStore } from "../stores/AuthenticationStore";
+
+const FADE_ANIMATION_INTERVAL = 200;
 
 const renderQuestionComponent = (question: IQuestion) => {
   switch (question.questionType) {
@@ -96,7 +99,6 @@ const QuizPage: React.FC = () => {
   const { currentQuestionIndex, exitQuiz, nextQuestion, prevQuestion } =
     useQuizNavigation(questions);
   const currentQuestion = questions[currentQuestionIndex];
-  const navigate = useNavigate();
 
   const hasStarted = currentQuestionIndex >= 0;
   const isFinalQuestion = currentQuestionIndex === questions.length - 1;
@@ -120,8 +122,27 @@ const QuizPage: React.FC = () => {
     (currentQuestion?.questionType === "MCQ" &&
       isMCQQuestionAnsweredMap[currentQuestion._id]);
 
+  const navigate = useNavigate();
+  const [fadeIn, setFadeIn] = useState(true);
+
   const handleSubmit = () => {
     navigate("/quiz/results");
+  };
+
+  const fadeInNewQuestion = (questionChangeCb: () => void) => {
+    setFadeIn(false);
+    setTimeout(() => {
+      questionChangeCb();
+      setFadeIn(true);
+    }, FADE_ANIMATION_INTERVAL);
+  };
+
+  const handleNextQuestion = () => {
+    fadeInNewQuestion(nextQuestion);
+  };
+
+  const handlePrevQuestion = () => {
+    fadeInNewQuestion(prevQuestion);
   };
 
   if (isLoading) {
@@ -141,7 +162,9 @@ const QuizPage: React.FC = () => {
     >
       {hasStarted ? (
         <>
-          {renderQuestionComponent(currentQuestion)}
+          <Fade in={fadeIn} timeout={FADE_ANIMATION_INTERVAL}>
+            <Box width="100%">{renderQuestionComponent(currentQuestion)}</Box>
+          </Fade>
           <Box display="flex" justifyContent="space-between" width="100%">
             <Button variant="outlined" onClick={exitQuiz}>
               Exit Quiz
@@ -150,7 +173,7 @@ const QuizPage: React.FC = () => {
             <Box display="flex" gap={1}>
               <Button
                 variant="outlined"
-                onClick={prevQuestion}
+                onClick={handlePrevQuestion}
                 disabled={currentQuestionIndex === 0}
               >
                 Previous
@@ -158,7 +181,7 @@ const QuizPage: React.FC = () => {
 
               <Button
                 variant="contained"
-                onClick={isFinalQuestion ? handleSubmit : nextQuestion}
+                onClick={isFinalQuestion ? handleSubmit : handleNextQuestion}
                 disabled={!isRankingQuestionAnswered || !isMCQQuestionAnswered}
               >
                 {isFinalQuestion ? "Submit" : "Next"}

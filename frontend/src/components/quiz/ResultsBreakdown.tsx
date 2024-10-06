@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import PieChart from "./PieChart";
 import React from "react";
-import { usePDF } from "react-to-pdf";
+import { usePDF, Resolution } from "react-to-pdf";
 import { useSnackbarStore } from "../../stores/SnackBarStore";
 import useSnackBar from "../../hooks/useSnackBar";
 
@@ -30,7 +30,11 @@ const ResultsBreakdown: React.FC<ResultsBreakdownProps> = ({
   const handleSnackBarClose = (): void => setIsOpen(false);
   const showSnackbar = useSnackBar();
 
-  const { toPDF, targetRef } = usePDF({ filename: "quiz_results.pdf" });
+  const { toPDF, targetRef } = usePDF({
+    filename: "quiz_results.pdf",
+    page: { margin: 40 },
+    resolution: Resolution.HIGH,
+  });
 
   const saveResultsAsPDF = () => {
     try {

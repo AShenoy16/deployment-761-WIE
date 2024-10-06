@@ -198,6 +198,7 @@ const EditableMCQOption: React.FC<EditableMCQOption> = ({ option }) => {
               },
             }}
           />
+          <Typography>Weighting</Typography>
         </Stack>
         <Stack width="100%" spacing={1}>
           {Object.entries(option.weightings)
@@ -298,6 +299,7 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({
     </>
   );
 };
+
 const MCQQuestionEditor: React.FC = () => {
   const theme = useTheme();
   const { selectedQuestion, updateQuestionTitle } = useMCQQuestionEditorStore(
@@ -310,6 +312,7 @@ const MCQQuestionEditor: React.FC = () => {
   const handleQuestionTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateQuestionTitle(e.target.value);
   };
+
   return (
     <Stack
       maxHeight={500}
@@ -335,16 +338,7 @@ const MCQQuestionEditor: React.FC = () => {
         }}
       />
 
-      <Stack
-        direction="row"
-        justifyContent="flex-end"
-        alignItems="center"
-        spacing={2}
-        paddingX={2}
-      >
-        <Typography>Weighting</Typography>
-      </Stack>
-      <Stack spacing={2}>
+      <Stack spacing={2} mt={2}>
         {selectedQuestion?.answerOptions.map((option, index) => (
           <EditableMCQOption key={index} option={option} />
         ))}

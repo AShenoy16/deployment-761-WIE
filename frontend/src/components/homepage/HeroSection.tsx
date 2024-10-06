@@ -4,9 +4,14 @@ import { Box, Typography, Stack } from "@mui/material";
 interface HeroSectionProps {
   title: string;
   subtitle: string;
+  image: string;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({ title, subtitle }) => {
+const HeroSection: React.FC<HeroSectionProps> = ({
+  title,
+  subtitle,
+  image,
+}) => {
   return (
     <Box
       role="banner"
@@ -19,8 +24,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({ title, subtitle }) => {
         padding: { xs: "40px 20px", sm: "40px 0px 40px 20px" },
         display: "flex",
         alignItems: "center",
-        height: "40em",
-        justifyContent: { sm: "center", md: "center", lg: "flex-end" },
+        height: {
+          xs: "calc(100vh - 4.5rem - 20px)",
+          sm: "calc(100vh - 5rem - 20px)",
+          md: "calc(100vh - 5.5rem - 20px)",
+        },
+        justifyContent: { xs: "center", sm: "center", md: "center", lg: "flex-end" },
       }}
     >
       {/* Overlay */}
@@ -81,9 +90,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ title, subtitle }) => {
           <Box
             component="img"
             sx={{ maxHeight: { xs: 130, md: 190 }, borderRadius: "3px" }}
-            src={
-              "https://www.auckland.ac.nz/content/auckland/en/engineering/study-with-us/women-in-engineering/_jcr_content/par/linkspagetemplategri_559213939/par2/subflexicomponentlin/image.img.480.low.jpg/1551045302558.jpg"
-            }
+            src={image}
           />
         </Stack>
       </Box>

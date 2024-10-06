@@ -278,6 +278,7 @@ const EditableRankingOption: React.FC<EditableRankingOption> = ({ option }) => {
               },
             }}
           />
+          <Typography>Weighting</Typography>
         </Stack>
         <Stack width="100%" spacing={1}>
           {Object.entries(option.weightings)
@@ -333,16 +334,7 @@ const RankingQuestionEditor: React.FC = () => {
         }}
       />
 
-      <Stack
-        direction="row"
-        justifyContent="flex-end"
-        alignItems="center"
-        spacing={2}
-        paddingX={2}
-      >
-        <Typography>Weighting</Typography>
-      </Stack>
-      <Stack spacing={2}>
+      <Stack spacing={2} mt={2}>
         {selectedQuestion?.answerOptions.map((option, index) => (
           <EditableRankingOption key={index} option={option} />
         ))}

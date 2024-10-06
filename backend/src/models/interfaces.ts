@@ -90,6 +90,7 @@ export interface ISpecialization extends Document {
   rightDetail: string;
   rightImage: string;
   leftImage: string;
+  source: string;
   createdAt: Date;
   updatedAt: Date;
 }
