@@ -1,7 +1,6 @@
 import request from "supertest";
 import app from "../app"; 
 import { getSpecQuiz } from "../services/quizService"; 
-import * as QuizService from "../services/quizService"; // Adjust the import to your service
 
 jest.mock("../services/quizService");
 
