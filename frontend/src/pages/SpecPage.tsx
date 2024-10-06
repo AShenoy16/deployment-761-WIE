@@ -76,15 +76,15 @@ const SpecPage: React.FC = () => {
       </AnimatedContainer>
 
       <AnimatedContainer delay={0.3}>
-        <Grid container spacing={3} paddingTop={3} pb={2}>
+        <Grid container spacing={3} paddingTop={1} pb={2}>
           {specialisations.map((spec) => (
-            <Grid item xs={12} sm={6} md={4} key={spec._id}>
+            <Grid item xs={12} sm={6} key={spec._id}>
               <Card
                 sx={{
                   backgroundColor: "#00467F",
                   color: "white",
                   borderRadius: 4,
-                  height: "100px",
+                  height: "85px",
                 }}
               >
                 <CardActionArea
