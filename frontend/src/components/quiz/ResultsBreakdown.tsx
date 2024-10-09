@@ -12,6 +12,7 @@ import React from "react";
 import { usePDF, Resolution } from "react-to-pdf";
 import { useSnackbarStore } from "../../stores/SnackBarStore";
 import useSnackBar from "../../hooks/useSnackBar";
+import AnimatedContainer from "../AnimatedContainer";
 
 type ResultsBreakdownProps = {
   pieChartData: { name: string; score: number }[];
@@ -48,9 +49,11 @@ const ResultsBreakdown: React.FC<ResultsBreakdownProps> = ({
   return (
     <Box textAlign="center">
       <Box ref={targetRef}>
-        <Typography variant={isSmallScreen ? "h4" : "h2"} mb={2}>
-          Results Breakdown
-        </Typography>
+        <AnimatedContainer delay={0.15} animationType="fade">
+          <Typography variant={isSmallScreen ? "h4" : "h2"} mb={1}>
+            Results Breakdown
+          </Typography>
+        </AnimatedContainer>
         <Box>
           <PieChart data={pieChartData} />
         </Box>

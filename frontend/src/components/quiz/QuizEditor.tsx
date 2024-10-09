@@ -43,6 +43,11 @@ import { useMCQQuestionEditorStore } from "../../stores/MCQQuestionEditorStore";
 import { useQuestions } from "../../hooks/useQuestions";
 import { useMultiplier } from "../../hooks/useMultiplier";
 
+const MCQ_COLOR = "#ffcce6"; // Pastel pink
+const RANKING_COLOR = "#99c2ff"; // Pastel blue
+const SLIDER_COLOR = "#99e699"; // Pastel green
+const DEFAULT_COLOR = "#fff"; // White
+
 const UpdateQuestionResultAlert = ({
   isSuccess,
   isError,
@@ -415,9 +420,23 @@ const EditableQuestion = ({
   onClickDeleteQuestion: (question: IQuestion) => void;
   isHighlighted: boolean;
 }) => {
+  const getRibbonColor = (questionType: IQuestion["questionType"]) => {
+    switch (questionType) {
+      case "MCQ":
+        return MCQ_COLOR;
+      case "Ranking":
+        return RANKING_COLOR;
+      case "Slider":
+        return SLIDER_COLOR;
+      default:
+        return DEFAULT_COLOR;
+    }
+  };
+
   return (
     <Paper
       sx={(theme) => ({
+        position: "relative",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
@@ -436,13 +455,37 @@ const EditableQuestion = ({
         },
       })}
     >
-      <Typography variant="body1">
-        {`Question ${questionNumber}`}
-        <Typography variant="body1" component="span" color="grey">
-          {` ~ ${question.questionType === "MCQ" ? "Multi-Choice" : question.questionType}`}
+      <Box
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          height: "100%",
+          width: "0.5rem",
+          backgroundColor: getRibbonColor(question.questionType),
+        }}
+      />
+      <Box maxWidth="85%">
+        <Typography
+          variant="body1"
+          whiteSpace="nowrap"
+          overflow="hidden"
+          textOverflow="ellipsis"
+        >
+          {`Question ${questionNumber} - ${question.questionText}`}
         </Typography>
-      </Typography>
-      <Box>
+        <Typography variant="body2" color="text.secondary" mt={0.25}>
+          {question.questionType === "MCQ"
+            ? "Multi-Choice"
+            : question.questionType}
+        </Typography>
+      </Box>
+      <Box
+        display="flex"
+        sx={{
+          flexDirection: { xs: "column", sm: "row" },
+        }}
+      >
         <IconButton
           color="primary"
           onClick={() => onClickEditQuestion(question)}

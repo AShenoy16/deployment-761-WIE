@@ -24,14 +24,14 @@ const RequirementsCard: React.FC<RequirementsCardProps> = ({
           sx={{
             backgroundColor: "#00467F",
             color: "white",
-            width: "50%",
+            width: "40%",
             borderRadius: "1rem",
             textAlign: "center",
           }}
-          spacing={2}
+          spacing={3}
           p={2}
         >
-          <Typography variant="h4" fontWeight="bold">
+          <Typography variant="h5" fontWeight="bold">
             {title}
           </Typography>
 
@@ -39,10 +39,10 @@ const RequirementsCard: React.FC<RequirementsCardProps> = ({
             <Typography variant="h6" fontWeight="bold">
               Required
             </Typography>
-            <Typography variant="h4" fontWeight="bold">
+            <Typography variant="h5" fontWeight="bold">
               {requiredScore}
             </Typography>
-            <Typography variant="h4" fontWeight="bold">
+            <Typography variant="h5" fontWeight="bold">
               Score
             </Typography>
           </Box>

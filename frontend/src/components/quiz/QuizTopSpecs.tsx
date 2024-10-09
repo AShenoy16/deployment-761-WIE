@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { SpecSummary } from "../../types/Specialization";
 import { slugify } from "../../pages/SpecPage";
+import AnimatedContainer from "../AnimatedContainer";
 
 type QuizTopSpecsProps = {
   quizResults: SpecSummary[];
@@ -46,14 +47,16 @@ const QuizTopSpecs: React.FC<QuizTopSpecsProps> = ({ quizResults }) => {
 
   return (
     <>
-      <Box textAlign="center" mb={2}>
-        <Typography variant={isSmallScreen ? "h4" : "h2"}>
-          Here's Your Top 3
-        </Typography>
-        <Typography variant={isSmallScreen ? "body2" : "body1"}>
-          Click to find out more about your top specializations!
-        </Typography>
-      </Box>
+      <AnimatedContainer delay={0.25} animationType="fade">
+        <Box textAlign="center" mb={2}>
+          <Typography variant={isSmallScreen ? "h4" : "h2"}>
+            Here's Your Top 3
+          </Typography>
+          <Typography variant={isSmallScreen ? "body2" : "body1"}>
+            Click to find out more about your top specializations!
+          </Typography>
+        </Box>
+      </AnimatedContainer>
 
       <Stack
         direction="row"
@@ -63,49 +66,55 @@ const QuizTopSpecs: React.FC<QuizTopSpecsProps> = ({ quizResults }) => {
       >
         {podiumOrder.slice(0, 3).map((spec, index) => {
           const podiumStyle = getPodiumStyles(index, isSmallScreen); // Get the podium style based on index and screen size
-
+          const delayOrder = [0.75, 1.25, 0.5];
           return (
-            <Stack key={index} alignItems="center">
-              <Typography
-                variant={isSmallScreen ? "body2" : "h6"}
-                fontWeight="bold"
-                mb={1}
-                width={isSmallScreen ? 100 : 150}
-                textAlign="center"
-                sx={{
-                  whiteSpace: "normal",
-                  wordWrap: "break-word",
-                }}
-              >
-                {spec.name}
-              </Typography>
-              <Box
-                sx={{
-                  ...podiumStyle,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  borderRadius: "10px",
-                  padding: "1rem",
-                  boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
-                  textAlign: "center",
-                }}
-              >
-                <Typography variant="h5" color="black">
-                  {getOrdinalSuffix(index)}
+            <AnimatedContainer
+              key={index}
+              delay={delayOrder[index]}
+              animationType="fade"
+            >
+              <Stack key={index} alignItems="center">
+                <Typography
+                  variant={isSmallScreen ? "body2" : "h6"}
+                  fontWeight="bold"
+                  mb={1}
+                  width={isSmallScreen ? 100 : 150}
+                  textAlign="center"
+                  sx={{
+                    whiteSpace: "normal",
+                    wordWrap: "break-word",
+                  }}
+                >
+                  {spec.name}
                 </Typography>
-              </Box>
-              <Link
-                sx={{ color: `${theme.palette.primary.light}` }}
-                mt={1}
-                href={`/specialisation/${slugify(spec.name)}`}
-                textAlign="center"
-                width={isSmallScreen ? 100 : 150}
-              >
-                Find Out More
-              </Link>
-            </Stack>
+                <Box
+                  sx={{
+                    ...podiumStyle,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    borderRadius: "10px",
+                    padding: "1rem",
+                    boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
+                    textAlign: "center",
+                  }}
+                >
+                  <Typography variant="h5" color="black">
+                    {getOrdinalSuffix(index)}
+                  </Typography>
+                </Box>
+                <Link
+                  sx={{ color: `${theme.palette.primary.light}` }}
+                  mt={1}
+                  href={`/specialisation/${slugify(spec.name)}`}
+                  textAlign="center"
+                  width={isSmallScreen ? 100 : 150}
+                >
+                  Find Out More
+                </Link>
+              </Stack>
+            </AnimatedContainer>
           );
         })}
       </Stack>

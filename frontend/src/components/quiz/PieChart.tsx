@@ -24,7 +24,7 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
   };
 
   return (
-    <Box width={isSmallScreen ? "95%" : "80%"} margin="auto" mb={1}>
+    <Box width={isSmallScreen ? "95%" : "70%"} margin="auto" mb={1}>
       <Pie data={chartData} />
     </Box>
   );

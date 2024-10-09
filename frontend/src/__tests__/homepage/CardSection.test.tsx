@@ -2,6 +2,7 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import CardSection from "../../components/homepage/CardSection";
 import { MemoryRouter } from "react-router-dom";
+import { mockIntersectionObserver } from "../../util/mockIntersectionObserver";
 
 const mockResources = [
   {
@@ -17,6 +18,11 @@ const mockResources = [
     link: "https://example.com/resource2",
   },
 ];
+
+// Mock IntersectionObserver before all tests
+beforeAll(() => {
+  mockIntersectionObserver();
+});
 
 describe("CardSection", () => {
   it("renders the section title", () => {
