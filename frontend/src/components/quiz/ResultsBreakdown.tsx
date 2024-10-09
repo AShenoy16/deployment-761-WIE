@@ -48,13 +48,15 @@ const ResultsBreakdown: React.FC<ResultsBreakdownProps> = ({
 
   return (
     <Box textAlign="center">
-      <AnimatedContainer delay={0.15} animationType="fade">
-        <Typography variant={isSmallScreen ? "h4" : "h2"} mb={1}>
-          Results Breakdown
-        </Typography>
-      </AnimatedContainer>
       <Box ref={targetRef}>
-        <PieChart data={pieChartData} />
+        <AnimatedContainer delay={0.15} animationType="fade">
+          <Typography variant={isSmallScreen ? "h4" : "h2"} mb={1}>
+            Results Breakdown
+          </Typography>
+        </AnimatedContainer>
+        <Box>
+          <PieChart data={pieChartData} />
+        </Box>
       </Box>
       <Box>
         <Button onClick={() => saveResultsAsPDF()}>Download Results</Button>
