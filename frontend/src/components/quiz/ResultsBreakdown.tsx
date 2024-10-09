@@ -47,11 +47,13 @@ const ResultsBreakdown: React.FC<ResultsBreakdownProps> = ({
 
   return (
     <Box textAlign="center">
-      <Typography variant={isSmallScreen ? "h4" : "h2"} mb={2}>
-        Results Breakdown
-      </Typography>
       <Box ref={targetRef}>
-        <PieChart data={pieChartData} />
+        <Typography variant={isSmallScreen ? "h4" : "h2"} mb={2}>
+          Results Breakdown
+        </Typography>
+        <Box>
+          <PieChart data={pieChartData} />
+        </Box>
       </Box>
       <Box>
         <Button onClick={() => saveResultsAsPDF()}>Download Results</Button>
