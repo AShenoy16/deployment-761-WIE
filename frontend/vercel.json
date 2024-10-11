@@ -1,0 +1,17 @@
+{
+    "version": 2,
+    "routes": [
+      {
+        "src": "https://project-team-7.onrender.com/api/(.*)",
+        "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+        "headers": {
+          "Access-Control-Allow-Credentials": "true",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+          "Access-Control-Allow-Headers": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+        },
+        "dest": "/api/$1"
+      }
+    ]
+  }
+  
