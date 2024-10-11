@@ -12,7 +12,6 @@ import { SpecSummary } from "../types/Specialization";
 import LZString from "lz-string";
 import ResultsBreakdown from "../components/quiz/ResultsBreakdown";
 import QuizTopSpecs from "../components/quiz/QuizTopSpecs";
-import AnimatedContainer from "../components/AnimatedContainer";
 
 const resetQuizProgress = () => {
   const resetQuiz = useQuizStore.getState().resetQuiz;

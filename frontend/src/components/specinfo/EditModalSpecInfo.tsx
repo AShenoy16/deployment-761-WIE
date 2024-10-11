@@ -22,12 +22,6 @@ import { API_BASE_URL } from "../../util/common";
 import DeleteIcon from "@mui/icons-material/Delete";
 import uoaEngBuilding from "/engineering-building.jpg"; // Fallback image if needed
 
-const buttonStyle = {
-  textTransform: "none",
-  textDecorationLine: "underline",
-  borderRadius: "12px",
-};
-
 interface EditModalSpecInfoProps {
   open: boolean;
   onClose: () => void;

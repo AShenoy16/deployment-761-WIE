@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import uoaLogo from "../img-assets/uoa-logo.png";
 import wieLogo from "../assets/img-white-wie-logo.svg";
 import {
   AppBar,
