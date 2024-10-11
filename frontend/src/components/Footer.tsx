@@ -5,7 +5,6 @@ import {
   Link as MuiLink,
   IconButton,
   useTheme,
-  SvgIcon,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import InstagramIcon from "@mui/icons-material/Instagram";
