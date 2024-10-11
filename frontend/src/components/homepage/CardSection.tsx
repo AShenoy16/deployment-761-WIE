@@ -2,13 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import HomePageCard from "./HomePageCard";
 import AnimatedContainer from "../AnimatedContainer";
-
-interface Card {
-  title: string;
-  description: string;
-  image: string;
-  link: string;
-}
+import { Card } from "../../pages/HomePage";
 
 interface CardSectionProps {
   resources: Card[];

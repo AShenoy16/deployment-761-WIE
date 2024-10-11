@@ -6,13 +6,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-
-interface HomePageCardProps {
-  title: string;
-  description: string;
-  image: string;
-  link: string;
-}
+import { Card as HomePageCardProps } from "../../pages/HomePage";
 
 const HomePageCard: React.FC<HomePageCardProps> = ({
   title,

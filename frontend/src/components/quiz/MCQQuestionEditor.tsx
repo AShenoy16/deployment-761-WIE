@@ -36,6 +36,7 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   spec,
   option,
 }) => {
+  // Extract actions from the store
   const { updateSpecName, updateSpecWeight } = useMCQQuestionEditorStore(
     (state) => ({
       updateSpecName: state.updateSpecName,
@@ -43,23 +44,14 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
     })
   );
 
-  const handleOnConfirm = () => {
-    if (!isInvalidSpec && !weightError) {
-      updateSpecName(option._id, spec, editedSpec);
-      updateSpecWeight(option._id, editedSpec, editedWeighting);
-      console.log(option);
-      onClose();
-    }
-  };
-
   const [editedSpec, setEditedSpec] = useState<string>(spec);
   const [editedWeighting, setEditedWeighting] = useState(
     option.weightings[spec]
   );
-
   const [weightError, setWeightError] = useState<string>("");
 
   const existingSpecs = Object.keys(option.weightings);
+  // Filter available specs, ensuring no duplicates in the options
   const availableSpecs = possibleSpecs.filter(
     (specName) => specName === spec || !existingSpecs.includes(specName)
   );
@@ -68,6 +60,7 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   );
   const isInvalidSpec = !possibleSpecs.includes(editedSpec);
 
+  // Handle weight change and validate input
   const handleWeightChange = (value: number) => {
     if (value < 1 || value > 10) {
       setWeightError("Value must be between 1 and 10");
@@ -77,6 +70,15 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
       setWeightError("");
     }
     setEditedWeighting(value);
+  };
+
+  // Handle confirm action
+  const handleOnConfirm = () => {
+    if (!isInvalidSpec && !weightError) {
+      updateSpecName(option._id, spec, editedSpec);
+      updateSpecWeight(option._id, editedSpec, editedWeighting);
+      onClose();
+    }
   };
 
   return (
@@ -119,7 +121,7 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
             disableClearable
           />
           <TextField
-            label={`Weighting`}
+            label="Weighting"
             type="number"
             value={isNaN(editedWeighting) ? "" : editedWeighting}
             onChange={(e) => {
@@ -148,16 +150,18 @@ const EditSpecWeighting: React.FC<EditSpecWeightingProps> = ({
   );
 };
 
-type EditableMCQOption = {
+type EditableMCQOptionProps = {
   option: IMCQAnswerOption;
 };
 
-const EditableMCQOption: React.FC<EditableMCQOption> = ({ option }) => {
+const EditableMCQOption: React.FC<EditableMCQOptionProps> = ({ option }) => {
+  // Store actions for updating the MCQ option
   const { updateOptionTitle, addSpec } = useMCQQuestionEditorStore((state) => ({
     updateOptionTitle: state.updateOptionTitle,
     addSpec: state.addSpec,
   }));
 
+  // Handle text change for option
   const handleOptionTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateOptionTitle(option._id, e.target.value);
   };
@@ -176,6 +180,7 @@ const EditableMCQOption: React.FC<EditableMCQOption> = ({ option }) => {
           justifyContent="space-between"
           position="relative"
         >
+          {/* Add spec button */}
           <Button
             startIcon={<AddIcon />}
             sx={{ flexShrink: 0 }}
@@ -183,6 +188,7 @@ const EditableMCQOption: React.FC<EditableMCQOption> = ({ option }) => {
           >
             Spec
           </Button>
+          {/* Editable option text */}
           <TextField
             label="Option Text"
             value={option.text}
@@ -200,6 +206,7 @@ const EditableMCQOption: React.FC<EditableMCQOption> = ({ option }) => {
           />
           <Typography>Weighting</Typography>
         </Stack>
+        {/* List of spec weightings */}
         <Stack width="100%" spacing={1}>
           {Object.entries(option.weightings)
             .sort(([, weightA], [, weightB]) => weightB - weightA)
@@ -245,6 +252,7 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({
   const handleDeleteSpec = () => {
     deleteSpec(option._id, specializationName);
   };
+
   return (
     <>
       <Stack direction="row" alignItems="center" spacing={1}>
@@ -258,6 +266,7 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({
           spacing={2}
         >
           <Stack direction="row">
+            {/* Delete and edit buttons for spec */}
             <IconButton
               color="error"
               sx={{ padding: "0.25rem" }}
@@ -290,6 +299,7 @@ const SpecWeighting: React.FC<SpecWeightingProps> = ({
           </Typography>
         </Box>
       </Stack>
+      {/* Edit Spec Weighting Modal */}
       <EditSpecWeighting
         open={isEditSpecWeightingOpen}
         onClose={handleCloseEditSpecWeighting}
@@ -309,6 +319,7 @@ const MCQQuestionEditor: React.FC = () => {
     })
   );
 
+  // Handle question text change
   const handleQuestionTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateQuestionTitle(e.target.value);
   };
@@ -322,6 +333,7 @@ const MCQQuestionEditor: React.FC = () => {
       borderRadius={theme.shape.borderRadius}
       sx={{ scrollbarWidth: "thin" }}
     >
+      {/* Question Text Input */}
       <TextField
         label="Question Text"
         value={selectedQuestion?.questionText}
@@ -339,6 +351,7 @@ const MCQQuestionEditor: React.FC = () => {
       />
 
       <Stack spacing={2} mt={2}>
+        {/* Editable options for MCQ */}
         {selectedQuestion?.answerOptions.map((option, index) => (
           <EditableMCQOption key={index} option={option} />
         ))}

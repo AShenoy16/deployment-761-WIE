@@ -14,27 +14,10 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import placeholder from "../../assets/placeholder.jpg";
+import placeholder from "../../assets/img-placeholder.jpg";
+import { Card, HomePageData } from "../../pages/HomePage";
 import { useSnackbarStore } from "../../stores/SnackBarStore";
 import { API_BASE_URL } from "../../util/common";
-
-interface Card {
-  title: string;
-  description: string;
-  image: string;
-  link: string;
-}
-
-interface HomePageData {
-  heroTitle: string;
-  heroSubtitle: string;
-  heroImage: string;
-  section1Header: string;
-  section1Text: string;
-  section2Header: string;
-  section2Text: string;
-  additionalResources: Card[];
-}
 
 interface EditHomepageModalProps {
   open: boolean;

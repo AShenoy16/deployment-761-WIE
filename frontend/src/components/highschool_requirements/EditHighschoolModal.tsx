@@ -1,3 +1,5 @@
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Alert,
   Box,
@@ -9,11 +11,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { IHighschoolRequirement } from "../../types/HighschoolRequirements";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
 import { useHighschoolRequirements } from "../../hooks/useHighschoolRequirements";
+import { IHighschoolRequirement } from "../../types/HighschoolRequirements";
 
 const UpdateHighschoolRequirementsResultAlert = ({
   isSuccess,
@@ -60,7 +60,6 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
   const [scoreErrors, setScoreErrors] = useState<boolean[]>([]);
   const [requirementErrors, setRequirementErrors] = useState<boolean[][]>([]);
 
@@ -264,7 +263,7 @@ const EditHighschoolModal: React.FC<EditHighschoolModalProps> = ({
                       }
                     />
                     <IconButton
-                      color="primary"
+                      sx={{ color: "#b92d19" }}
                       role="delete-btn"
                       onClick={() => handleDeleteRequirement(idx, reqIndex)}
                     >
