@@ -1,15 +1,8 @@
-import { spec } from "node:test/reporters";
 import {
   getInitialSpecResults,
   specAbbreviationMap,
 } from "../constants/quizConstants";
-import {
-  IMCQAnswerOption,
-  IQuestion,
-  IQuiz,
-  IRankingAnswerOption,
-  IRankingQuestion,
-} from "../models/interfaces";
+import { IMCQAnswerOption, IQuestion } from "../models/interfaces";
 import Quiz from "../models/QuizModel";
 import { QuizSubmissionRequest } from "../types/quizTypes";
 import { isQuizSubmissionRequest } from "../validation/quizValidation";
@@ -17,17 +10,15 @@ import RankingQuestion from "../models/RankingModel";
 import SliderQuestion from "../models/SliderModel";
 import MCQQuestion from "../models/MCQModel";
 import mongoose from "mongoose";
-import { Console } from "console";
-import MultiplierData from "../models/multiplerModel";
 import { getAllMultipliers } from "./multiplierService";
-import { ParamsDictionary } from "express-serve-static-core";
 import { defaultQuizQuestions } from "../constants/quizConstants";
 import Specialization from "../models/SpecializationModel";
 
 /**
- * Servixe code that will actually calculate the results
- * @param quizSubmission
- * @returns
+ * Service to process quiz submission and calculate results.
+ * Aggregates scores from MCQ, slider, and ranking questions, and returns the top three specializations.
+ * @param {QuizSubmissionRequest} quizSubmission - The quiz submission data from the user.
+ * @returns {Promise<any[]> | null} - Returns an array of top three specializations with their scores or null if an error occurs.
  */
 export const processQuizSubmission = async (
   quizSubmission: QuizSubmissionRequest
@@ -76,8 +67,8 @@ export const processQuizSubmission = async (
 };
 
 /**
- * This will return the quiz in the database if present, otherwise null
- * @returns Quiz or null
+ * Retrieves the quiz from the database if present.
+ * @returns {Promise<IQuestion[]> | null} - Returns an array of quiz questions or null if not found.
  */
 export const getSpecQuiz = async () => {
   const quizIds = await getQuizIds();
@@ -90,7 +81,12 @@ export const getSpecQuiz = async () => {
   return allQuestions;
 };
 
-// Fetch MCQQuestions
+/**
+ * Fetches MCQ (Multiple Choice Questions) from the database based on provided IDs.
+ * Uses aggregation to retrieve the MCQ questions, excluding unnecessary fields like `createdAt`, `updatedAt`, and `__v`.
+ * @param {any[]} ids - An array of MCQ question IDs to fetch.
+ * @returns {Promise<any[]>} - Returns a promise that resolves to an array of MCQ questions.
+ */
 const fetchMCQ = async (ids: any[]) => {
   const mcqQuestions = await MCQQuestion.aggregate([
     { $match: { _id: { $in: ids } } },
@@ -106,7 +102,12 @@ const fetchMCQ = async (ids: any[]) => {
   return mcqQuestions;
 };
 
-// fetch SliderQuestions
+/**
+ * Fetches Slider questions from the database based on provided IDs.
+ * Uses aggregation to retrieve the questions, excluding certain fields like `createdAt`, `updatedAt`, and `__v`.
+ * @param {any[]} ids - An array of Slider question IDs to fetch.
+ * @returns {Promise<any[]>} - Returns a promise that resolves to an array of Slider questions.
+ */
 const fetchSlider = async (ids: any[]) => {
   const mcqQuestions = await SliderQuestion.aggregate([
     { $match: { _id: { $in: ids } } },
@@ -122,7 +123,12 @@ const fetchSlider = async (ids: any[]) => {
   return mcqQuestions;
 };
 
-// fetch rankingQuestions
+/**
+ * Fetches Ranking questions from the database based on provided IDs.
+ * Uses aggregation to retrieve the questions, excluding certain fields like `createdAt`, `updatedAt`, and `__v`.
+ * @param {any[]} ids - An array of Ranking question IDs to fetch.
+ * @returns {Promise<any[]>} - Returns a promise that resolves to an array of Ranking questions.
+ */
 const fetchRanking = async (ids: any) => {
   const mcqQuestions = await RankingQuestion.aggregate([
     { $match: { _id: { $in: ids } } },
@@ -138,17 +144,20 @@ const fetchRanking = async (ids: any) => {
   return mcqQuestions;
 };
 
-// get all QuizQuestion Ids from Database
+/**
+ * Retrieves all quiz question IDs from the Quiz collection in the database.
+ * This function assumes there is only one quiz document, and it extracts the `quizQuestions` field, which is an array of question IDs.
+ * @returns {Promise<string[]>} - Returns a promise that resolves to an array of quiz question IDs.
+ */
 const getQuizIds = async () => {
   const ids = await Quiz.find().select("quizQuestions");
   return ids[0].quizQuestions;
 };
 
 /**
- * Calculate mcq quiz question results
- * @param mcqAnswers -> json object of mcq question: chosen answer (both ids)
- * @param specResults -> specMap
- * @returns
+ * Processes MCQ results and updates the spec map based on the user's answers.
+ * @param {Object} mcqAnswers - Object containing MCQ question IDs and their corresponding selected answers.
+ * @param {Object} specResults - Object containing the current specialization results map.
  */
 const mcqResults = async (
   mcqAnswers: { [questionId: string]: string },
@@ -187,11 +196,11 @@ const mcqResults = async (
 };
 
 /**
- * Returns slider update amount based on slider factor, weighting and choice
- * @param sliderChoice 1 - 5 representing users slider choice
- * @param weighting weighting of the spec
- * @param sliderFactor slider factor
- * @returns
+ * Calculates the weighting value based on slider choice, weighting, and slider factor.
+ * @param {number} sliderChoice - The slider choice (1-5) selected by the user.
+ * @param {number} weighting - The weighting of the specialization.
+ * @param {number} sliderFactor - The slider factor from the multiplier data.
+ * @returns {number} - The calculated weighting value.
  */
 const getSliderWeightingValue = (
   sliderChoice: number,
@@ -215,10 +224,9 @@ const getSliderWeightingValue = (
 };
 
 /**
- * method to update specMap of slider results
- * @param sliderAnswers object that has questionId to number of the slider
- * -> this will be the index inside the database
- * @param specResults specMap
+ * Updates the spec map based on slider question results.
+ * @param {Object} sliderAnswers - Object containing slider question IDs and their corresponding slider choices.
+ * @param {Object} specResults - Object containing the current specialization results map.
  */
 const sliderResults = async (
   sliderAnswers: { [questionNumber: string]: number },
@@ -265,12 +273,12 @@ const sliderResults = async (
 };
 
 /**
- * Method to get update value for a spec based on the rank of the answer chosen
- * @param rank of the answer option
- * @param weighting of the spec
- * @param rank2Factor
- * @param rank3Factor
- * @returns
+ * Calculates the ranking update value based on the rank of the answer.
+ * @param {number} rank - The rank (1, 2, or 3) assigned by the user.
+ * @param {number} weighting - The weighting of the specialization.
+ * @param {number} rank2Factor - The factor for second-ranked answers.
+ * @param {number} rank3Factor - The factor for third-ranked answers.
+ * @returns {number} - The calculated update value.
  */
 const getRankingUpdateValue = (
   rank: number,
@@ -291,10 +299,9 @@ const getRankingUpdateValue = (
 };
 
 /**
- * Method to update specMap of ranking results
- * @param rankingAnswers object that has questionId, and nested object with the optionId to the rank
- * -> will not be index inside database, but rather an object
- * @param specResults specMap
+ * Updates the spec map based on ranking question results.
+ * @param {Object} rankingAnswers - Object containing ranking question IDs and their rankings for each answer option.
+ * @param {Object} specResults - Object containing the current specialization results map.
  */
 const rankingResults = async (
   rankingAnswers: {
@@ -374,9 +381,11 @@ const rankingResults = async (
 };
 
 /**
- * Service that deletes quiz question by id from db
- * @param id - string representing question Id
- * @param questionType - string representing question type
+ * Deletes a quiz question from the database.
+ * This operation is handled as a transaction to ensure the question is removed from both the quiz and question collections.
+ * @param {string} id - The ID of the question to delete.
+ * @param {string} questionType - The type of question to delete (MCQ, Ranking, or Slider).
+ * @returns {Promise<number | null>} - Returns 1 if the deletion is successful, otherwise null.
  */
 export const deleteQuestion = async (id: string, questionType: string) => {
   // create transaction to delete question from both, otherwise rollback
@@ -444,18 +453,19 @@ export const deleteQuestion = async (id: string, questionType: string) => {
 };
 
 /**
- * Check if question type is one of the valid question types
- * @param qType string containing question type
- * @returns
+ * Checks if a given question type is valid.
+ * @param {string} qType - The question type to validate.
+ * @returns {boolean} - Returns true if the question type is valid, otherwise false.
  */
 export const isValidQuestionType = (qType: string) => {
   return qType == "MCQ" || qType == "Ranking" || qType == "Slider";
 };
 
 /**
- * Service to add a new default quiz question and add to the existing quiz collection
- * @param questionType
- * @returns
+ * Adds a default quiz question of the specified type and adds it to the quiz collection.
+ * @param {string} questionType - The type of question to add (MCQ, Slider, or Ranking).
+ * @returns {Promise<any>} - Returns the updated quiz document.
+ * @throws {Error} - Throws an error if the question type is invalid.
  */
 export const addDefaultQuizQuestion = async (questionType: string) => {
   let question;
@@ -485,10 +495,10 @@ export const addDefaultQuizQuestion = async (questionType: string) => {
 };
 
 /**
- * Service to update an existing quiz question
- * @param id The question ID to update
- * @param questionData The new data for the quiz question
- * @returns The updated question or null if not found
+ * Updates an existing quiz question by its ID.
+ * @param {string} id - The ID of the question to update.
+ * @param {any} updatedData - The new data for the quiz question.
+ * @returns {Promise<IQuestion | null>} - Returns the updated question or null if not found.
  */
 export const updateQuestionById = async (id: string, updatedData: any) => {
   let updatedQuestion: IQuestion | null = null;
@@ -516,9 +526,9 @@ export const updateQuestionById = async (id: string, updatedData: any) => {
 };
 
 /**
- * Validates the updatedData to make sure there are no default spec weightings
- * @param updatedData
- * @returns {boolean} - True if valid, false if invalid
+ * Validates the updated question data to ensure no default specialization weightings are present.
+ * @param {IQuestion} updatedData - The updated quiz question data.
+ * @returns {boolean} - Returns true if the data is valid, false otherwise.
  */
 export const isValidUpdatedQuestionData = (updatedData: IQuestion): boolean => {
   if (
@@ -539,6 +549,11 @@ export const isValidUpdatedQuestionData = (updatedData: IQuestion): boolean => {
   return false;
 };
 
+/**
+ * Retrieves the details of a specialization by its name.
+ * @param {string} specializationName - The name of the specialization.
+ * @returns {Promise<any>} - Returns the specialization details or null if not found.
+ */
 export const getSpecializationDetails = async (specializationName: string) => {
   return await Specialization.findOne({ name: specializationName })
     .select("name description careerPathways")
