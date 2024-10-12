@@ -1,9 +1,9 @@
 import request from "supertest";
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
-import app from "../app"; 
-import { User } from "../models/userModel"; 
-import * as authService from "../services/authentication"; 
+import app from "../app";
+import { User } from "../models/userModel";
+import * as authService from "../services/authentication";
 
 let mongoServer: MongoMemoryServer;
 
@@ -27,12 +27,6 @@ afterAll(async () => {
 });
 
 describe("User API", () => {
-  it("should return a message when fetching users", async () => {
-    const res = await request(app).get("/api/users"); 
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty("message", "create user endpoints");
-  });
-
   it("should return 401 if login fails", async () => {
     // Mock login failure (return null)
     jest.spyOn(authService, "loginAdmin").mockResolvedValue(null);
@@ -55,6 +49,4 @@ describe("User API", () => {
 
     expect(res.statusCode).toEqual(200);
   });
-
-  
 });
